@@ -14,15 +14,17 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const { chatRoomId } = useParams(); // ✅ URL에서 chatRoomId 가져오기
+  const { chatRoomId } = useParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
 
+  // ✅ chatRoomId가 유효하지 않을 때 예외 처리 (useEffect 전에 위치)
   if (!chatRoomId || typeof chatRoomId !== "string") {
-    return <p>Invalid Chat Room</p>; // ✅ chatRoomId가 없을 경우 예외 처리
+    return <p>Invalid Chat Room</p>;
   }
 
   useEffect(() => {
+    if (!chatRoomId) return; // ✅ chatRoomId가 없을 경우 API 요청을 하지 않음
     const fetchMessages = async () => {
       try {
         const response = await axiosInstance.get(
@@ -34,7 +36,7 @@ export default function ChatPage() {
       }
     };
     fetchMessages();
-  }, [chatRoomId]);
+  }, [chatRoomId]); // ✅ useEffect가 항상 같은 순서로 실행되도록 유지
 
   const sendMessage = async () => {
     if (!message.trim()) return;
