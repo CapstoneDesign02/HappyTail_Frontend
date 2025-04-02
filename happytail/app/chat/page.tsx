@@ -17,7 +17,7 @@ interface ChatProps {
   chatRoomId: string;
 }
 
-export default function Chat({ chatRoomId }: ChatProps) {
+export function Chat({ chatRoomId }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
 
