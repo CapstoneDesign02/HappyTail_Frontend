@@ -4,6 +4,8 @@ import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: "standalone", // 이 설정 추가
+
   // 다른 Next.js 설정들...
 };
 
