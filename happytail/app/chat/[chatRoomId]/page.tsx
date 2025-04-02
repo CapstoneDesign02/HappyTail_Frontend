@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, ChangeEvent } from "react";
-import axiosInstance from "../common/axiosInstance";
+import { useParams } from "next/navigation";
+import axiosInstance from "@/app/common/axiosInstance";
 
-// 메시지 타입 정의
 interface Message {
   id: string;
   chatRoomId: string;
@@ -13,14 +13,14 @@ interface Message {
   timestamp: string;
 }
 
-interface ChatProps {
-  chatRoomId: string;
-}
-
-export default function ChatPage({ chatRoomId }: ChatProps) {
-  // ✅ default export 추가
+export default function ChatPage() {
+  const { chatRoomId } = useParams(); // ✅ URL에서 chatRoomId 가져오기
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
+
+  if (!chatRoomId || typeof chatRoomId !== "string") {
+    return <p>Invalid Chat Room</p>; // ✅ chatRoomId가 없을 경우 예외 처리
+  }
 
   useEffect(() => {
     const fetchMessages = async () => {
