@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* PWA 설정 */}
-        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials"/>
+        <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
         {/* Favicon 설정 */}
         <link rel="icon" href="/webLogo.png" />
