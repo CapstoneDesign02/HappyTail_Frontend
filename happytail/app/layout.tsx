@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   title: "HappyTail",
   description: "행복한 꼬리",
   icons: {
-    icon: "/img/webLogo.png", // 아이콘 경로
-    apple: "/img/webLogo.png", // Apple Touch 아이콘 경로
+    icon: "/img/logo192.png", // PWA 아이콘 경로
+    apple: "/img/logo192.png", // Apple Touch 아이콘 경로
   },
 };
 
@@ -32,10 +32,13 @@ export default function RootLayout({
         {/* PWA 설정 */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
-        {/* Favicon 설정 */}
-        <link rel="icon" href="/webLogo.png" />
-        {/* Apple Touch 아이콘 설정 */}
-        <link rel="apple-touch-icon" href="/webLogo.png" />
+
+        {/* Favicon 설정 (일반 브라우저용) */}
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+
+        {/* PWA 아이콘 설정 */}
+        <link rel="apple-touch-icon" sizes="192x192" href="/img/logo192.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/img/logo512.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
