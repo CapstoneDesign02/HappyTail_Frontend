@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   title: "HappyTail",
   description: "행복한 꼬리",
   icons: {
-    icon: "/webLogo.png", // 아이콘 경로
-    apple: "/webLogo.png", // Apple Touch 아이콘 경로
+    icon: "/img/webLogo.png", // 아이콘 경로
+    apple: "/img/webLogo.png", // Apple Touch 아이콘 경로
   },
 };
 
