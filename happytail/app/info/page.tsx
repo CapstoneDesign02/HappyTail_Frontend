@@ -18,7 +18,7 @@ const WebPage: React.FC = () => {
       <div className="fixed right-0 h-full w-full max-w-[50%] lg:max-w-[40%] md:max-w-[30%]">
         <Image
           className="object-cover h-full w-full"
-          src="/img/web.png"
+          src={process.env.NEXT_PUBLIC_FRONTEND_ID + "/img/web.png"}
           alt="Background"
           fill
           sizes="(max-width: 768px) 0px, (max-width: 1024px) 30vw, (max-width: 1536px) 40vw, 50vw"

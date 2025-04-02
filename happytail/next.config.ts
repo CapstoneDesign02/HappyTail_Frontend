@@ -5,8 +5,13 @@ import withPWA from "next-pwa";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone", // 이 설정 추가
-
-  // 다른 Next.js 설정들...
+  images: {
+    domains: [
+      "localhost",
+      "happytail-hqfso996r-eunseos-projects.vercel.app",
+      "happy-tail-frontend.vercel.app",
+    ],
+  },
 };
 
 export default withPWA({

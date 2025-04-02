@@ -12,12 +12,13 @@ export function middleware(req: NextRequest) {
     req.nextUrl.pathname.endsWith(".ico") ||
     req.nextUrl.pathname.startsWith("/info") ||
     req.nextUrl.pathname.startsWith("/login/callback") ||
-    req.nextUrl.pathname.startsWith("/join")
+    req.nextUrl.pathname.startsWith("/join") ||
+    req.nextUrl.pathname.startsWith("/img")
   ) {
     return NextResponse.next();
   }
 
-  // 토큰이 없으면 "/info"로 리다이렉트
+  //토큰이 없으면 "/info"로 리다이렉트
   if (!token) {
     return NextResponse.redirect(new URL("/info", req.url));
   }
