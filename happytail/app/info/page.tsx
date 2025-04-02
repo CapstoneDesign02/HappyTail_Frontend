@@ -16,23 +16,33 @@ const WebPage: React.FC = () => {
     useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
+    // PWA 설치 이벤트 핸들링
     const handleBeforeInstallPrompt = (e: Event) => {
       const event = e as BeforeInstallPromptEvent;
       event.preventDefault();
       setDeferredPrompt(event);
     };
 
-    window.addEventListener(
-      "beforeinstallprompt",
-      handleBeforeInstallPrompt as EventListener
-    );
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
-        handleBeforeInstallPrompt as EventListener
+        handleBeforeInstallPrompt
       );
     };
+  }, []);
+
+  // ✅ Service Worker 등록
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then(() => console.log("✅ Service Worker registered!"))
+        .catch((err) =>
+          console.error("❌ Service Worker registration failed:", err)
+        );
+    }
   }, []);
 
   const handleInstallPWA = async () => {
