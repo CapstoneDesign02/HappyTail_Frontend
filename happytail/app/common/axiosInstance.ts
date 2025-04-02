@@ -12,6 +12,8 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    console.log(token);
+
     //ngrok사용시 error 스킵 코드드
     // config.headers["ngrok-skip-browser-warning"] = "69420";
 

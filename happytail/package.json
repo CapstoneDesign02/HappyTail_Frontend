@@ -15,6 +15,7 @@
     "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.3.0",
     "tesseract.js": "3.0.3"
   },
   "devDependencies": {
