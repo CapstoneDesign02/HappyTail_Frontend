@@ -1,7 +1,7 @@
 {
   "name": "HappyTail",
   "short_name": "행꼬",
-  "description": "행복한 꼬리리",
+  "description": "행복한 꼬리",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

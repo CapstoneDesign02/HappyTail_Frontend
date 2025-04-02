@@ -1,11 +1,43 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const WebPage: React.FC = () => {
   const router = useRouter();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
+  const handleInstallPWA = async () => {
+    if (!deferredPrompt) {
+      alert("PWA 설치가 지원되지 않는 환경입니다.");
+      return;
+    }
+    deferredPrompt.prompt();
+    const choiceResult = await deferredPrompt.userChoice;
+    if (choiceResult.outcome === "accepted") {
+      console.log("사용자가 PWA 설치를 수락했습니다.");
+    } else {
+      console.log("사용자가 PWA 설치를 거부했습니다.");
+    }
+    setDeferredPrompt(null);
+  };
 
   const KakaoLogin = () => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}&response_type=code`;
@@ -55,12 +87,10 @@ const WebPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 다운로드 버튼 */}
+        {/* PWA 다운로드 버튼 */}
         <button
           className="mt-6 md:mt-8 w-full max-w-[400px] h-12 sm:h-14 md:h-16 justify-start relative"
-          onClick={() => {
-            window.location.href = "/apk/happytail.apk"; // APK 파일 경로
-          }}
+          onClick={handleInstallPWA}
         >
           <div className="absolute inset-0 bg-yellow-400 rounded-2xl blur-md"></div>
           <div className="absolute inset-0 bg-white rounded-2xl flex items-center justify-center">
@@ -70,10 +100,10 @@ const WebPage: React.FC = () => {
           </div>
         </button>
 
-        {/* 카카오 */}
+        {/* 카카오 로그인 버튼 */}
         <button
           className="mt-6 md:mt-8 w-full max-w-[400px] h-12 sm:h-14 md:h-16 justify-start relative"
-          onClick={() => KakaoLogin()}
+          onClick={KakaoLogin}
         >
           <div className="absolute inset-0 bg-yellow-400 rounded-2xl blur-md"></div>
           <div className="absolute inset-0 bg-yellow-300 rounded-2xl flex items-center justify-center">

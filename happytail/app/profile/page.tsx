@@ -7,10 +7,11 @@ import { joinAPI } from "../join/joinAPI";
 import { getProfile } from "./api/profileAPI";
 
 interface UserProfile {
+  id: number;
   nickname: string;
   name: string;
-  age: string;
-  gender: string;
+  points: number;
+  gender: number; // 1: 남성, 2: 여성
   ssn: string;
   phone: string;
   address: string;
@@ -20,68 +21,22 @@ interface UserProfile {
 const UserProfilePage: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [dataSubmitted, setDataSubmitted] = useState<boolean>(false); // API 호출 상태 추적
   const router = useRouter();
 
   useEffect(() => {
     const fetchProfile = async () => {
       const data = await getProfile();
-      console.log("유저 프로필 데이터:", data);
-      return data;
-    };
-    fetchProfile();
-  }, []);
-
-  // 백엔드에서 사용자 데이터 가져오기
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("/api/user"); // 유저 정보 API
-        if (!response.ok) throw new Error("User not found");
-        const data = await response.json();
+      if (data) {
         setUser(data);
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+      } else {
+        console.error("유저 프로필 데이터가 없습니다.");
         setUser(null);
         setLoading(false);
       }
     };
-
-    fetchUserData();
+    fetchProfile();
   }, []);
-
-  // 사용자 데이터가 로드된 후 한 번만 joinAPI 호출
-  useEffect(() => {
-    const submitUserData = async () => {
-      if (user && !dataSubmitted) {
-        try {
-          await joinAPI(
-            user.email,
-            user.name,
-            user.address,
-            user.gender === "남" ? 1 : 2,
-            user.ssn,
-            user.phone,
-            user.nickname
-          );
-          console.log("유저 정보 백엔드 전송");
-          setDataSubmitted(true); // API 호출 완료 표시
-        } catch (error) {
-          console.error("Error submitting user data:", error);
-        }
-      }
-    };
-
-    submitUserData();
-  }, [user, dataSubmitted]);
-
-  // 로그인 안 되어 있으면 KakaoLogin.tsx로 이동
-  // useEffect(() => {
-  //     if (!loading && !user) {
-  //         router.push('/login/KakaoLogin'); // 로그인 페이지로 이동
-  //     }
-  // }, [loading, user, router]);
 
   if (loading) {
     return (
@@ -130,7 +85,6 @@ const UserProfilePage: React.FC = () => {
           {[
             { label: "닉네임", value: user?.nickname },
             { label: "이름", value: user?.name },
-            { label: "나이", value: user?.age },
             { label: "성별", value: user?.gender },
             { label: "휴대폰 번호", value: user?.phone },
             { label: "주소", value: user?.address },
