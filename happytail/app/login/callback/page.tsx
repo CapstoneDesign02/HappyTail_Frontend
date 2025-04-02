@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { setCookie } from "@/app/common/cookie";
