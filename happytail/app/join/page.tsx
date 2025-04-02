@@ -1,15 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { checkNicknameAPI, joinAPI } from "./joinAPI";
 import { OCRmockdata } from "./mockData";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function JoinPage() {
-  const router = useRouter();
+export default function JoinPageWrapper() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <JoinPage />
+    </Suspense>
+  );
+}
 
+function JoinPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+
   const [file, setFile] = useState<File | null>(null);
   const [ocrResult, setOcrResult] = useState<{
     name?: string;
@@ -19,10 +27,10 @@ export default function JoinPage() {
     valid?: boolean;
     reason?: string;
   } | null>(null);
-  const [phone, setPhone] = useState<string>(""); // 전화번호 상태 추가
-  const [nickname, setNickname] = useState<string>(""); // 닉네임 상태 추가
+  const [phone, setPhone] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean>(true); // 닉네임 중복 여부 상태
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState<boolean>(true);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -43,12 +51,10 @@ export default function JoinPage() {
 
     try {
       const data = await checkNicknameAPI(nickname);
-      setIsNicknameAvailable(!data.isDuplicate); // API 응답을 기반으로 중복 여부 설정
+      setIsNicknameAvailable(!data.isDuplicate);
 
       if (data.isDuplicate) {
         alert("이미 사용 중인 닉네임입니다.");
-      } else {
-        //화면 반영
       }
     } catch (error) {
       console.error("닉네임 확인 오류:", error);
@@ -121,7 +127,6 @@ export default function JoinPage() {
         </button>
       </div>
 
-      {/* 닉네임 입력 필드 및 중복 체크 버튼 추가 */}
       <div className="mt-4">
         <label htmlFor="nickname" className="block">
           닉네임
@@ -145,7 +150,6 @@ export default function JoinPage() {
         )}
       </div>
 
-      {/* 전화번호 입력 필드 추가 */}
       <div className="mt-4">
         <label htmlFor="phone" className="block">
           전화번호
