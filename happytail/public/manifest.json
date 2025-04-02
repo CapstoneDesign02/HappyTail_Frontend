@@ -1,4 +1,5 @@
 {
+  "id": "https://happytail.vercel.app",
   "name": "HappyTail",
   "short_name": "행꼬",
   "description": "행복한 꼬리",
@@ -24,14 +25,12 @@
     {
       "src": "/img/screenshot-mobile.png",
       "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow"
+      "type": "image/png"
     },
     {
       "src": "/img/screenshot-desktop.png",
       "sizes": "1920x1080",
-      "type": "image/png",
-      "form_factor": "wide"
+      "type": "image/png"
     }
   ]
 }

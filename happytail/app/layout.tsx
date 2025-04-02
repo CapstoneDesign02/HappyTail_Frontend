@@ -34,7 +34,12 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
 
         {/* Favicon 설정 (일반 브라우저용) */}
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/img/logo192.png"
+        />
 
         {/* PWA 아이콘 설정 */}
         <link rel="apple-touch-icon" sizes="192x192" href="/img/logo192.png" />
