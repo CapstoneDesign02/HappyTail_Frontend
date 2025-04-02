@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import InstallPWAButton from "./Button";
 
 // BeforeInstallPromptEvent 타입 정의
 interface BeforeInstallPromptEvent extends Event {
@@ -120,6 +121,8 @@ const WebPage: React.FC = () => {
             </div>
           </div>
         </button>
+
+        <InstallPWAButton />
 
         {/* 카카오 로그인 버튼 */}
         <button
