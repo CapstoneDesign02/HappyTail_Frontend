@@ -30,8 +30,7 @@ const UserProfilePage: React.FC = () => {
       return data;
     };
     fetchProfile();
-  }),
-    [];
+  }, []);
 
   // 백엔드에서 사용자 데이터 가져오기
   useEffect(() => {
