@@ -4,22 +4,33 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+// BeforeInstallPromptEvent 타입 정의
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => void;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
 const WebPage: React.FC = () => {
   const router = useRouter();
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
+    const handleBeforeInstallPrompt = (e: Event) => {
+      const event = e as BeforeInstallPromptEvent;
+      event.preventDefault();
+      setDeferredPrompt(event);
     };
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt as EventListener
+    );
 
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
-        handleBeforeInstallPrompt
+        handleBeforeInstallPrompt as EventListener
       );
     };
   }, []);

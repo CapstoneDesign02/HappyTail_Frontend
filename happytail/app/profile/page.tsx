@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { joinAPI } from "../join/joinAPI";
 import { getProfile } from "./api/profileAPI";
 
 interface UserProfile {
