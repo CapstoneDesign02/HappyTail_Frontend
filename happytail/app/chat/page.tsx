@@ -17,18 +17,18 @@ interface ChatProps {
   chatRoomId: string;
 }
 
-export function Chat({ chatRoomId }: ChatProps) {
+export default function ChatPage({ chatRoomId }: ChatProps) {
+  // ✅ default export 추가
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
 
-  // 채팅 메시지 불러오기
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axiosInstance.get(
           `/api/chat/messages/${chatRoomId}`
         );
-        setMessages(response.data); // 응답 데이터를 메시지 배열로 설정
+        setMessages(response.data);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       }
@@ -36,20 +36,16 @@ export function Chat({ chatRoomId }: ChatProps) {
     fetchMessages();
   }, [chatRoomId]);
 
-  // 메시지 전송
   const sendMessage = async () => {
     if (!message.trim()) return;
 
-    const newMessage = { chatRoomId: "123", receiverId: "user123", content: message };
+    const newMessage = { chatRoomId, receiverId: "user123", content: message };
+    const response = await axiosInstance.post(`/api/chat/send`, newMessage);
 
-    const response = await axiosInstance.post(`/api/chat/send`, newMessage );
-
-    const data = response.data;
-    setMessages((prevMessages) => [...prevMessages, data]); // 새로운 메시지를 기존 메시지 목록에 추가
-    setMessage(""); // 입력란 초기화
+    setMessages((prevMessages) => [...prevMessages, response.data]);
+    setMessage("");
   };
 
-  // 메시지 입력 값 변경
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
