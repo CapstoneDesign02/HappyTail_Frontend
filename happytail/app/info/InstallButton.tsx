@@ -29,7 +29,7 @@ const InstallPWAButton: React.FC = () => {
 
   const handleInstallPWA = async () => {
     if (!deferredPrompt) {
-      alert("PWA 설치가 지원되지 않는 환경입니다.");
+      alert("이미 다운로드 된 앱입니다.");
       return;
     }
     deferredPrompt.prompt();

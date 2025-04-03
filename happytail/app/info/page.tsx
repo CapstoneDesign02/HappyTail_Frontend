@@ -3,63 +3,10 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import InstallPWAButton from "./Button";
-
-// BeforeInstallPromptEvent 타입 정의
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => void;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
+import InstallPWAButton from "./InstallButton";
 
 const WebPage: React.FC = () => {
   const router = useRouter();
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
-
-  useEffect(() => {
-    // PWA 설치 이벤트 핸들링
-    const handleBeforeInstallPrompt = (e: Event) => {
-      const event = e as BeforeInstallPromptEvent;
-      event.preventDefault();
-      setDeferredPrompt(event);
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-    };
-  }, []);
-
-  // ✅ Service Worker 등록
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then(() => console.log("✅ Service Worker registered!"))
-        .catch((err) =>
-          console.error("❌ Service Worker registration failed:", err)
-        );
-    }
-  }, []);
-
-  const handleInstallPWA = async () => {
-    if (!deferredPrompt) {
-      alert("PWA 설치가 지원되지 않는 환경입니다.");
-      return;
-    }
-    deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
-    if (choiceResult.outcome === "accepted") {
-      console.log("사용자가 PWA 설치를 수락했습니다.");
-    } else {
-      console.log("사용자가 PWA 설치를 거부했습니다.");
-    }
-    setDeferredPrompt(null);
-  };
 
   const KakaoLogin = () => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URI}&response_type=code`;
@@ -108,19 +55,6 @@ const WebPage: React.FC = () => {
             행복한 꼬리
           </div>
         </div>
-
-        {/* PWA 다운로드 버튼 */}
-        <button
-          className="mt-6 md:mt-8 w-full max-w-[400px] h-12 sm:h-14 md:h-16 justify-start relative"
-          onClick={handleInstallPWA}
-        >
-          <div className="absolute inset-0 bg-yellow-400 rounded-2xl blur-md"></div>
-          <div className="absolute inset-0 bg-white rounded-2xl flex items-center justify-center">
-            <div className="text-black text-opacity-80 text-lg sm:text-xl md:text-2xl font-bold font-['NanumSquareRound']">
-              앱 다운로드
-            </div>
-          </div>
-        </button>
 
         <InstallPWAButton />
 
