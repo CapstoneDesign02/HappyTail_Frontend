@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import InstallPWAButton from "./InstallButton";
+import ImageUploader from "./ImageUploader";
 
 const WebPage: React.FC = () => {
   const router = useRouter();
@@ -69,7 +70,13 @@ const WebPage: React.FC = () => {
               카카오로 시작하기
             </div>
           </div>
+          sdfsf
         </button>
+
+        <div>
+          <h1>이미지 업로드 테스트</h1>
+          <ImageUploader />
+        </div>
       </div>
     </div>
   );
