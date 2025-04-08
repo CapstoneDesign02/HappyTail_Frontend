@@ -22,7 +22,7 @@ function LoginCallbackContent() {
         if (data.isLogin) {
           if (data.token) {
             setCookie("token", data.token);
-            router.push("/");
+            router.push("/profile");
           } else {
             console.error("❌ 토큰이 없습니다.");
           }

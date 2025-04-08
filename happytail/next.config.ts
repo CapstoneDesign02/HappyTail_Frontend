@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     domains: ["localhost", "happytail.vercel.app"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "happytail-uploaded-files.s3.ap-northeast-2.amazonaws.com",
+        pathname: "/**",
+      },
+    ],
   },
 };
 
