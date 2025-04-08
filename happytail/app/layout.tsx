@@ -31,7 +31,7 @@ export default function RootLayout({
       <head>
         {/* PWA 설정 */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#ffffff" />
 
         {/* Favicon 설정 (일반 브라우저용) */}
         <link
