@@ -9,6 +9,11 @@ import ImageUploader from "../common/ImageUploader";
 import { FiCheck, FiSettings } from "react-icons/fi";
 import { checkNicknameAPI } from "../join/joinAPI";
 
+interface File {
+  id: number;
+  url: string;
+}
+
 interface UserProfile {
   id: number;
   nickname: string;
@@ -19,7 +24,7 @@ interface UserProfile {
   phone: string;
   address: string;
   email: string;
-  files: any[];
+  files: File[];
 }
 
 const UserProfilePage: React.FC = () => {
@@ -59,7 +64,7 @@ const UserProfilePage: React.FC = () => {
         }
       }
 
-      const res = await updateProfile({
+      await updateProfile({
         nickname: editedUser.nickname,
         address: editedUser.address,
         phone: editedUser.phone,
