@@ -15,7 +15,6 @@ export default function ImageUploader({
 }: ImageUploaderProps) {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [fileIds, setFileIds] = useState<number[] | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFiles(e.target.files);
@@ -35,7 +34,6 @@ export default function ImageUploader({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      setFileIds(res.data); // 내부 상태 저장 (선택사항)
       onUploadSuccess(res.data); // 부모에게 전달!
     } catch (err) {
       console.error("업로드 실패:", err);
@@ -43,8 +41,6 @@ export default function ImageUploader({
       setUploading(false);
     }
   };
-
-  // ... return 부분은 동일
 
   return (
     <div className="flex flex-col items-center p-6 bg-white rounded-xl w-full max-w-md mx-auto mb-10">
