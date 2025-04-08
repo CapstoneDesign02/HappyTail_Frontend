@@ -33,6 +33,7 @@ export default function ImageUploader({
       const res = await axiosInstance.post("/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("업로드 성공:", res.data);
 
       onUploadSuccess(res.data); // 부모에게 전달!
     } catch (err) {
@@ -65,7 +66,7 @@ export default function ImageUploader({
 
       <button
         onClick={handleUpload}
-        disabled={uploading || selectedFiles !== null}
+        disabled={uploading}
         className="px-6 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition disabled:bg-gray-300"
       >
         {selectedFiles ? "이미지 선택 완료" : "이미지 수정"}
