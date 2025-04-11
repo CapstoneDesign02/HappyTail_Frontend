@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { checkNicknameAPI, joinAPI } from "./joinAPI";
 import { OCRmockdata } from "./mockData";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -49,7 +49,8 @@ export default function JoinPage() {
       } else {
         alert("OCR 실패: " + data.error);
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("OCR 처리 오류:", error);
       alert("서버 오류");
     } finally {
       setLoading(false);
@@ -63,7 +64,8 @@ export default function JoinPage() {
       const data = await checkNicknameAPI(nickname);
       setIsNicknameAvailable(!data.isDuplicate);
       if (data.isDuplicate) alert("이미 사용 중인 닉네임입니다.");
-    } catch (err) {
+    } catch (error) {
+      console.error("닉네임 중복 확인 오류:", error);
       alert("서버 오류");
     }
   };

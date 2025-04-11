@@ -1,35 +1,43 @@
-// app/pets/page.tsx
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface Pet {
-  id: string;
-  name: string;
-  age: string;
-  personality: string;
-  feature: string;
-  etc: string;
-  imageUrl: string;
-}
+import { AnimalInfo, getAnimalInfo, deleteAnimalInfo } from "./api/PetAPI";
 
 export default function PetListPage() {
-  const [pets, setPets] = useState<Pet[]>([]);
+  const [pets, setPets] = useState<AnimalInfo[]>([]);
 
   useEffect(() => {
-    fetch("/api/pets")
-      .then((res) => res.json())
-      .then(setPets);
+    fetchPets();
   }, []);
+
+  const fetchPets = async () => {
+    try {
+      const data = await getAnimalInfo();
+      setPets(data);
+    } catch (err) {
+      console.error("❌ 동물 정보를 불러오는 데 실패했습니다:", err);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+    try {
+      await deleteAnimalInfo(id);
+      setPets((prev) => prev.filter((pet) => pet.id !== id)); // UI에서 바로 제거
+    } catch (err) {
+      alert("삭제에 실패했습니다.");
+    }
+  };
 
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-xl font-bold mb-4">내 반려동물 관리</h1>
+
       {pets.map((pet) => (
         <div key={pet.id} className="border p-4 rounded-md mb-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <img
-              src={pet.imageUrl}
+              src={pet.files?.[0]?.url || "/img/default_pet.avif"}
               alt={pet.name}
               className="w-24 h-24 object-cover rounded-md"
             />
@@ -38,24 +46,30 @@ export default function PetListPage() {
                 <strong>이름:</strong> {pet.name}
               </p>
               <p>
-                <strong>나이:</strong> {pet.age}
+                <strong>타입:</strong> {pet.type}
               </p>
               <p>
-                <strong>성격:</strong> {pet.personality}
+                <strong>품종:</strong> {pet.breed}
               </p>
               <p>
-                <strong>특징:</strong> {pet.feature}
-              </p>
-              <p>
-                <strong>기타:</strong> {pet.etc}
+                <strong>추가정보:</strong> {pet.additionalInfo}
               </p>
             </div>
-            <Link href={`/pets/${pet.id}/edit`}>
-              <button className="text-yellow-500 hover:underline">✏️</button>
-            </Link>
+            <div className="flex flex-row items-center gap-2">
+              <Link href={`/pets/${pet.id}/edit`}>
+                <button className="text-yellow-500 hover:underline">✏️</button>
+              </Link>
+              <button
+                onClick={() => handleDelete(pet.id!)}
+                className="text-red-500 hover:underline"
+              >
+                🗑️
+              </button>
+            </div>
           </div>
         </div>
       ))}
+
       <Link href="/pets/new">
         <div className="mt-6 border-2 border-yellow-300 rounded-xl p-6 flex flex-col items-center hover:bg-yellow-50 cursor-pointer">
           <div className="text-4xl font-bold text-yellow-400">+</div>

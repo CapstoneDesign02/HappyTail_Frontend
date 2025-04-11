@@ -8,11 +8,7 @@ import { formatPhoneNumber } from "../common/formatPhonenumber";
 import ImageUploader from "../common/ImageUploader";
 import { FiCheck, FiSettings } from "react-icons/fi";
 import { checkNicknameAPI } from "../join/joinAPI";
-
-interface File {
-  id: number;
-  url: string;
-}
+import { File } from "../common/fileType";
 
 interface UserProfile {
   id: number;
@@ -55,7 +51,6 @@ const UserProfilePage: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // 닉네임이 기존과 다르면 중복 체크 수행
       if (editedUser.nickname && editedUser.nickname !== user?.nickname) {
         const check = await checkNicknameAPI(editedUser.nickname);
         if (check.isDuplicate) {

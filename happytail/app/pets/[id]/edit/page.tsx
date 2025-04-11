@@ -1,81 +1,96 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+// "use client";
+// import { useEffect, useState } from "react";
+// import { useParams, useRouter } from "next/navigation";
+// import { AnimalInfo, updateAnimalInfo } from "../../api/PetAPI";
 
-export default function EditPetPage() {
-  const { id } = useParams();
-  const router = useRouter();
-  const [form, setForm] = useState<any>(null);
+// export default function EditPetPage() {
+//   const { id } = useParams();
+//   const router = useRouter();
+//   const [form, setForm] = useState<AnimalInfo | null>(null);
 
-  useEffect(() => {
-    fetch(`/api/pets/${id}`)
-      .then((res) => res.json())
-      .then(setForm);
-  }, [id]);
+//   useEffect(() => {
+//     const fetchPet = async () => {
+//       try {
+//         const res = await fetch(`/api/pets/${id}`);
+//         const data = await res.json();
+//         setForm(data);
+//       } catch (err) {
+//         console.error("❌ Failed to load pet data:", err);
+//       }
+//     };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev: any) => ({ ...prev, [name]: value }));
-  };
+//     fetchPet();
+//   }, [id]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setForm((prev: any) => ({ ...prev, image: e.target.files![0] }));
-    }
-  };
+//   const handleChange = (
+//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+//   ) => {
+//     const { name, value } = e.target;
+//     setForm((prev) =>
+//       prev
+//         ? {
+//             ...prev,
+//             [name]: name === "type" ? Number(value) : value,
+//           }
+//         : null
+//     );
+//   };
 
-  const handleSubmit = async () => {
-    const data = new FormData();
-    if (form.image instanceof File) {
-      data.append("image", form.image);
-    }
-    data.append("name", form.name);
-    data.append("age", form.age);
-    data.append("personality", form.personality);
-    data.append("feature", form.feature);
-    data.append("etc", form.etc);
+//   const handleSubmit = async () => {
+//     if (!form) return;
 
-    await fetch(`/api/pets/${id}`, {
-      method: "PUT",
-      body: data,
-    });
+//     try {
+//       await updateAnimalInfo(Number(id), {
+//         name: form.name,
+//         type: form.type,
+//         breed: form.breed,
+//         additionalInfo: form.additionalInfo,
+//       });
 
-    router.push("/pets");
-  };
+//       router.push("/pets");
+//     } catch (err) {
+//       alert("동물 정보 수정에 실패했습니다.");
+//     }
+//   };
 
-  if (!form) return <div>로딩 중...</div>;
+//   if (!form) return <div>로딩 중...</div>;
 
-  return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">내 반려동물 관리</h1>
+//   return (
+//     <div className="p-4 max-w-xl mx-auto">
+//       <h1 className="text-xl font-bold mb-4">반려동물 정보 수정</h1>
 
-      <label className="block mb-2">
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        <img
-          src={form.imageUrl}
-          alt="pet"
-          className="w-full h-40 object-cover mt-2"
-        />
-      </label>
+//       {(
+//         [
+//           ["name", "이름", "text"],
+//           ["type", "동물 타입 (숫자)", "number"],
+//           ["breed", "품종", "text"],
+//         ] as const
+//       ).map(([key, label, type]) => (
+//         <input
+//           key={key}
+//           type={type}
+//           name={key}
+//           placeholder={label}
+//           value={form[key]?.toString() || ""}
+//           onChange={handleChange}
+//           className="w-full border p-2 my-2 rounded"
+//         />
+//       ))}
 
-      {["name", "age", "personality", "feature", "etc"].map((key) => (
-        <input
-          key={key}
-          type="text"
-          name={key}
-          placeholder={key}
-          value={form[key]}
-          onChange={handleChange}
-          className="w-full border p-2 my-2 rounded"
-        />
-      ))}
+//       <textarea
+//         name="additionalInfo"
+//         placeholder="추가 정보"
+//         value={form.additionalInfo || ""}
+//         onChange={handleChange}
+//         className="w-full border p-2 my-2 rounded h-24 resize-none"
+//       />
 
-      <button
-        onClick={handleSubmit}
-        className="w-full bg-yellow-300 p-2 rounded mt-4 font-semibold"
-      >
-        수정 완료
-      </button>
-    </div>
-  );
-}
+//       <button
+//         onClick={handleSubmit}
+//         className="w-full bg-yellow-300 p-2 rounded mt-4 font-semibold"
+//       >
+//         수정 완료
+//       </button>
+//     </div>
+//   );
+// }
