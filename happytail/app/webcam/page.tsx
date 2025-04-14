@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import io from "socket.io-client";
-import { Socket } from "socket.io-client";
+"use client";
 
-const SERVER_URL = "http://localhost:5000";
+import React, { useState, useEffect, useRef } from "react";
+import io, { Socket } from "socket.io-client";  // Socket을 타입으로 직접 import\
+
+const SERVER_URL = "http://13.125.160.14";
 const DEFAULT_ROOM_ID = "cctv-stream";
 
-function App() {
-  const [socket, setSocket] = useState<Socket | null>(null);
+function Webcam() {
+  const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
   const [joined, setJoined] = useState<boolean>(false);
   const [peers, setPeers] = useState<string[]>([]);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -112,7 +113,7 @@ function App() {
       setCameraStatus("카메라 연결됨");
       setLocalStream(stream);
       
-      // 카메라 연결 후 방 참가
+      // 카메라 연결 후 방 참가9
       if (!joined && socket) {
         joinRoom();
       }
@@ -231,4 +232,4 @@ function App() {
   );
 }
 
-export default App;
+export default Webcam;
