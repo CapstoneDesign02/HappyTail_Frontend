@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Image from "next/image";
 
 export default function Step1() {
   const router = useRouter();
@@ -37,21 +36,23 @@ export default function Step1() {
   };
 
   return (
-    <div className="w-[1080px] min-h-[2060px] bg-white mx-auto overflow-hidden p-10">
+    <div className="w-full max-w-4xl min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 1. 뒤로가기 + 회원가입 */}
       <div className="flex items-center mb-12">
-        <div className="size-14 bg-white shadow-md flex items-center justify-center">
-          <span className="text-black text-4xl font-extrabold font-['NanumSquareRound']">&lt;</span>
+        <div className="size-12 sm:size-14 bg-white shadow-md flex items-center justify-center">
+          <span className="text-black text-3xl sm:text-4xl font-extrabold font-['NanumSquareRound']">
+            &lt;
+          </span>
         </div>
-        <div className="ml-4 text-4xl font-extrabold text-black font-['NanumSquareRound']">
+        <div className="ml-4 text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
           회원가입
         </div>
       </div>
 
       {/* 2. 로고 + 행복한 꼬리 */}
-      <div className="flex items-center justify-center mb-12">
-        <img src="/img/logo192.png" alt="로고" className="w-24 h-24" />
-        <div className="ml-6 text-6xl font-bold text-amber-800 font-['Y_Onepick_TTF']">
+      <div className="flex flex-col items-center mb-12">
+        <img src="/img/logo192.png" alt="로고" className="w-20 h-20 sm:w-24 sm:h-24 mb-4" />
+        <div className="text-5xl sm:text-6xl font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
           행복한 꼬리
         </div>
       </div>
@@ -61,7 +62,7 @@ export default function Step1() {
 
       {/* 4. 신분증 인증 제목 */}
       <div className="flex justify-center mb-8">
-        <div className="text-4xl font-normal text-black font-['NanumSquareRound']">
+        <div className="text-3xl sm:text-4xl font-normal text-black font-['NanumSquareRound']">
           신분증 인증
         </div>
       </div>
@@ -72,7 +73,7 @@ export default function Step1() {
           type="file"
           accept="image/*"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          className="text-black border border-gray-300 p-4 rounded-md w-[600px] text-center text-lg font-['NanumSquareRound']"
+          className="text-black border border-gray-300 p-4 rounded-md w-full max-w-[600px] text-center text-lg font-['NanumSquareRound']"
         />
       </div>
 
@@ -80,7 +81,7 @@ export default function Step1() {
       <div className="flex flex-col items-center">
         <button
           onClick={handleUpload}
-          className="w-[600px] h-20 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-2xl font-['NanumSquareRound'] transition-all duration-300"
+          className="w-full max-w-[600px] h-16 sm:h-20 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-xl sm:text-2xl font-['NanumSquareRound'] transition-all duration-300"
           disabled={loading}
         >
           {loading ? "처리 중..." : "OCR 인증하기"}
