@@ -1,183 +1,223 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { getAllPosts } from "./api/postAPI";
+import { PostInfo } from "./api/postAPI";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function post() {
+const mockPosts: PostInfo[] = [
+  {
+    id: 1,
+    title: "강아지 올데이 케어",
+    content: "소형견ㆍ중형견 간병 가능",
+    availableAnimals: "강아지",
+    price: 20000,
+    files: [{ id: 1, url: "/images/sample.jpg" }],
+    user: {
+      id: 1,
+      username: "testuser",
+      email: "test@example.com",
+      nickname: "제니제니",
+      gender: 1,
+      address: "서울시",
+      phone: "01012345678",
+      ratingAvg: 4.7,
+      points: 100,
+      file: { id: 1, url: "/images/profile.jpg" },
+    },
+    availableTimes: null,
+  },
+];
+
+export default function PostListStyledPage() {
+  const [posts, setPosts] = useState<PostInfo[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<number | null>(null);
-  const [weeklyTime, setWeeklyTime] = useState<Record<string, string[]>>({
-    일: [""],
-    월: [""],
-    화: [""],
-    수: [""],
-    목: [""],
-    금: [""],
-    토: [""],
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await getAllPosts();
+        if (Array.isArray(data)) {
+          setPosts(data);
+        } else {
+          console.error("Unexpected response:", data);
+          setPosts(mockPosts);
+        }
+      } catch (error) {
+        console.error("게시글 불러오기 실패", error);
+        setPosts(mockPosts);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  const filteredPosts = posts.filter((post) => {
+    const matchesSearch =
+      post.title.includes(searchTerm) ||
+      post.content.includes(searchTerm) ||
+      post.availableAnimals.includes(searchTerm);
+    const matchesFilter = activeFilter
+      ? post.availableAnimals.includes(activeFilter)
+      : true;
+    return matchesSearch && matchesFilter;
   });
 
-  const handleGoBack = () => router.back();
+  const filterItems = [
+    { label: "강아지", icon: "/img/icons/dog.png" },
+    { label: "고양이", icon: "/img/icons/cat.png" },
+    { label: "내 주변", icon: "/img/icons/around.png" },
+    { label: "기간", icon: "/img/icons/date.png" },
+  ];
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setSelectedImage(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  };
-
-  const handleTimeChange = (day: string, idx: number, value: string) => {
-    const updated = [...weeklyTime[day]];
-    updated[idx] = value;
-    setWeeklyTime({ ...weeklyTime, [day]: updated });
-  };
-
-  const addTimeSlot = (day: string) => {
-    setWeeklyTime({ ...weeklyTime, [day]: [...weeklyTime[day], ""] });
-  };
-
-  const handleDateClick = (day: number) => {
-    setSelectedDate(day);
-  };
-
-  const handleSubmit = () => {
-    // 여기에 제출 로직 (예: API 호출)
-    alert("제출 완료");
-  };
+  const navItems = [
+    { icon: "/img/icons/reservation.png", route: "/reservation" },
+    { icon: "/img/icons/chat.png", route: "/chat" },
+    { icon: "/img/icons/home.png", route: "/post" },
+    { icon: "/img/icons/diary.png", route: "/diary" },
+    { icon: "/img/icons/profile.png", route: "/profile" },
+  ];
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-white text-black">
-      <div className="w-full max-w-xl px-6 pb-8">
-        <div className="w-full flex items-center justify-between py-6">
-          {/* 뒤로가기 */}
-          <div className="flex items-center">
-            <button onClick={handleGoBack}>
-              <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
-                <span className="text-3xl font-extrabold">{"<"}</span>
-              </div>
+    <div className="min-w-[320px] flex flex-col items-center w-full min-h-screen bg-white pb-24 px-4 max-w-screen-sm mx-auto">
+      {/* 슬라이딩 메뉴 */}
+      {isMenuOpen && (
+        <div className="text-black fixed inset-0 z-50 flex">
+          <div className="w-64 bg-white shadow-lg p-6 space-y-4">
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="text-right w-full text-gray-500"
+            >
+              ✕ 닫기
             </button>
-            <h1 className="text-2xl font-extrabold">개인 정보 관리</h1>
+            <ul className="space-y-2">
+              <li className="text-lg font-semibold cursor-pointer">
+                내 프로필
+              </li>
+              <li className="text-lg font-semibold cursor-pointer">
+                예약 목록
+              </li>
+              <li className="text-lg font-semibold cursor-pointer">채팅 목록</li>
+              <li className="text-lg font-semibold cursor-pointer">로그아웃</li>
+            </ul>
           </div>
+          <div
+            className="flex-1 bg-black bg-opacity-40"
+            onClick={() => setIsMenuOpen(false)}
+          />
         </div>
-        <div className="w-full h-px bg-yellow-400 my-6"></div>
-        
+      )}
 
-        {/* 이미지 업로드 */}
-        <div className="mb-6">
-          {previewUrl ? (
+      {/* 헤더 */}
+      <header className="w-full h-20 flex items-center justify-between px-4 bg-amber-100 rounded-b-xl">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="w-10 h-10 flex items-center justify-center"
+          >
             <Image
-              src={previewUrl}
-              alt="preview"
-              width={150}
-              height={150}
-              className="rounded-[20px] border border-black/30"
+              src="/img/icons/menu.png"
+              alt="menu"
+              width={60}
+              height={60}
             />
-          ) : (
-            <div className="w-36 h-36 border border-black/30 rounded-[20px] flex items-center justify-center text-gray-400">
-              미리보기
-            </div>
-          )}
+          </button>
+          <span className="font-['Y_Onepick_TTF'] text-nowrap pr-4 text-2xl font-bold text-amber-800">
+            행복한 꼬리
+          </span>
+        </div>
+        <div className="relative w-3/5">
           <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="mt-2"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full rounded-full pl-10 pr-4 py-2 bg-white text-sm border text-black border-gray-300"
+            placeholder="검색어를 입력하세요"
+          />
+          <Image
+            src="/img/icons/search.png"
+            alt="search"
+            width={20}
+            height={20}
+            className="absolute left-2.5 top-1/2 transform -translate-y-1/2"
           />
         </div>
-        
+      </header>
 
-        {/* 제목 */}
-        <div className="mb-4">
-          <label className="text-3xl font-bold">제목</label>
-          <input
-            className="w-full h-16 border border-black/30 rounded px-4 text-2xl mt-2"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="제목"
-          />
-        </div>
-
-        {/* 설명 */}
-        <div className="mb-6">
-          <label className="text-3xl font-bold">자세한 설명</label>
-          <textarea
-            className="w-full h-[300px] border border-black/30 rounded px-4 py-2 text-xl mt-2"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="설명"
-          />
-        </div>
-
-        <div className="w-full h-px bg-yellow-400 my-6"></div>
-
-        {/* 날짜 선택 */}
-        <div className="mb-6">
-          <div className="text-3xl font-bold mb-4">날짜와 시간</div>
-          <div className="grid grid-cols-7 gap-2 text-center text-xl font-bold">
-            {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-              <div key={day}>{day}</div>
-            ))}
-            {[...Array(31).keys()].map((d) => {
-              const day = d + 1;
-              return (
-                <button
-                  key={day}
-                  className={`p-2 rounded-full ${
-                    selectedDate === day
-                      ? "bg-indigo-400 text-white"
-                      : "text-black/50"
-                  }`}
-                  onClick={() => handleDateClick(day)}
-                >
-                  {day}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="w-full h-px bg-yellow-400 my-6"></div>
-
-        {/* 요일 별 시간 */}
-        <div className="mb-6">
-          <div className="text-3xl font-bold mb-4">요일 별 시간</div>
-          {Object.entries(weeklyTime).map(([day, times]) => (
-            <div key={day} className="mb-4">
-              <div className="flex items-center mb-2">
-                <span className="text-2xl font-bold w-10">{day}</span>
-              </div>
-              {times.map((t, idx) => (
-                <input
-                  key={idx}
-                  className="w-full max-w-[400px] h-12 border border-black/30 rounded px-4 text-lg mb-2"
-                  placeholder="00:00 ~ 00:00"
-                  value={t}
-                  onChange={(e) => handleTimeChange(day, idx, e.target.value)}
-                />
-              ))}
-              <button
-                onClick={() => addTimeSlot(day)}
-                className="ml-2 px-3 py-1 rounded-full bg-yellow-100 border shadow text-2xl text-amber-500"
-              >
-                +
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* 제출 */}
-        <button
-          onClick={handleSubmit}
-          className="w-full h-16 bg-yellow-400 text-white text-2xl font-bold rounded hover:bg-yellow-500 transition"
-        >
-          글 등록하기
-        </button>
+      {/* 토글 + 필터 메뉴 한 줄 */}
+      <div className="w-full grid grid-cols-4 gap-2 py-4 text-center">
+        {filterItems.map(({ label, icon }) => (
+          <button
+            key={label}
+            onClick={() =>
+              setActiveFilter(activeFilter === label ? null : label)
+            }
+            className={`flex flex-col items-center px-2 py-1 rounded-xl ${
+              activeFilter === label ? "bg-yellow-300" : "bg-transparent"
+            }`}
+          >
+            <Image
+              src={icon}
+              alt={label}
+              width={40}
+              height={40}
+              className={`mb-1 ${
+                activeFilter === label ? "brightness-0 invert" : ""
+              }`}
+            />
+          </button>
+        ))}
       </div>
+
+      {/* 최근 목록 */}
+      <div className="w-full">
+        <h2 className="text-black text-lg font-bold mb-2">최근 목록</h2>
+        {filteredPosts.length === 0 && (
+          <div className="text-gray-500 text-center py-8">
+            게시글이 없습니다.
+          </div>
+        )}
+        {filteredPosts.map((post) => (
+          <div
+            key={post.id}
+            onClick={() => router.push(`/post/${post.id}`)}
+            className="flex items-center w-full h-28 rounded-3xl bg-white/70 mb-4 overflow-hidden shadow cursor-pointer"
+          >
+            <img
+              src={post.user?.file?.url || "/default-user.png"}
+              alt="profile"
+              className="w-20 h-20 rounded-full ml-4 object-cover"
+            />
+            <div className="flex-1 ml-4 mr-4">
+              <div className="text-black text-base font-bold">
+                {post.user?.nickname || "제니제니"}
+              </div>
+              <div className="text-sm text-gray-700 truncate">
+                {post.title}{" "}
+                {post.availableAnimals && `ㆍ${post.availableAnimals}`}
+              </div>
+              <div className="text-sm text-gray-500">
+                ⭐ 4.7 | 5,635 건 완료
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 하단 네비게이션 */}
+      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+        {navItems.map(({ icon, route }, i) => (
+          <button
+            key={i}
+            onClick={() => router.push(route)}
+            className="w-14 h-14 flex items-center justify-center"
+          >
+            <Image src={icon} alt="nav-icon" width={60} height={60} />
+          </button>
+        ))}
+      </footer>
     </div>
   );
 }
