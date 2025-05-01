@@ -26,25 +26,13 @@ export interface UpdateReservationStatusForm {
 }
 
 // ✅ 내가 신청한 예약 목록 조회
-export const getMyReservations = async (): Promise<ReservationInfo[]> => {
-  try {
-    const response = await axiosInstance.get("/reservation");
-    return response.data;
-  } catch (error) {
-    console.error("❌ Failed to fetch my reservations:", error);
-    throw error;
-  }
+export const getMyReservations = async (): Promise<ReservationInfo> => {
+  return await axiosInstance.get("/reservation");
 };
 
 // ✅ 내가 받은 예약 목록 조회 (파트너 입장)
-export const getPartnerReservations = async (): Promise<ReservationInfo[]> => {
-  try {
-    const response = await axiosInstance.get("/reservation/partner");
-    return response.data;
-  } catch (error) {
-    console.error("❌ Failed to fetch partner reservations:", error);
-    throw error;
-  }
+export const getPartnerReservations = async (): Promise<ReservationInfo> => {
+  return await axiosInstance.get("/reservation/partner");
 };
 
 // ✅ 예약 신청하기

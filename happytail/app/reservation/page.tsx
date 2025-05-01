@@ -12,7 +12,7 @@ import {
 export default function ReservationManagePage() {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<"my" | "partner">("my");
-  const [reservations, setReservations] = useState<ReservationInfo[]>([]);
+  const [reservation, setReservation] = useState<ReservationInfo | null>(null);
 
   useEffect(() => {
     fetchReservations();
@@ -22,10 +22,10 @@ export default function ReservationManagePage() {
     try {
       if (selectedTab === "my") {
         const data = await getMyReservations();
-        setReservations(data);
+        setReservation(data);
       } else {
         const data = await getPartnerReservations();
-        setReservations(data);
+        setReservation(data);
       }
     } catch (error) {
       console.error("❌ 예약 정보 불러오기 실패:", error);
@@ -55,6 +55,28 @@ export default function ReservationManagePage() {
   };
 
   const handleGoBack = () => router.back();
+
+  // {목업 데이터}
+  const useMock = true;
+
+  const mockReservation: ReservationInfo = {
+    id: 999,
+    partnerPhotoUrl: "https://placehold.co/150x150",
+    startDate: "2024-06-01",
+    endDate: "2024-06-01",
+    startTime: "10:00",
+    endTime: "12:00",
+    isAccepted: 0,
+  };
+
+  useEffect(() => {
+    if (useMock) {
+      setReservation(mockReservation);
+    } else {
+      fetchReservations();
+    }
+  }, [selectedTab]);
+  // 목업데이터 끝
 
   return (
     <div className="w-full max-w-[1080px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-8">
@@ -102,60 +124,53 @@ export default function ReservationManagePage() {
       </div>
 
       {/* 예약 목록 */}
-      {reservations.length === 0 ? (
+      {!reservation ? (
         <div className="text-center text-lg sm:text-2xl text-gray-500 mt-20">
           예약 내역이 없습니다.
         </div>
       ) : (
-        reservations.map((rsv) => (
-          <div key={rsv.id} className="relative mb-16">
-            {/* 예약 카드 */}
-            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
-              {/* 프로필 이미지 */}
-              <img
-                src={rsv.partnerPhotoUrl}
-                alt="프로필"
-                className="w-24 h-24 sm:w-40 sm:h-40 rounded-md"
-              />
+        <div className="relative mb-16">
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
+            <img
+              src={reservation.partnerPhotoUrl}
+              alt="프로필"
+              className="w-24 h-24 sm:w-40 sm:h-40 rounded-md"
+            />
 
-              {/* 예약 정보 */}
-              <div className="flex flex-col gap-4 w-full">
-                {/* 날짜 시간 */}
-                <div className="text-lg sm:text-2xl font-extrabold font-['NanumSquareRound'] text-black">
-                  {rsv.startDate} {rsv.startTime} ~ {rsv.endDate} {rsv.endTime}
-                </div>
-
-                {/* 상태 표시 */}
-                <div className="text-base sm:text-xl font-normal text-black">
-                  상태:{" "}
-                  {rsv.isAccepted === 0
-                    ? "대기 중"
-                    : rsv.isAccepted === 1
-                    ? "수락됨"
-                    : "거절됨"}
-                </div>
-
-                {/* 수락/거절 버튼 (파트너 탭에서만, 대기 상태일 때만) */}
-                {selectedTab === "partner" && rsv.isAccepted === 0 && (
-                  <div className="flex gap-4 mt-4">
-                    <button
-                      onClick={() => handleAccept(rsv.id)}
-                      className="flex-1 h-12 sm:h-16 bg-green-400 hover:bg-green-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
-                    >
-                      수락
-                    </button>
-                    <button
-                      onClick={() => handleReject(rsv.id)}
-                      className="flex-1 h-12 sm:h-16 bg-red-400 hover:bg-red-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
-                    >
-                      거절
-                    </button>
-                  </div>
-                )}
+            <div className="flex flex-col gap-4 w-full">
+              <div className="text-lg sm:text-2xl font-extrabold text-black font-['NanumSquareRound']">
+                {reservation.startDate} {reservation.startTime} ~{" "}
+                {reservation.endDate} {reservation.endTime}
               </div>
+
+              <div className="text-base sm:text-xl font-normal text-black">
+                상태:{" "}
+                {reservation.isAccepted === 0
+                  ? "대기 중"
+                  : reservation.isAccepted === 1
+                  ? "수락됨"
+                  : "거절됨"}
+              </div>
+
+              {selectedTab === "partner" && reservation.isAccepted === 0 && (
+                <div className="flex gap-4 mt-4">
+                  <button
+                    onClick={() => handleAccept(reservation.id)}
+                    className="flex-1 h-12 sm:h-16 bg-green-400 hover:bg-green-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
+                  >
+                    수락
+                  </button>
+                  <button
+                    onClick={() => handleReject(reservation.id)}
+                    className="flex-1 h-12 sm:h-16 bg-red-400 hover:bg-red-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
+                  >
+                    거절
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        ))
+        </div>
       )}
     </div>
   );
