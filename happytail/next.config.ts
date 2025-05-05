@@ -4,12 +4,22 @@ import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // 다른 Next.js 설정들...
+  output: "standalone",
+  images: {
+    domains: ["localhost", "happytail.vercel.app"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "happytail-uploaded-files.s3.ap-northeast-2.amazonaws.com",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development", // 개발 환경에서는 PWA 기능 비활성화
+  sw: "sw.js", // 서비스 워커 파일명을 sw.js로 변경
 })(nextConfig);

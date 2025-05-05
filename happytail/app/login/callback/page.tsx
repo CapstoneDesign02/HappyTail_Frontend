@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { setCookie } from "@/app/common/cookie";
 
-export default function LoginCallback() {
+function LoginCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
@@ -17,13 +18,11 @@ export default function LoginCallback() {
           `${process.env.NEXT_PUBLIC_BACKEND_ID}/auth/kakao?code=${code}`
         );
         const data = await response.json();
-        console.log(data);
 
         if (data.isLogin) {
           if (data.token) {
-            console.log(data.token);
-            localStorage.setItem("token", data.token);
-            router.push("/");
+            setCookie("token", data.token);
+            router.push("/profile");
           } else {
             console.error("❌ 토큰이 없습니다.");
           }
@@ -42,5 +41,13 @@ export default function LoginCallback() {
     fetchToken();
   }, [code, router]);
 
-  return <p>로그인 처리 중...</p>;
+  return null; // No UI needed while processing
+}
+
+export default function LoginCallback() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginCallbackContent />
+    </Suspense>
+  );
 }

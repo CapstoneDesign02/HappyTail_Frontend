@@ -14,8 +14,52 @@
   }
 }
 
+@font-face {
+  font-family: "Bold";
+  src: url("/fonts/ONE Mobile Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Light";
+  src: url("/fonts/ONE Mobile Light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Regular";
+  src: url("/fonts/ONE Mobile Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "POP";
+  src: url("/fonts/ONE Mobile POP.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Light", Arial, Helvetica, sans-serif;
+}
+
+.font-Bold {
+  font-family: "Bold", sans-serif;
+}
+
+.font-Regular {
+  font-family: "Regular", sans-serif;
+}
+
+.font-Light {
+  font-family: "Light", sans-serif;
+}
+
+.font-POP {
+  font-family: "POP", sans-serif;
 }
