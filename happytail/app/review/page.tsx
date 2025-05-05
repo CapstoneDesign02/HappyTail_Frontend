@@ -76,9 +76,9 @@ export default function ReviewManagePage() {
   };
 
   return (
-    <div className="w-full max-w-[1080px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full max-w-[1080px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-4">
       {/* 상단 타이틀 */}
-      <div className="flex items-center mb-12">
+      <div className="flex items-center mb-4">
         <button
           onClick={handleGoBack}
           className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
@@ -158,20 +158,25 @@ export default function ReviewManagePage() {
               </div>
 
               {/* 수정 / 삭제 버튼 */}
-              <div className="flex gap-4 mt-4">
-                <button
-                  onClick={() => alert(`수정 페이지 이동 (id: ${review.id})`)}
-                  className="flex-1 h-12 sm:h-16 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
-                >
-                  수정
-                </button>
-                <button
-                  onClick={() => handleDelete(review.id)}
-                  className="flex-1 h-12 sm:h-16 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
-                >
-                  삭제
-                </button>
-              </div>
+<div className="flex gap-4 mt-4">
+  {selectedTab === "written" && (
+    <button
+      onClick={() => alert(`수정 페이지 이동 (id: ${review.id})`)}
+      className="flex-1 h-12 sm:h-16 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all"
+    >
+      수정
+    </button>
+  )}
+  <button
+    onClick={() => handleDelete(review.id)}
+    className={`${
+      selectedTab === "written" ? "flex-1" : "w-full"
+    } h-12 sm:h-16 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-lg sm:text-xl transition-all`}
+  >
+    삭제
+  </button>
+</div>
+
             </div>
           </div>
         </div>

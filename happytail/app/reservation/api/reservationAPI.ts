@@ -26,13 +26,15 @@ export interface UpdateReservationStatusForm {
 }
 
 // ✅ 내가 신청한 예약 목록 조회
-export const getMyReservations = async (): Promise<ReservationInfo> => {
-  return await axiosInstance.get("/reservation");
+export const getMyReservations = async (): Promise<ReservationInfo[]> => {
+  const response = await axiosInstance.get("/reservation");
+  return response.data;
 };
 
 // ✅ 내가 받은 예약 목록 조회 (파트너 입장)
-export const getPartnerReservations = async (): Promise<ReservationInfo> => {
-  return await axiosInstance.get("/reservation/partner");
+export const getPartnerReservations = async (): Promise<ReservationInfo[]> => {
+  const response = await axiosInstance.get("/reservation/partner");
+  return response.data;
 };
 
 // ✅ 예약 신청하기
