@@ -43,9 +43,7 @@ export default function PostListStyledPage() {
         const data = await getAllPosts();
         if (Array.isArray(data)) {
           setPosts(data);
-        } else {
-          console.error("Unexpected response:", data);
-          setPosts(mockPosts);
+          console.log("게시글 불러오기 성공", data);
         }
       } catch (error) {
         console.error("게시글 불러오기 실패", error);
@@ -94,14 +92,33 @@ export default function PostListStyledPage() {
               ✕ 닫기
             </button>
             <ul className="space-y-2">
-              <li className="text-lg font-semibold cursor-pointer">
+              <li
+                className="text-lg font-semibold cursor-pointer"
+                onClick={() => router.push("/profile")}
+              >
                 내 프로필
               </li>
-              <li className="text-lg font-semibold cursor-pointer">
+              <li
+                className="text-lg font-semibold cursor-pointer"
+                onClick={() => router.push("/pets")}
+              >
+                내 반려동물
+              </li>
+              <li
+                className="text-lg font-semibold cursor-pointer"
+                onClick={() => router.push("/reservation")}
+              >
                 예약 목록
               </li>
-              <li className="text-lg font-semibold cursor-pointer">채팅 목록</li>
-              <li className="text-lg font-semibold cursor-pointer">로그아웃</li>
+              <li
+                className="text-lg font-semibold cursor-pointer"
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  router.push("info");
+                }}
+              >
+                로그아웃
+              </li>
             </ul>
           </div>
           <div

@@ -22,13 +22,13 @@ function LoginCallbackContent() {
         if (data.isLogin) {
           if (data.token) {
             setCookie("token", data.token);
-            router.push("/profile");
+            router.push("/post");
           } else {
             console.error("❌ 토큰이 없습니다.");
           }
         } else {
           if (data.email) {
-            router.push(`/join?email=${data.email}`);
+            router.push(`/join/step1?email=${data.email}`);
           } else {
             console.error("❌ 이메일 정보가 없습니다.");
           }

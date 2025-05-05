@@ -8,7 +8,7 @@ export interface AnimalForm {
   name: string;
   type: number; // 1: 강아지, 2: 고양이, 3: 기타
   breed: string;
-  additionalInfo: string;
+  additionalInfo: string | undefined;
   fileIds: number[];
 }
 

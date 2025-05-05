@@ -6,7 +6,7 @@ export default function JoinComplete() {
   const router = useRouter();
 
   const handleGoHome = () => {
-    router.push("/");
+    router.push("/post");
   };
 
   return (
