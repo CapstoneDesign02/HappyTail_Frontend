@@ -24,6 +24,37 @@ interface UserProfile {
 }
 
 const UserProfilePage: React.FC = () => {
+  // const [user, setUser] = useState<UserProfile | null>(null);
+  // const [loading, setLoading] = useState(true);
+  // const [editMode, setEditMode] = useState(false);
+  // const [editedUser, setEditedUser] = useState<Partial<UserProfile>>({});
+  // const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);
+  // const router = useRouter();
+
+  // // ✅ 목업 데이터 추가
+  // const mockUser: UserProfile = {
+  //   id: 1,
+  //   nickname: "행복냥이",
+  //   username: "김고양",
+  //   points: 200,
+  //   gender: 2,
+  //   ssn: "123456-7890123",
+  //   phone: "01012345678",
+  //   address: "서울시 강남구",
+  //   email: "meow@example.com",
+  //   files: [{ id: 1, url: "/img/profile.jpeg" }],
+  // };
+
+  // useEffect(() => {
+  //   // 실제 API 대신 목업 사용
+  //   setUser(mockUser);
+  //   setEditedUser({
+  //     nickname: mockUser.nickname,
+  //     address: mockUser.address,
+  //     phone: mockUser.phone,
+  //   });
+  //   setLoading(false);
+  // }, []);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -85,16 +116,16 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-white text-black">
-      <div className="w-full max-w-xl px-6 pb-8">
-        <div className="w-full flex items-center justify-between py-6">
+    <div className="relative overflow-x-hidden min-w-[320px] flex flex-col items-center w-full min-h-screen font-bold text-black bg-white pb-24 px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
+      <div className="w-full max-w-xl px-6">
+        <div className="w-full flex items-center justify-between py-3">
           <div className="flex items-center">
             <button onClick={handleGoBack}>
               <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
                 <span className="text-3xl font-extrabold">{"<"}</span>
               </div>
             </button>
-            <h1 className="text-2xl font-extrabold">개인 정보 관리</h1>
+            <h1 className="whitespace-nowrap text-2xl font-extrabold">개인 정보 관리</h1>
           </div>
 
           <button onClick={() => setEditMode(!editMode)}>
@@ -108,7 +139,7 @@ const UserProfilePage: React.FC = () => {
           </button>
         </div>
 
-        <div className="w-full h-px bg-yellow-400 my-6"></div>
+        <div className="w-full h-px bg-yellow-400 mb-6"></div>
 
         {editMode ? (
           <ImageUploader

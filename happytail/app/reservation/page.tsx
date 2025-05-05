@@ -93,18 +93,18 @@ export default function ReservationManagePage() {
   const handleGoBack = () => router.back();
 
   return (
-    <div className="w-full max-w-4xl min-w-min min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full max-w-[760px] min-w-[400px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
       {/* 상단 타이틀 */}
-      <div className="flex items-center mb-12">
+      <div className="flex items-center mb-4">
         <button
           onClick={handleGoBack}
-          className="size-12 sm:size-14 bg-white shadow-md flex items-center justify-center "
+          className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
         >
-          <span className="text-black text-3xl sm:text-4xl font-extrabold font-['NanumSquareRound']">
+          <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
             &lt;
           </span>
         </button>
-        <h1 className="ml-8 text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+        <h1 className="whitespace-nowrap text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
           예약 관리
         </h1>
       </div>
@@ -114,7 +114,7 @@ export default function ReservationManagePage() {
         <div className="grid grid-cols-2">
           <button
             onClick={() => setSelectedTab("my")}
-            className={`h-12 sm:h-16 flex items-center justify-center text-sm sm:text-2xl font-extrabold rounded-lg ${
+            className={`w-full text-ellipsis overflow-hidden whitespace-nowrap h-12 sm:h-16 flex items-center justify-center text-sm sm:text-xl font-extrabold rounded-lg ${
               selectedTab === "my"
                 ? "bg-yellow-400 text-black"
                 : "bg-white text-black"
@@ -124,7 +124,7 @@ export default function ReservationManagePage() {
           </button>
           <button
             onClick={() => setSelectedTab("partner")}
-            className={`h-12 sm:h-16 flex items-center justify-center text-sm sm:text-2xl font-extrabold rounded-lg ${
+            className={`w-full text-ellipsis overflow-hidden whitespace-nowrap h-12 sm:h-16 flex items-center justify-center text-sm sm:text-xl font-extrabold rounded-lg ${
               selectedTab === "partner"
                 ? "bg-yellow-400 text-black"
                 : "bg-white text-black"
@@ -164,31 +164,33 @@ export default function ReservationManagePage() {
               key={reservation.id}
               className="relative mb-8 border-b border-yellow-300 pb-4"
             >
-              <div
-                className={`text-base sm:text-2xl font-extrabold mb-2 pl-1 ${statusColor}`}
-              >
-                {statusText}
+              <div className="flex flex-col text-sm justify-center sm:flex-row sm:text-xl sm:justify-between items-center mb-2">
+                <div
+                  className={`text-base sm:text-2xl font-extrabold ${statusColor}`}
+                >
+                  {statusText}
+                </div>
+                <div className="text-base sm:text-2xl font-extrabold text-black font-['NanumSquareRound'] text-right">
+                  {reservation.startDate} {reservation.startTime} ~{" "}
+                  {reservation.endDate} {reservation.endTime}
+                </div>
               </div>
-              <div className="w-full flex flex-col sm:flex-row gap-6 sm:gap-6">
+
+              <div className="w-full flex flex-col sm:flex-row items-center gap-6">
                 {/* 프로필 이미지 */}
-                <div className="flex justify-center items-center w-24 sm:w-40">
+                <div className="flex justify-center items-center w-24 sm:w-40 shrink-0">
                   <img
                     src={reservation.partnerPhotoUrl}
                     alt="프로필"
-                    className="w-full h-auto rounded-md object-cover"
+                    className="w-full h-auto rounded-full object-cover"
                   />
                 </div>
 
                 {/* 예약 정보 및 버튼 */}
                 <div className="flex flex-col justify-between w-full whitespace-nowrap">
-                  <div>
-                    <div className="w-full flex justify-center sm:justify-end text-base sm:text-2xl font-extrabold text-black font-['NanumSquareRound']">
-                      {reservation.startDate} {reservation.startTime} ~{" "}
-                      {reservation.endDate} {reservation.endTime}
-                    </div>
-                  </div>
+                  <div></div>
 
-                  <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-0 text-black">
+                  <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
                     {reservation.isAccepted === 0 &&
                     selectedTab === "partner" ? (
                       <>

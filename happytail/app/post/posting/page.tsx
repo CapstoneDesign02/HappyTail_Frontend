@@ -156,8 +156,8 @@ export default function Post() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-white text-black">
-      <div className="w-full max-w-xl px-6 pb-8">
+    <div className="relative overflow-x-hidden min-w-[320px] flex flex-col items-center w-full min-h-screen font-bold text-black bg-white pb-24 px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
+      <div className="w-full max-w-xl px-6">
         <div className="w-full flex items-center justify-between py-3">
           <div className="flex items-center">
             <button onClick={handleGoBack}>
@@ -170,7 +170,7 @@ export default function Post() {
         </div>
         <div className="w-full h-px bg-yellow-400 mb-6"></div>
       </div>
-      <div className="w-full max-w-xl px-6 pb-8">
+      <div className="w-full max-w-xl px-6 pb-0">
         {/* 이미지 업로드 */}
         <div className="mb-6">
           <div className="flex flex-wrap gap-4 mt-2">
@@ -322,7 +322,7 @@ export default function Post() {
           {Object.entries(weeklyTime).map(([day, times]) => (
             <div key={day} className="mb-6">
               <div className="text-lg font-semibold mb-2">
-                <span className="text-2xl font-bold w-10">{day}</span>
+                <span className="text-xl font-bold w-10">{day}</span>
               </div>
               {times.map((t, idx) => {
                 const [start, end] = t.split("~").map((s) => s.trim());
