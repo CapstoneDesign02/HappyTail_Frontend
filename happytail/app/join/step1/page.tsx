@@ -1,10 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function Step1() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
+  console.log(email);
+
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +28,7 @@ export default function Step1() {
 
       if (res.ok) {
         localStorage.setItem("ocrResult", JSON.stringify(data));
-        router.push("/join/step2");
+        router.push("/join/step2?email=" + email);
       } else {
         alert("OCR 실패: " + data.error);
       }

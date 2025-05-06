@@ -45,9 +45,7 @@ export default function PostListStyledPage() {
         const data = await getAllPosts();
         if (Array.isArray(data)) {
           setPosts(data);
-        } else {
-          console.error("Unexpected response:", data);
-          setPosts(mockPosts);
+          console.log("게시글 불러오기 성공", data);
         }
       } catch (error) {
         console.error("게시글 불러오기 실패", error);

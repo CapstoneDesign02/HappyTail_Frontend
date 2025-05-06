@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
+import { OCRmockdata } from "../mockData";
 
 export default function Step3() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || "";
   const [ocrData, setOcrData] = useState<any>(null);
   const [phone, setPhone] = useState("");
   const [nickname, setNickname] = useState("");
@@ -15,6 +18,7 @@ export default function Step3() {
     const stored = localStorage.getItem("ocrResult");
     if (stored) {
       setOcrData(JSON.parse(stored));
+      setOcrData(OCRmockdata);
     } else {
       router.push("/join/step1");
     }
@@ -34,7 +38,7 @@ export default function Step3() {
     const gender = ocrData.gender === "M" ? 1 : 2;
 
     const data = await joinAPI(
-      ocrData.email,
+      email,
       ocrData.name,
       ocrData.address,
       gender,
@@ -45,7 +49,7 @@ export default function Step3() {
 
     localStorage.removeItem("ocrResult");
     localStorage.setItem("token", data.token);
-    router.push("/");
+    router.push("/join/step4");
   };
 
   if (!ocrData) return null;
@@ -87,7 +91,9 @@ export default function Step3() {
         <div className="w-full max-w-2xl flex flex-col space-y-8">
           {/* 전화번호 입력 */}
           <div className="flex text-black flex-col">
-            <label className="text-black text-2xl font-['NanumSquareRound'] mb-2">전화번호</label>
+            <label className="text-black text-2xl font-['NanumSquareRound'] mb-2">
+              전화번호
+            </label>
             <input
               type="text"
               value={phone}
@@ -99,7 +105,9 @@ export default function Step3() {
 
           {/* 닉네임 입력 */}
           <div className="flex text-black flex-col">
-            <label className="text-black text-2xl font-['NanumSquareRound'] mb-2">닉네임</label>
+            <label className="text-black text-2xl font-['NanumSquareRound'] mb-2">
+              닉네임
+            </label>
             <input
               type="text"
               value={nickname}
@@ -127,7 +135,7 @@ export default function Step3() {
               { label: "성별", value: ocrData.gender === "M" ? "남" : "여" },
               { label: "주민등록번호", value: ocrData.idNumber },
               { label: "주소", value: ocrData.address },
-              { label: "이메일", value: ocrData.email || "example@domain.com" },
+              { label: "이메일", value: email || "example@domain.com" },
             ].map(({ label, value }, idx) => (
               <div key={idx} className="flex flex-col sm:flex-row">
                 <div className="w-full sm:w-1/3 font-bold">{label}</div>
