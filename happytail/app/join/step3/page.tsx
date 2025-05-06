@@ -55,7 +55,7 @@ export default function Step3() {
   if (!ocrData) return null;
 
   return (
-    <div className="w-full max-w-4xl min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full max-w-4xl min-w-min min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 상단 타이틀 */}
       <div className="flex items-center mb-12">
         <button
@@ -66,7 +66,7 @@ export default function Step3() {
             &lt;
           </span>
         </button>
-        <div className="ml-4 text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+        <div className="ml-4 whitespace-nowrap text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
           회원가입
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function Step3() {
           alt="로고"
           className="w-20 h-20 sm:w-24 sm:h-24 mb-4"
         />
-        <div className="text-4xl sm:text-6xl font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
+        <div className="text-4xl whitespace-nowrap sm:text-6xl font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
           행복한 꼬리
         </div>
       </div>

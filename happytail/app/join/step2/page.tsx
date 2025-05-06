@@ -32,18 +32,18 @@ export default function Step2() {
   if (!ocrData) return null;
 
   return (
-    <div className="w-full max-w-4xl min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full max-w-4xl min-w-min min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 뒤로가기 + 회원가입 */}
       <div className="flex items-center mb-12">
         <button
           onClick={() => router.back()}
           className="size-12 sm:size-14 bg-white shadow-md flex items-center justify-center"
         >
-          <span className="text-3xl sm:text-4xl font-extrabold font-['NanumSquareRound']">
+          <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
             &lt;
           </span>
         </button>
-        <div className="ml-4 text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+        <div className="ml-4 text-3xl whitespace-nowrap sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
           회원가입
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function Step2() {
           alt="로고"
           className="w-20 h-20 sm:w-24 sm:h-24 mb-4"
         />
-        <div className="text-4xl sm:text-6xl font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
+        <div className="text-4xl sm:text-6xl whitespace-nowrap font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
           행복한 꼬리
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function Step2() {
 
       {/* OCR 결과 확인 */}
       <div className="flex flex-col items-center mb-12 w-full">
-        <div className="text-2xl sm:text-4xl font-normal text-black font-['NanumSquareRound'] mb-12 text-center">
+        <div className="text-2xl sm:text-4xl whitespace-nowrap font-normal text-black font-['NanumSquareRound'] mb-12 text-center">
           신분증 정보 확인
         </div>
 

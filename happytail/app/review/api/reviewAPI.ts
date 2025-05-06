@@ -6,7 +6,9 @@ export interface ReviewInfo {
   reservationId: number;
   rating: number;
   content: string;
+  profileImage: string;
 }
+
 
 // 후기 작성/수정 시 사용할 데이터 타입
 export interface ReviewForm {

@@ -40,7 +40,7 @@ export default function Step1() {
   };
 
   return (
-    <div className="w-full max-w-4xl min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full max-w-4xl min-w-min min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 1. 뒤로가기 + 회원가입 */}
       <div className="flex items-center mb-12">
         <div className="size-12 sm:size-14 bg-white shadow-md flex items-center justify-center">
@@ -48,15 +48,15 @@ export default function Step1() {
             &lt;
           </span>
         </div>
-        <div className="ml-4 text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+        <div className="ml-4 text-3xl whitespace-nowrap sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
           회원가입
         </div>
       </div>
 
       {/* 2. 로고 + 행복한 꼬리 */}
-      <div className="flex flex-col items-center mb-12">
+      <div className="flex flex-wrap flex-col items-center mb-12">
         <img src="/img/logo192.png" alt="로고" className="w-20 h-20 sm:w-24 sm:h-24 mb-4" />
-        <div className="text-5xl sm:text-6xl font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
+        <div className="text-5xl sm:text-6xl whitespace-nowrap font-bold text-amber-800 font-['Y_Onepick_TTF'] text-center">
           행복한 꼬리
         </div>
       </div>
@@ -66,7 +66,7 @@ export default function Step1() {
 
       {/* 4. 신분증 인증 제목 */}
       <div className="flex justify-center mb-8">
-        <div className="text-3xl sm:text-4xl font-normal text-black font-['NanumSquareRound']">
+        <div className="text-3xl sm:text-4xl whitespace-nowrap font-normal text-black font-['NanumSquareRound']">
           신분증 인증
         </div>
       </div>
