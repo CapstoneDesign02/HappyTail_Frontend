@@ -3,7 +3,9 @@ import axiosInstance from "@/app/common/axiosInstance";
 // 예약 정보 타입
 export interface ReservationInfo {
   id: number;
-  partnerPhotoUrl: string;
+  partnerId: number;
+  userId: number;
+  profilePhotoUrl: string;
   startDate: string;
   endDate: string;
   startTime: string;

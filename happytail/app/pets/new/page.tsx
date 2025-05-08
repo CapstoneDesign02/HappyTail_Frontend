@@ -46,8 +46,19 @@ export default function NewPetPage() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">새 반려동물 추가하기</h1>
-      <ImageUploader
+  <div className="flex items-center mb-4">
+        <button
+          onClick={() => router.back()}
+          className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
+        >
+          <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+            &lt;
+          </span>
+        </button>
+        <h1 className="whitespace-nowrap text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
+          새 반려동물 등록하기기
+        </h1>
+      </div>      <ImageUploader
         onUploadSuccess={setUploadedFileIds}
         url={"/img/default_pet.avif"}
       />

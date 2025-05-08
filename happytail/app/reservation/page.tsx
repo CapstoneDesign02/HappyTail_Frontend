@@ -14,44 +14,8 @@ export default function ReservationManagePage() {
   const [selectedTab, setSelectedTab] = useState<"my" | "partner">("my");
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
 
-  const useMock = true;
-
-  const mockReservations: ReservationInfo[] = [
-    {
-      id: 999,
-      partnerPhotoUrl: "https://placehold.co/150x150",
-      startDate: "2024-06-01",
-      endDate: "2024-06-01",
-      startTime: "10:00",
-      endTime: "12:00",
-      isAccepted: 1,
-    },
-    {
-      id: 999,
-      partnerPhotoUrl: "https://placehold.co/150x150",
-      startDate: "2024-06-01",
-      endDate: "2024-06-01",
-      startTime: "10:00",
-      endTime: "12:00",
-      isAccepted: 0,
-    },
-    {
-      id: 999,
-      partnerPhotoUrl: "https://placehold.co/150x150",
-      startDate: "2024-06-01",
-      endDate: "2024-06-01",
-      startTime: "10:00",
-      endTime: "12:00",
-      isAccepted: 2,
-    },
-  ];
-
   useEffect(() => {
-    if (useMock) {
-      setReservations(mockReservations);
-    } else {
-      fetchReservations();
-    }
+    fetchReservations();
   }, [selectedTab]);
 
   const fetchReservations = async () => {
@@ -147,7 +111,7 @@ export default function ReservationManagePage() {
             reservation.isAccepted === 0
               ? "대기중"
               : reservation.isAccepted === 1
-              ? "돌봄중"
+              ? "신청 완료"
               : reservation.isAccepted === 2
               ? "거절됨"
               : "돌봄 완료";
@@ -180,7 +144,7 @@ export default function ReservationManagePage() {
                 {/* 프로필 이미지 */}
                 <div className="flex justify-center items-center w-24 sm:w-40 shrink-0">
                   <img
-                    src={reservation.partnerPhotoUrl}
+                    src={reservation.profilePhotoUrl || "/img/profile.jpeg"}
                     alt="프로필"
                     className="w-full h-auto rounded-full object-cover"
                   />

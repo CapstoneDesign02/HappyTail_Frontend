@@ -6,7 +6,7 @@ import { PostInfo } from "./api/postAPI";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const mockPosts: PostInfo[] = [
+export const mockPosts: PostInfo[] = [
   {
     id: 1,
     title: "강아지 올데이 케어",
@@ -23,7 +23,7 @@ const mockPosts: PostInfo[] = [
       address: "서울시",
       phone: "01012345678",
       ratingAvg: 4.7,
-      points: 100,
+      reviewCount: 2,
       file: { id: 1, url: "/images/profile.jpg" },
     },
     availableTimes: null,
@@ -75,7 +75,7 @@ export default function PostListStyledPage() {
 
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
-    { icon: "/img/icons/chat.png", route: "/chat" },
+    { icon: "/img/icons/chat.png", route: "/pets" },
     { icon: "/img/icons/home.png", route: "/post" },
     { icon: "/img/icons/diary.png", route: "/diary" },
     { icon: "/img/icons/profile.png", route: "/profile" },
@@ -104,6 +104,12 @@ export default function PostListStyledPage() {
                 </li>
                 <li
                   className="text-lg font-semibold cursor-pointer"
+                  onClick={() => router.push("/pets")}
+                >
+                  반려동물 프로필
+                </li>
+                <li
+                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/post/posting")}
                 >
                   글 쓰기
@@ -113,12 +119,6 @@ export default function PostListStyledPage() {
                   onClick={() => router.push("/reservation")}
                 >
                   예약 목록
-                </li>
-                <li
-                  className="text-lg font-semibold cursor-pointer"
-                  onClick={() => router.push("/chat")}
-                >
-                  채팅
                 </li>
                 <li
                   className="text-lg font-semibold cursor-pointer"
@@ -141,7 +141,7 @@ export default function PostListStyledPage() {
                 className="list-none text-lg font-semibold cursor-pointer"
                 onClick={() => console.log("로그아웃 처리")}
               >
-               로그아웃
+                로그아웃
               </li>
             </div>
           </div>
@@ -237,10 +237,11 @@ export default function PostListStyledPage() {
             className="flex items-center w-full h-28 rounded-3xl bg-white/70 mb-4 overflow-hidden shadow cursor-pointer"
           >
             <img
-              src={post.user?.file?.url || "/default-user.png"}
-              alt="profile"
+              src={post.user?.file?.url ?? "/img/profile.jpeg"}
+              alt="작성자 이미지"
               className="w-20 h-20 rounded-full ml-4 object-cover"
             />
+
             <div className="flex-1 ml-4 mr-4">
               <div className="text-black text-base font-bold">
                 {post.user?.nickname || "제니제니"}
@@ -250,7 +251,7 @@ export default function PostListStyledPage() {
                 {post.availableAnimals && `ㆍ${post.availableAnimals}`}
               </div>
               <div className="text-sm text-gray-500">
-                ⭐ 4.7 | 5,635 건 완료
+                ⭐ {post.user?.ratingAvg} | {post.user?.reviewCount} 건 완료
               </div>
             </div>
           </div>
@@ -271,14 +272,15 @@ export default function PostListStyledPage() {
       </footer>
 
       {isPartner && (
-        <div className="absolute bottom-24 right-4 group">
+        <div className="fixed bottom-24 right-4 z-50 group">
           <button
             onClick={() => router.push("/post/posting")}
-            className="bg-amber-400 hover:bg-amber-500 text-white text-xl font-bold rounded-full shadow-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-all"
+            className="bg-yellow-400 hover:bg-yellow-500 text-white text-3xl font-bold rounded-full shadow-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-all"
+            aria-label="새 글 쓰기"
           >
             +
           </button>
-          <div className="absolute top-1/2 right-full mr-2 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 bg-black text-white text-sm px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">
             새 글 쓰기
           </div>
         </div>

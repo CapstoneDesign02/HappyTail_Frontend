@@ -14,8 +14,8 @@ export interface UserInfo {
   address: string;
   phone: string;
   ratingAvg: number;
-  points: number;
   file: FileData;
+  reviewCount: number;
 }
 
 export interface AvailableTime {
@@ -57,7 +57,7 @@ export const getAllPosts = async (): Promise<PostInfo[]> => {
 };
 
 // ✅ 단일 게시글 조회
-export const getPostById = async (postId: number): Promise<PostInfo> => {
+export const getPostById = async (postId: string): Promise<PostInfo> => {
   try {
     const response = await axiosInstance.get(`/post/${postId}`);
     return response.data;

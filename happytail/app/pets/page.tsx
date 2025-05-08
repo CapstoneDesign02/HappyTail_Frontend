@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimalInfo, getAnimalInfo, deleteAnimalInfo } from "./api/PetAPI";
+import { useRouter } from "next/navigation";
 
 export default function PetListPage() {
   const [pets, setPets] = useState<AnimalInfo[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     fetchPets();
   }, []);
@@ -31,7 +32,21 @@ export default function PetListPage() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">내 반려동물 관리</h1>
+      <div className="w-full max-w-xl px-6">
+        <div className="flex items-center mb-4">
+          <button
+            onClick={() => router.back()}
+            className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
+          >
+            <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+              &lt;
+            </span>
+          </button>
+          <h1 className="whitespace-nowrap text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
+            내 반려동물 관리
+          </h1>
+        </div>
+      </div>
 
       {pets.map((pet) => (
         <div key={pet.id} className="border p-4 rounded-md mb-4">
@@ -46,7 +61,8 @@ export default function PetListPage() {
                 <strong>이름:</strong> {pet.name}
               </p>
               <p>
-                <strong>타입:</strong> {pet.type}
+                <strong>타입:</strong>{" "}
+                {pet.type == 0 ? "강아지" : pet.type == 1 ? "고양이" : "기타"}
               </p>
               <p>
                 <strong>품종:</strong> {pet.breed}

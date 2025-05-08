@@ -24,37 +24,7 @@ interface UserProfile {
 }
 
 const UserProfilePage: React.FC = () => {
-  // const [user, setUser] = useState<UserProfile | null>(null);
-  // const [loading, setLoading] = useState(true);
-  // const [editMode, setEditMode] = useState(false);
-  // const [editedUser, setEditedUser] = useState<Partial<UserProfile>>({});
-  // const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);
-  // const router = useRouter();
 
-  // // ✅ 목업 데이터 추가
-  // const mockUser: UserProfile = {
-  //   id: 1,
-  //   nickname: "행복냥이",
-  //   username: "김고양",
-  //   points: 200,
-  //   gender: 2,
-  //   ssn: "123456-7890123",
-  //   phone: "01012345678",
-  //   address: "서울시 강남구",
-  //   email: "meow@example.com",
-  //   files: [{ id: 1, url: "/img/profile.jpeg" }],
-  // };
-
-  // useEffect(() => {
-  //   // 실제 API 대신 목업 사용
-  //   setUser(mockUser);
-  //   setEditedUser({
-  //     nickname: mockUser.nickname,
-  //     address: mockUser.address,
-  //     phone: mockUser.phone,
-  //   });
-  //   setLoading(false);
-  // }, []);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
