@@ -68,14 +68,12 @@ export default function PostListStyledPage() {
 
   const filterItems = [
     { label: "강아지", icon: "/img/icons/dog.png" },
-    { label: "고양이", icon: "/img/icons/cat.png" },
-    { label: "내 주변", icon: "/img/icons/around.png" },
-    { label: "기간", icon: "/img/icons/date.png" },
+    { label: "고양이", icon: "/img/icons/cat.png" }
   ];
 
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
-    { icon: "/img/icons/chat.png", route: "/pets" },
+    { icon: "/img/icons/pets.png", route: "/pets" },
     { icon: "/img/icons/home.png", route: "/post" },
     { icon: "/img/icons/diary.png", route: "/diary" },
     { icon: "/img/icons/profile.png", route: "/profile" },
@@ -113,6 +111,12 @@ export default function PostListStyledPage() {
                   onClick={() => router.push("/post/posting")}
                 >
                   글 쓰기
+                </li>
+                <li
+                  className="text-lg font-semibold cursor-pointer"
+                  onClick={() => router.push("/post/posting")}
+                >
+                  내 게시글
                 </li>
                 <li
                   className="text-lg font-semibold cursor-pointer"
@@ -190,7 +194,7 @@ export default function PostListStyledPage() {
       </header>
 
       {/* 필터 메뉴 한 줄 */}
-      <div className="w-full grid grid-cols-4 gap-2 py-4 text-center">
+      <div className="w-full grid grid-cols-2 gap-2 py-4 text-center">
         {filterItems.map(({ label, icon }) => {
           const isActive = activeFilter === label;
 
