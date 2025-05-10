@@ -89,20 +89,20 @@ export default function EditPetPage() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-2">
         <button
           onClick={() => router.back()}
           className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
         >
-          <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+          <span className="text-3xl  font-extrabold text-black font-['NanumSquareRound']">
             &lt;
           </span>
         </button>
-        <h1 className="whitespace-nowrap text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
+        <h1 className="whitespace-nowrap text-2xl  font-extrabold text-black">
           반려동물 정보 수정
         </h1>
       </div>
-      <div className="w-full h-px bg-yellow-400 my-6"></div>
+      <div className="w-full h-px bg-yellow-400"></div>
 
       {/* 이름 입력 */}
       <input

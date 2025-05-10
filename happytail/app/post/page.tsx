@@ -47,8 +47,8 @@ export default function PostListStyledPage() {
   });
 
   const filterItems = [
-    { label: "강아지", icon: "/img/icons/dog.png" },
-    { label: "고양이", icon: "/img/icons/cat.png" },
+    { label: "0", icon: "/img/icons/dog.png" },
+    { label: "1", icon: "/img/icons/cat.png" },
   ];
 
   const navItems = [
@@ -84,12 +84,6 @@ export default function PostListStyledPage() {
                   className="text-lg font-semibold cursor-pointer"
                 >
                   반려동물 프로필
-                </li>
-                <li
-                  onClick={() => router.push("/post/posting")}
-                  className="text-lg font-semibold cursor-pointer"
-                >
-                  글 쓰기
                 </li>
                 <li
                   onClick={() => router.push("/post/posting")}
@@ -228,7 +222,7 @@ export default function PostListStyledPage() {
                 </div>
                 <div className="text-sm text-gray-700 truncate">
                   {post.title}{" "}
-                  {post.availableAnimals && `ㆍ${post.availableAnimals}`}
+                  {post.availableAnimals == "0"? "강아지" : post.availableAnimals == "1" ? "고양이" : "기타"}
                 </div>
                 <div className="text-sm text-gray-500">
                   ⭐ {post.user?.ratingAvg} | {post.user?.reviewCount} 건 완료
@@ -252,21 +246,6 @@ export default function PostListStyledPage() {
         ))}
       </footer>
 
-      {/* 새 글 작성 버튼 */}
-      {isPartner && (
-        <div className="fixed bottom-24 right-4 z-50 group">
-          <button
-            onClick={() => router.push("/post/posting")}
-            className="bg-yellow-400 hover:bg-yellow-500 text-white text-3xl font-bold rounded-full shadow-lg w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-all"
-            aria-label="새 글 쓰기"
-          >
-            +
-          </button>
-          <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 bg-black text-white text-sm px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">
-            새 글 쓰기
-          </div>
-        </div>
-      )}
     </div>
   );
 }
