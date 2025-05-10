@@ -12,7 +12,7 @@ export default function Step3() {
   const [ocrData, setOcrData] = useState<any>(null);
   const [phone, setPhone] = useState("");
   const [nickname, setNickname] = useState("");
-  const [isNicknameAvailable, setIsNicknameAvailable] = useState(true);
+  const [isDuplicate, setIsDuplicate] = useState<boolean|null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("ocrResult");
@@ -26,13 +26,13 @@ export default function Step3() {
 
   const checkNickname = async () => {
     const res = await checkNicknameAPI(nickname);
-    setIsNicknameAvailable(!res.isDuplicate);
+    setIsDuplicate(res.isDuplicate);
     if (res.isDuplicate) alert("이미 사용 중인 닉네임입니다.");
   };
 
   const handleJoin = async () => {
     if (!phone || !nickname) return alert("필수 정보를 입력하세요.");
-    if (!isNicknameAvailable) return alert("닉네임 중복 확인하세요.");
+    if (isDuplicate) return alert("닉네임 중복 확인하세요.");
 
     const phoneSanitized = phone.replace(/-/g, "");
     const gender = ocrData.gender === "M" ? 1 : 2;
@@ -111,7 +111,10 @@ export default function Step3() {
             <input
               type="text"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e) => {
+                setNickname(e.target.value);
+                setIsDuplicate(true);
+              }}
               placeholder="사용할 닉네임을 입력하세요"
               className="w-full p-4 border border-gray-300 rounded-md text-xl focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
@@ -121,9 +124,14 @@ export default function Step3() {
             >
               닉네임 중복 확인
             </button>
-            {!isNicknameAvailable && (
+            {isDuplicate && (
               <p className="text-red-500 text-lg mt-2 font-['NanumSquareRound']">
-                🚨 이미 사용 중인 닉네임입니다.
+                🚨 닉네임 중복 확인이 필요합니다.
+              </p>
+            ) }
+            {!isDuplicate && (
+              <p className="text-green-500 text-lg mt-2 font-['NanumSquareRound']">
+                ✅ 사용 가능한 닉네임입니다.
               </p>
             )}
           </div>
