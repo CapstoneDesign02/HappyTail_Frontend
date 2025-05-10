@@ -25,7 +25,7 @@ export default function ChatPage() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const email = "user2@naver.com";
+    const email = "user1@naver.com";
 
     const ws = new WebSocket(
       `${process.env.NEXT_PUBLIC_SOCKET_ID}/ws/chat?email=${email}`
@@ -103,7 +103,7 @@ export default function ChatPage() {
                     <div
                       className={`text-xs mb-1 ${
                         isMine
-                          ? "text-right text-blue-600"
+                          ? "text-right text-amber-500"
                           : "text-left text-gray-700"
                       }`}
                     >
@@ -112,7 +112,7 @@ export default function ChatPage() {
                     <div
                       className={`p-3 shadow-sm break-words text-sm ${
                         isMine
-                          ? "bg-blue-500 text-white rounded-xl rounded-br-none"
+                          ? "bg-amber-400 text-white rounded-xl rounded-br-none"
                           : "bg-white text-gray-900 rounded-xl rounded-bl-none"
                       }`}
                     >
@@ -129,11 +129,11 @@ export default function ChatPage() {
               value={message}
               onChange={handleInputChange}
               placeholder="메시지를 입력하세요"
-              className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
             <button
               onClick={sendMessage}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none"
+              className="bg-amber-400 text-white px-4 py-2 rounded-lg hover:bg-amber-600 focus:outline-none"
             >
               전송
             </button>

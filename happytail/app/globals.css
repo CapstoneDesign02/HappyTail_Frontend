@@ -7,33 +7,41 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 @font-face {
   font-family: "Bold";
-  src: url("/fonts/ONE Mobile Bold.ttf") format("truetype");
+  src: url("/fonts/NanumSquareRoundB.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Light";
-  src: url("/fonts/ONE Mobile Light.ttf") format("truetype");
+  src: url("/fonts/NanumSquareRoundL.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Regular";
-  src: url("/fonts/ONE Mobile Regular.ttf") format("truetype");
+  src: url("/fonts/NanumSquareRoundR.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "NanumSquareRound";
+  src: url("/fonts/NanumSquareRoundR.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 @font-face {
   font-family: "POP";
@@ -42,10 +50,11 @@
   font-style: normal;
 }
 
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Light", Arial, Helvetica, sans-serif;
+  font-family: 'Regular', Arial, Helvetica, sans-serif;
 }
 
 .font-Bold {

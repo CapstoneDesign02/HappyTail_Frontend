@@ -53,3 +53,14 @@ export const deleteAnimalInfo = async (id: number): Promise<void> => {
     throw error;
   }
 };
+
+// ✅ 동물 정보 상세 조회
+export const getAnimalInfoById = async (id: string): Promise<AnimalInfo> => {
+  try {
+    const response = await axiosInstance.get(`/animal-info/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Failed to delete animal info:", error);
+    throw error;
+  }
+};

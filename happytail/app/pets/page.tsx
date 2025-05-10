@@ -2,13 +2,23 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimalInfo, getAnimalInfo, deleteAnimalInfo } from "./api/PetAPI";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function PetListPage() {
   const [pets, setPets] = useState<AnimalInfo[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     fetchPets();
   }, []);
+
+  const navItems = [
+    { icon: "/img/icons/reservation.png", route: "/reservation" },
+    { icon: "/img/icons/pets.png", route: "/pets" },
+    { icon: "/img/icons/home.png", route: "/post" },
+    { icon: "/img/icons/diary.png", route: "/diary" },
+    { icon: "/img/icons/profile.png", route: "/profile" },
+  ];
 
   const fetchPets = async () => {
     try {
@@ -31,7 +41,22 @@ export default function PetListPage() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">내 반려동물 관리</h1>
+      <div className="w-full max-w-xl px-6">
+        <div className="flex items-center mb-4">
+          <button
+            onClick={() => router.back()}
+            className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
+          >
+            <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+              &lt;
+            </span>
+          </button>
+          <h1 className="whitespace-nowrap text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
+            내 반려동물 관리
+          </h1>
+        </div>
+      </div>
+      <div className="w-full h-px bg-yellow-400 my-6"></div>
 
       {pets.map((pet) => (
         <div key={pet.id} className="border p-4 rounded-md mb-4">
@@ -46,7 +71,8 @@ export default function PetListPage() {
                 <strong>이름:</strong> {pet.name}
               </p>
               <p>
-                <strong>타입:</strong> {pet.type}
+                <strong>타입:</strong>{" "}
+                {pet.type == 0 ? "강아지" : pet.type == 1 ? "고양이" : "기타"}
               </p>
               <p>
                 <strong>품종:</strong> {pet.breed}
@@ -76,6 +102,20 @@ export default function PetListPage() {
           <div className="mt-2 text-sm">새 반려동물 추가하기</div>
         </div>
       </Link>
+      <div className="w-full h-px bg-yellow-400 my-6"></div>
+
+      {/* 하단 네비게이션 */}
+      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+        {navItems.map(({ icon, route }, i) => (
+          <button
+            key={i}
+            onClick={() => router.push(route)}
+            className="w-14 h-14 flex items-center justify-center"
+          >
+            <Image src={icon} alt="nav-icon" width={60} height={60} />
+          </button>
+        ))}
+      </footer>
     </div>
   );
 }
