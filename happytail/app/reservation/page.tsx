@@ -165,7 +165,7 @@ export default function ReservationManagePage() {
               <div className="w-full flex flex-col sm:flex-row items-center gap-6">
                 {/* 프로필 이미지 */}
                 <div className="flex flex-col items-center w-24 sm:w-40 shrink-0">
-                  <img
+                  <Image
                     src={reservation.profilePhotoUrl || "/img/profile.jpeg"}
                     alt="프로필"
                     className="w-24 h-24 rounded-full object-cover"

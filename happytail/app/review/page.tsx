@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ReviewInfo } from "./api/reviewAPI";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 // 목업 데이터
 const writtenMockReviews: ReviewInfo[] = [
@@ -114,7 +115,7 @@ export default function ReviewManagePage() {
           {/* 프로필 + 별점 + 후기내용 */}
           <div className="flex gap-4 items-start">
             {/* 프로필 이미지 */}
-            <img
+            <Image
               src={review.profileImage}
               alt="프로필"
               className="w-24 h-24 rounded-full object-cover"

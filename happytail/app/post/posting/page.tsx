@@ -68,6 +68,7 @@ export default function Post() {
       alert("글이 등록되었습니다.");
       router.push("/post");
     } catch (err) {
+      console.error("❌ 글 등록 실패:", err);
       alert("글 등록 실패");
     }
   };
