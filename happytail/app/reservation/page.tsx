@@ -8,11 +8,21 @@ import {
   updateReservationStatus,
   ReservationInfo,
 } from "./api/reservationAPI";
+import Image from "next/image";
 
 export default function ReservationManagePage() {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<"my" | "partner">("my");
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const navItems = [
+    { icon: "/img/icons/reservation.png", route: "/reservation" },
+    { icon: "/img/icons/pets.png", route: "/pets" },
+    { icon: "/img/icons/home.png", route: "/post" },
+    { icon: "/img/icons/diary.png", route: "/diary" },
+    { icon: "/img/icons/profile.png", route: "/profile" },
+  ];
 
   useEffect(() => {
     fetchReservations();
@@ -20,15 +30,17 @@ export default function ReservationManagePage() {
 
   const fetchReservations = async () => {
     try {
-      if (selectedTab === "my") {
-        const data = await getMyReservations();
-        setReservations(data);
-      } else {
-        const data = await getPartnerReservations();
-        setReservations(data);
-      }
+      setIsLoading(true);
+      setReservations([]);
+      const data =
+        selectedTab === "my"
+          ? await getMyReservations()
+          : await getPartnerReservations();
+      setReservations(data);
     } catch (error) {
       console.error("❌ 예약 정보 불러오기 실패:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,20 +69,21 @@ export default function ReservationManagePage() {
   const handleGoBack = () => router.back();
 
   return (
-    <div className="w-full max-w-[760px] min-w-[400px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
-      {/* 상단 타이틀 */}
-      <div className="flex items-center mb-4">
-        <button
-          onClick={handleGoBack}
-          className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
-        >
-          <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
-            &lt;
-          </span>
-        </button>
-        <h1 className="whitespace-nowrap text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
-          예약 관리
-        </h1>
+    <div className="max-w-xl mx-auto">
+      <div className="w-full max-w-xl py-3">
+        <div className="flex items-center">
+          <button
+            onClick={handleGoBack}
+            className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
+          >
+            <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
+              &lt;
+            </span>
+          </button>
+          <h1 className="whitespace-nowrap text-2xl font-extrabold text-black">
+            예약 관리
+          </h1>
+        </div>
       </div>
 
       {/* 탭 버튼 */}
@@ -100,8 +113,12 @@ export default function ReservationManagePage() {
         <div className="absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400" />
       </div>
 
-      {/* 예약 목록 */}
-      {reservations.length === 0 ? (
+      {/* 로딩 상태 */}
+      {isLoading ? (
+        <div className="text-center text-xl sm:text-2xl text-stone-400 mt-20 animate-pulse">
+          예약 정보를 불러오는 중입니다...
+        </div>
+      ) : reservations.length === 0 ? (
         <div className="text-center text-xl sm:text-2xl text-stone-500 mt-20">
           예약 내역이 없습니다.
         </div>
@@ -111,22 +128,28 @@ export default function ReservationManagePage() {
             reservation.isAccepted === 0
               ? "대기중"
               : reservation.isAccepted === 1
-              ? "신청 완료"
+              ? "돌봄 예정"
               : reservation.isAccepted === 2
               ? "거절됨"
+              : reservation.isAccepted === 3
+              ? "돌봄 중"
               : "돌봄 완료";
 
           const statusColor =
             reservation.isAccepted === 0
-              ? "text-black"
+              ? "text-gray-700"
               : reservation.isAccepted === 1
-              ? "text-yellow-500"
-              : "text-neutral-500";
+              ? "text-green-400"
+              : reservation.isAccepted === 2
+              ? "text-red-400"
+              : reservation.isAccepted === 3
+              ? "text-amber-400"
+              : "text-gray-700";
 
           return (
             <div
               key={reservation.id}
-              className="relative mb-8 border-b border-yellow-300 pb-4"
+              className="relative mb-8 border-b border-yellow-300 pb-4 pl-5"
             >
               <div className="flex flex-col text-sm justify-center sm:flex-row sm:text-xl sm:justify-between items-center mb-2">
                 <div
@@ -135,76 +158,67 @@ export default function ReservationManagePage() {
                   {statusText}
                 </div>
                 <div className="text-base sm:text-2xl font-extrabold text-black font-['NanumSquareRound'] text-right">
-                  {reservation.startDate} {reservation.startTime} ~{" "}
-                  {reservation.endDate} {reservation.endTime}
+                  {reservation.startDate} ~ {reservation.endDate}
                 </div>
               </div>
 
               <div className="w-full flex flex-col sm:flex-row items-center gap-6">
                 {/* 프로필 이미지 */}
-                <div className="flex justify-center items-center w-24 sm:w-40 shrink-0">
+                <div className="flex flex-col items-center w-24 sm:w-40 shrink-0">
                   <img
                     src={reservation.profilePhotoUrl || "/img/profile.jpeg"}
                     alt="프로필"
-                    className="w-full h-auto rounded-full object-cover"
+                    className="w-24 h-24 rounded-full object-cover"
                   />
+                  <span className="mt-2 text-xl text-center font-extrabold text-gray-800 font-['NanumSquareRound']">
+                    {selectedTab === "my"
+                      ? reservation.partnerNickname
+                      : reservation.userNickname}
+                  </span>
                 </div>
 
                 {/* 예약 정보 및 버튼 */}
                 <div className="flex flex-col justify-between w-full whitespace-nowrap">
-                  <div></div>
-
                   <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
                     {reservation.isAccepted === 0 &&
                     selectedTab === "partner" ? (
                       <>
                         <button
                           onClick={() => handleAccept(reservation.id)}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-green-400 hover:bg-green-500  font-bold rounded-lg text-base sm:text-lg"
+                          className="h-14 w-full bg-green-400 hover:bg-green-500 font-bold rounded-lg text-base sm:text-lg"
                         >
                           수락
                         </button>
                         <button
                           onClick={() => handleReject(reservation.id)}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-red-400 hover:bg-red-500  font-bold rounded-lg text-base sm:text-lg"
+                          className="h-14 w-full  bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
                         >
                           거절
                         </button>
                         <button
                           onClick={() => router.push(`/chat/${reservation.id}`)}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-blue-400 hover:bg-blue-500  font-bold rounded-lg text-base sm:text-lg"
+                          className="h-14 w-full  bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
                         >
                           채팅
                         </button>
                       </>
-                    ) : reservation.isAccepted === 2 ? (
+                    ) : reservation.isAccepted === 1 ||
+                      reservation.isAccepted === 4 ? (
                       <button
                         onClick={() => router.push(`/chat/${reservation.id}`)}
-                        className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
+                        className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                       >
                         채팅
                       </button>
                     ) : (
-                      <>
-                        <button
-                          onClick={() => router.push("/health-status")}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          건강 상태
-                        </button>
-                        <button
-                          onClick={() => router.push("/care-log")}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          돌봄 일지
-                        </button>
+                      reservation.isAccepted === 3 && (
                         <button
                           onClick={() => router.push(`/chat/${reservation.id}`)}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
+                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                         >
                           채팅
                         </button>
-                      </>
+                      )
                     )}
                   </div>
                 </div>
@@ -213,6 +227,19 @@ export default function ReservationManagePage() {
           );
         })
       )}
+
+      {/* 하단 네비게이션 */}
+      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+        {navItems.map(({ icon, route }, i) => (
+          <button
+            key={i}
+            onClick={() => router.push(route)}
+            className="w-14 h-14 flex items-center justify-center"
+          >
+            <Image src={icon} alt="nav-icon" width={60} height={60} />
+          </button>
+        ))}
+      </footer>
     </div>
   );
 }

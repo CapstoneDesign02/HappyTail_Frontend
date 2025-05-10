@@ -1,16 +1,28 @@
 import axiosInstance from "@/app/common/axiosInstance";
+import { File } from "@/app/common/fileType";
 
 // 예약 정보 타입
 export interface ReservationInfo {
   id: number;
   partnerId: number;
   userId: number;
+  animalId: number;
   profilePhotoUrl: string;
+  partnerNickname: string;
+  userNickname: string;
+  userAnimalProfiles : AnimalProfile[];
   startDate: string;
   endDate: string;
-  startTime: string;
-  endTime: string;
-  isAccepted: number; // 0: 대기, 1: 수락, 2: 거절
+  isAccepted: number;
+}
+
+export interface AnimalProfile {
+  id: number;
+  name: string;
+  type: number; // 1: 강아지, 2: 고양이, 3: 기타
+  breed: string;
+  additionalInfo: string | null;
+  files: File[];
 }
 
 // ✅ 예약 신청 데이터 타입

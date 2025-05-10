@@ -33,12 +33,12 @@ export function AvailableDateSelector({ availableDates }: DateRangeProps) {
           available: "bg-amber-400 text-white rounded-full p-3",
         }}
         className="
-          text-3xl 
+          text-3xl m-2
           [&_.rdp-day]:w-16
           [&_.rdp-day]:h-16 
           [&_.rdp-day]:text-2xl 
           [&_.rdp-caption_label]:text-3xl 
-          [&_.rdp-head_cell]:text-3xl
+          [&_.rdp-head_cell]:text-3xl 
         "
       />
     </div>
