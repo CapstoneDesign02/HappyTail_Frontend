@@ -102,6 +102,8 @@ export default function EditPetPage() {
           반려동물 정보 수정
         </h1>
       </div>
+      <div className="w-full h-px bg-yellow-400 my-6"></div>
+
       {/* 이름 입력 */}
       <input
         type="text"
@@ -122,7 +124,6 @@ export default function EditPetPage() {
       >
         <option value={0}>강아지</option>
         <option value={1}>고양이</option>
-        <option value={2}>기타</option>
       </select>
 
       {/* 품종 입력 */}
@@ -156,6 +157,7 @@ export default function EditPetPage() {
       >
         수정 완료
       </button>
+      <div className="w-full h-px bg-yellow-400 my-6"></div>
     </div>
   );
 }

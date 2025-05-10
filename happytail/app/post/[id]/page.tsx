@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import PostImageCarousel from "./PostImageCarousel";
 import { getPostById, PostInfo } from "../api/postAPI";
 import { useEffect, useState } from "react";
+import { AvailableDateSelector } from "./AvailableDateSelecter";
 
 export default function PostPage() {
   const { id } = useParams();
@@ -41,7 +42,7 @@ export default function PostPage() {
   }
 
   return (
-    <main className="p-4 max-w-md mx-auto">
+    <div className="relative min-w-[320px] flex flex-col items-center w-full min-h-screen font-bold bg-white pb-24 px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
       <div className="w-full max-w-xl px-6">
         <div className="w-full flex items-center justify-between py-3">
           <div className="flex items-center">
@@ -76,16 +77,22 @@ export default function PostPage() {
         <h2 className="text-lg font-bold">{post.title}</h2>
         <p className="text-sm text-gray-700 mb-2">{post.content}</p>
         <p className="text-sm text-gray-600">
-          동물 종류: {post.availableAnimals}
+          동물 종류: {post.availableAnimals == "0" ? "강아지" : "고양이"}
         </p>
         <p className="text-sm text-gray-600">
           가격: 시간당 {post.price.toLocaleString()}원
         </p>
 
+        <div className="w-full h-px bg-yellow-400 my-6"></div>
+        
+        <label className="text-2xl font-bold">예약 가능 시간</label>
+
+        <AvailableDateSelector availableDates={post.availableTimes} />
+
         <button className="mt-4 w-full bg-amber-300 hover:bg-amber-400 text-black font-semibold py-2 rounded">
           신청하기
         </button>
       </div>
-    </main>
+    </div>
   );
 }

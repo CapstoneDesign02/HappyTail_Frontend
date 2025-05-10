@@ -26,7 +26,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const router = useRouter();
     const originalRequest = error.config;
 
     // 혼합 콘텐츠 오류 (Mixed Content) → 로그아웃 처리
@@ -34,7 +33,6 @@ axiosInstance.interceptors.response.use(
       console.log("로그아웃", error.message);
       removeCookie("token");
       removeCookie("refreshToken");
-      router.push("/");
       return Promise.reject(error);
     }
 
@@ -68,7 +66,6 @@ axiosInstance.interceptors.response.use(
         console.error("토큰 갱신 실패", err);
         removeCookie("token");
         removeCookie("refreshToken");
-        router.push("/");
         return Promise.reject(err);
       }
     }

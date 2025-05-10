@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimalInfo, getAnimalInfo, deleteAnimalInfo } from "./api/PetAPI";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function PetListPage() {
   const [pets, setPets] = useState<AnimalInfo[]>([]);
@@ -10,6 +11,14 @@ export default function PetListPage() {
   useEffect(() => {
     fetchPets();
   }, []);
+
+  const navItems = [
+    { icon: "/img/icons/reservation.png", route: "/reservation" },
+    { icon: "/img/icons/pets.png", route: "/pets" },
+    { icon: "/img/icons/home.png", route: "/post" },
+    { icon: "/img/icons/diary.png", route: "/diary" },
+    { icon: "/img/icons/profile.png", route: "/profile" },
+  ];
 
   const fetchPets = async () => {
     try {
@@ -47,6 +56,7 @@ export default function PetListPage() {
           </h1>
         </div>
       </div>
+      <div className="w-full h-px bg-yellow-400 my-6"></div>
 
       {pets.map((pet) => (
         <div key={pet.id} className="border p-4 rounded-md mb-4">
@@ -92,6 +102,20 @@ export default function PetListPage() {
           <div className="mt-2 text-sm">새 반려동물 추가하기</div>
         </div>
       </Link>
+      <div className="w-full h-px bg-yellow-400 my-6"></div>
+
+      {/* 하단 네비게이션 */}
+      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+        {navItems.map(({ icon, route }, i) => (
+          <button
+            key={i}
+            onClick={() => router.push(route)}
+            className="w-14 h-14 flex items-center justify-center"
+          >
+            <Image src={icon} alt="nav-icon" width={60} height={60} />
+          </button>
+        ))}
+      </footer>
     </div>
   );
 }

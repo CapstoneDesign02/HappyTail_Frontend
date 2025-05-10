@@ -5,30 +5,7 @@ import { getAllPosts } from "./api/postAPI";
 import { PostInfo } from "./api/postAPI";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
-export const mockPosts: PostInfo[] = [
-  {
-    id: 1,
-    title: "강아지 올데이 케어",
-    content: "소형견ㆍ중형견 간병 가능",
-    availableAnimals: "강아지",
-    price: 20000,
-    files: [{ id: 1, url: "/images/sample.jpg" }],
-    user: {
-      id: 1,
-      username: "testuser",
-      email: "test@example.com",
-      nickname: "제니제니",
-      gender: 1,
-      address: "서울시",
-      phone: "01012345678",
-      ratingAvg: 4.7,
-      reviewCount: 2,
-      file: { id: 1, url: "/images/profile.jpg" },
-    },
-    availableTimes: null,
-  },
-];
+import { removeCookie } from "../common/cookie";
 
 const isPartner = true;
 
@@ -37,11 +14,13 @@ export default function PostListStyledPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setIsLoading(true);
         const data = await getAllPosts();
         if (Array.isArray(data)) {
           setPosts(data);
@@ -49,7 +28,8 @@ export default function PostListStyledPage() {
         }
       } catch (error) {
         console.error("게시글 불러오기 실패", error);
-        setPosts(mockPosts);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchPosts();
@@ -68,7 +48,7 @@ export default function PostListStyledPage() {
 
   const filterItems = [
     { label: "강아지", icon: "/img/icons/dog.png" },
-    { label: "고양이", icon: "/img/icons/cat.png" }
+    { label: "고양이", icon: "/img/icons/cat.png" },
   ];
 
   const navItems = [
@@ -84,7 +64,6 @@ export default function PostListStyledPage() {
       {/* 슬라이딩 메뉴 */}
       {isMenuOpen && (
         <div className="text-black fixed inset-0 z-50 flex">
-          {/* 슬라이드 메뉴 패널 */}
           <div className="w-64 max-h-screen overflow-y-auto bg-white shadow-lg p-6 flex flex-col justify-between">
             <div className="space-y-4">
               <button
@@ -95,62 +74,61 @@ export default function PostListStyledPage() {
               </button>
               <ul className="space-y-2">
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/profile")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   내 프로필
                 </li>
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/pets")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   반려동물 프로필
                 </li>
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/post/posting")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   글 쓰기
                 </li>
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/post/posting")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   내 게시글
                 </li>
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/reservation")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   예약 목록
                 </li>
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/diary")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   돌봄 일지
                 </li>
                 <li
-                  className="text-lg font-semibold cursor-pointer"
                   onClick={() => router.push("/review")}
+                  className="text-lg font-semibold cursor-pointer"
                 >
                   후기
                 </li>
               </ul>
             </div>
-
-            {/* 하단 고정 로그아웃 */}
             <div className="pt-4">
               <li
                 className="list-none text-lg font-semibold cursor-pointer"
-                onClick={() => console.log("로그아웃 처리")}
+                onClick={() => {
+                  removeCookie("token");
+                  router.push("/info");
+                }}
               >
                 로그아웃
               </li>
             </div>
           </div>
-
-          {/* 어두운 배경 */}
           <div
             className="flex-1 bg-black bg-opacity-40"
             onClick={() => setIsMenuOpen(false)}
@@ -193,11 +171,10 @@ export default function PostListStyledPage() {
         </div>
       </header>
 
-      {/* 필터 메뉴 한 줄 */}
+      {/* 필터 메뉴 */}
       <div className="w-full grid grid-cols-2 gap-2 py-4 text-center">
         {filterItems.map(({ label, icon }) => {
           const isActive = activeFilter === label;
-
           return (
             <button
               key={label}
@@ -219,8 +196,6 @@ export default function PostListStyledPage() {
                   } object-contain`}
                 />
               </div>
-
-              <span className="text-xs text-black mt-1"></span>
             </button>
           );
         })}
@@ -229,37 +204,39 @@ export default function PostListStyledPage() {
       {/* 최근 목록 */}
       <div className="w-full">
         <h2 className="text-black text-lg font-bold mb-2">최근 목록</h2>
-        {filteredPosts.length === 0 && (
+        {isLoading ? (
+          <div className="text-gray-500 text-center py-8">불러오는 중...</div>
+        ) : filteredPosts.length === 0 ? (
           <div className="text-gray-500 text-center py-8">
             게시글이 없습니다.
           </div>
-        )}
-        {filteredPosts.map((post) => (
-          <div
-            key={post.id}
-            onClick={() => router.push(`/post/${post.id}`)}
-            className="flex items-center w-full h-28 rounded-3xl bg-white/70 mb-4 overflow-hidden shadow cursor-pointer"
-          >
-            <img
-              src={post.user?.file?.url ?? "/img/profile.jpeg"}
-              alt="작성자 이미지"
-              className="w-20 h-20 rounded-full ml-4 object-cover"
-            />
-
-            <div className="flex-1 ml-4 mr-4">
-              <div className="text-black text-base font-bold">
-                {post.user?.nickname || "제니제니"}
-              </div>
-              <div className="text-sm text-gray-700 truncate">
-                {post.title}{" "}
-                {post.availableAnimals && `ㆍ${post.availableAnimals}`}
-              </div>
-              <div className="text-sm text-gray-500">
-                ⭐ {post.user?.ratingAvg} | {post.user?.reviewCount} 건 완료
+        ) : (
+          filteredPosts.map((post) => (
+            <div
+              key={post.id}
+              onClick={() => router.push(`/post/${post.id}`)}
+              className="flex items-center w-full h-28 rounded-3xl bg-white/70 mb-4 overflow-hidden shadow cursor-pointer"
+            >
+              <img
+                src={post.user?.file?.url ?? "/img/profile.jpeg"}
+                alt="작성자 이미지"
+                className="w-20 h-20 rounded-full ml-4 object-cover"
+              />
+              <div className="flex-1 ml-4 mr-4">
+                <div className="text-black text-base font-bold">
+                  {post.user?.nickname || "제니제니"}
+                </div>
+                <div className="text-sm text-gray-700 truncate">
+                  {post.title}{" "}
+                  {post.availableAnimals && `ㆍ${post.availableAnimals}`}
+                </div>
+                <div className="text-sm text-gray-500">
+                  ⭐ {post.user?.ratingAvg} | {post.user?.reviewCount} 건 완료
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* 하단 네비게이션 */}
@@ -275,6 +252,7 @@ export default function PostListStyledPage() {
         ))}
       </footer>
 
+      {/* 새 글 작성 버튼 */}
       {isPartner && (
         <div className="fixed bottom-24 right-4 z-50 group">
           <button

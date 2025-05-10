@@ -19,10 +19,8 @@ export interface UserInfo {
 }
 
 export interface AvailableTime {
-  startDate: string;
-  endDate: string | null;
-  startTime: string;
-  endTime: string;
+  start_Date: string;
+  end_Date: string;
 }
 
 export interface PostInfo {
@@ -33,7 +31,7 @@ export interface PostInfo {
   price: number;
   files: FileData[] | null;
   user: UserInfo | null;
-  availableTimes: AvailableTime[] | null;
+  availableTimes: AvailableTime[];
 }
 
 export interface CreateOrUpdatePostForm {
@@ -41,7 +39,7 @@ export interface CreateOrUpdatePostForm {
   content: string;
   availableAnimals: string;
   price: number;
-  availableDates: AvailableTime[];
+  availableDates: AvailableTime[] ;
   fileIds: number[];
 }
 
@@ -79,7 +77,10 @@ export const createPost = async (formData: CreateOrUpdatePostForm) => {
 };
 
 // ✅ 게시글 수정
-export const updatePost = async (postId: number, formData: CreateOrUpdatePostForm) => {
+export const updatePost = async (
+  postId: number,
+  formData: CreateOrUpdatePostForm
+) => {
   try {
     const response = await axiosInstance.put(`/post/${postId}`, formData);
     return response.data;

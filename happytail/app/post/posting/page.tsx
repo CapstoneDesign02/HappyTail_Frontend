@@ -3,23 +3,13 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { createPost } from "../api/postAPI";
+import {
+  AvailableTime,
+  CreateOrUpdatePostForm,
+  createPost,
+} from "../api/postAPI";
 import axiosInstance from "@/app/common/axiosInstance";
 import { DateRangeSelector } from "./MultiRangeClaendar";
-
-interface AvailableTime {
-  startDate: string;
-  endDate: string;
-}
-
-interface CreateOrUpdatePostForm {
-  title: string;
-  content: string;
-  availableAnimals: string;
-  price: number;
-  availableDates: AvailableTime[];
-  fileIds: number[];
-}
 
 export default function Post() {
   const router = useRouter();
@@ -27,25 +17,13 @@ export default function Post() {
   const [description, setDescription] = useState("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
-  const [selectedDates, setSelectedDates] = useState<number[]>([]);
-  const [dateRangeStart, setDateRangeStart] = useState<number | null>(null);
   const [animalType, setAnimalType] = useState<number>(1); // 1: 강아지, 2: 고양이, 3: 기타
   const [price, setPrice] = useState<number>(0);
-  const [weeklyTime, setWeeklyTime] = useState<Record<string, string[]>>({
-    일: [""],
-    월: [""],
-    화: [""],
-    수: [""],
-    목: [""],
-    금: [""],
-    토: [""],
-  });
 
+  const [availableDates, setAvailableDates] = useState<AvailableTime[]>([]);
   const handleGoBack = () => router.back();
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       const newPreviews = files.map((file) => URL.createObjectURL(file));
@@ -54,47 +32,17 @@ export default function Post() {
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
-    setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleTimeChange = (day: string, idx: number, value: string) => {
-    const updated = [...weeklyTime[day]];
-    updated[idx] = value;
-    setWeeklyTime({ ...weeklyTime, [day]: updated });
-  };
-
-  const addTimeSlot = (day: string) => {
-    setWeeklyTime({ ...weeklyTime, [day]: [...weeklyTime[day], ""] });
-  };
-
-  const handleRangeDateClick = (day: number) => {
-    if (dateRangeStart === null) {
-      setDateRangeStart(day);
-      setSelectedDates([day]);
-    } else {
-      const start = Math.min(dateRangeStart, day);
-      const end = Math.max(dateRangeStart, day);
-      const range = Array.from(
-        { length: end - start + 1 },
-        (_, i) => start + i
-      );
-      setSelectedDates(range);
-      setDateRangeStart(null);
-    }
-  };
-
   const uploadImagesAndGetFileIds = async (): Promise<number[]> => {
     const fileIds: number[] = [];
     for (const file of selectedImages) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("files", file);
       try {
-        const res = await axiosInstance.post("/file", formData, {
+        const res = await axiosInstance.post("/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        fileIds.push(res.data.id);
+
+        fileIds.push(res.data[0]);
       } catch (err) {
         console.error("❌ 이미지 업로드 실패:", err);
       }
@@ -102,21 +50,9 @@ export default function Post() {
     return fileIds;
   };
 
-  const getDaysInMonth = (year: number, month: number): number => {
-    return new Date(year, month, 0).getDate();
-  };
-
-  const getFirstDayOfWeek = (year: number, month: number): number => {
-    return new Date(year, month - 1, 1).getDay();
-  };
-
   const handleSubmit = async () => {
     const fileIds = await uploadImagesAndGetFileIds();
     if (fileIds.length === 0) return alert("이미지 업로드 실패");
-
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
 
     const formData: CreateOrUpdatePostForm = {
       title,
@@ -229,7 +165,7 @@ export default function Post() {
             name="type"
             value={animalType}
             onChange={(e) => setAnimalType(Number(e.target.value))}
-            className="w-full border p-2 my-2 rounded text-1xl"
+            className="w-full border p-4 my-2 rounded text-1xl"
           >
             <option value={0}>강아지</option>
             <option value={1}>고양이</option>
@@ -239,15 +175,17 @@ export default function Post() {
         <div className="mb-6 ">
           <label className="text-2xl font-bold">가격</label>
           <input
-            className="w-full h-16 border border-black/30 rounded px-4 text-1xl mt-2"
+            className="w-full h-16 border border-black/30 rounded p-4 my-2 text-1xl mt-2"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
             placeholder="가격"
           />
         </div>
         <div className="w-full h-px bg-yellow-400 my-6"></div>
-        <DateRangeSelector />
-       
+        
+        <label className="text-2xl font-bold">예약 가능 시간</label>
+        <DateRangeSelector setAvailableDates={setAvailableDates} />
+
         <div className="w-full h-px bg-yellow-400 my-6"></div>
 
         {/* 제출 */}

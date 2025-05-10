@@ -24,14 +24,19 @@ interface UserProfile {
 }
 
 const UserProfilePage: React.FC = () => {
-
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState<Partial<UserProfile>>({});
   const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);
   const router = useRouter();
-
+  const navItems = [
+    { icon: "/img/icons/reservation.png", route: "/reservation" },
+    { icon: "/img/icons/pets.png", route: "/pets" },
+    { icon: "/img/icons/home.png", route: "/post" },
+    { icon: "/img/icons/diary.png", route: "/diary" },
+    { icon: "/img/icons/profile.png", route: "/profile" },
+  ];
   useEffect(() => {
     const fetchProfile = async () => {
       const data = await getProfile();
@@ -95,7 +100,9 @@ const UserProfilePage: React.FC = () => {
                 <span className="text-3xl font-extrabold">{"<"}</span>
               </div>
             </button>
-            <h1 className="whitespace-nowrap text-2xl font-extrabold">개인 정보 관리</h1>
+            <h1 className="whitespace-nowrap text-2xl font-extrabold">
+              개인 정보 관리
+            </h1>
           </div>
 
           <button onClick={() => setEditMode(!editMode)}>
@@ -208,6 +215,19 @@ const UserProfilePage: React.FC = () => {
 
         <div className="w-full h-px bg-yellow-400 my-6"></div>
       </div>
+
+      {/* 하단 네비게이션 */}
+      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+        {navItems.map(({ icon, route }, i) => (
+          <button
+            key={i}
+            onClick={() => router.push(route)}
+            className="w-14 h-14 flex items-center justify-center"
+          >
+            <Image src={icon} alt="nav-icon" width={60} height={60} />
+          </button>
+        ))}
+      </footer>
     </div>
   );
 };

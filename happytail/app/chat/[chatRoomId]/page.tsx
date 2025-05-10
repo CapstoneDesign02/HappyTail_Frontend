@@ -25,7 +25,7 @@ export default function ChatPage() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const email = "user2@naver.com";
+    const email = "user1@naver.com";
 
     const ws = new WebSocket(
       `${process.env.NEXT_PUBLIC_SOCKET_ID}/ws/chat?email=${email}`

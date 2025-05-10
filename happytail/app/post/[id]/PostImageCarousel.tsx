@@ -20,7 +20,7 @@ export default function PostImageCarousel({
       <img
         src={files[0].url}
         alt="게시글 이미지"
-        className="w-full h-48 object-cover rounded-md mb-4"
+        className="w-full h-80 object-contain rounded-md"
       />
     );
   }
@@ -35,7 +35,7 @@ export default function PostImageCarousel({
       <img
         src={files[index].url}
         alt={`게시글 이미지 ${index + 1}`}
-        className="w-full h-48 object-cover rounded-md"
+        className="w-full h-80 object-contain rounded-md"
       />
       <button
         onClick={prev}
