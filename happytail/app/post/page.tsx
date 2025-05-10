@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { removeCookie } from "../common/cookie";
 
-const isPartner = true;
 
 export default function PostListStyledPage() {
   const [posts, setPosts] = useState<PostInfo[]>([]);
