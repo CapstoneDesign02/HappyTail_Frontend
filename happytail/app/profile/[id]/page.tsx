@@ -9,7 +9,7 @@ interface PageProps {
 }
 
 export default async  function PageProfile({ params }: PageProps) {
-  const id = params.id;
+  const id = await params.id;
 
   if (!id) {
     return <p>로딩 중...</p>;
