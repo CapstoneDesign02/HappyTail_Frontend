@@ -2,7 +2,13 @@ export const dynamic = 'force-dynamic';
 
 import ProfilePage from "./ProfilePage";
 
-export default function PageProfile({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function PageProfile({ params }: PageProps) {
   const id = params.id;
 
   if (!id) {
