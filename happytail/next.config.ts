@@ -4,6 +4,7 @@ import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: "standalone", // standalone 모드로 배포를 시도해 보세요.Q
   images: {
     domains: ["localhost", "happytail.vercel.app"],
     remotePatterns: [
