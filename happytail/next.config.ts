@@ -4,7 +4,6 @@ import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: "standalone",
   images: {
     domains: ["localhost", "happytail.vercel.app"],
     remotePatterns: [
