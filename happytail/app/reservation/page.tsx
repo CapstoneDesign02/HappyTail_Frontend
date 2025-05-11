@@ -1,13 +1,68 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   getMyReservations,
   getPartnerReservations,
-  updateReservationStatus,
+  // updateReservationStatus,
   ReservationInfo,
 } from "./api/reservationAPI";
+
+const mockMyReservations = [
+  {
+    id: 1,
+    profilePhotoUrl: "/img/profile/winter.jpg",
+    startDate: "2025-05-13",
+    endDate: "2025-05-13",
+    startTime: "10:00",
+    endTime: "12:00",
+    isAccepted: 1, // 신청 완료
+  },
+  {
+    id: 2,
+    profilePhotoUrl: "/img/profile/iu.png",
+    startDate: "2025-05-15",
+    endDate: "2025-05-15",
+    startTime: "14:00",
+    endTime: "16:00",
+    isAccepted: 2, // 거절됨
+  },
+];
+
+const mockPartnerReservations = [
+  {
+    id: 3,
+    profilePhotoUrl: "/img/profile/cha.jpg",
+    startDate: "2025-05-16",
+    endDate: "2025-05-16",
+    startTime: "09:00",
+    endTime: "11:00",
+    isAccepted: 0, // 대기중
+  },
+  {
+    id: 4,
+    profilePhotoUrl: "/img/profile/jang.jpg",
+    startDate: "2025-05-17",
+    endDate: "2025-05-17",
+    startTime: "13:00",
+    endTime: "15:00",
+    isAccepted: 1, // 신청 완료
+  },
+];
+
+// 상태 업데이트용 목 함수
+const updateReservationStatus = async (
+  id: number,
+  update: { isAccepted: number }
+) => {
+  alert(
+    `예약 ${id} 상태를 ${
+      update.isAccepted === 1 ? "수락" : "거절"
+    } 처리했습니다. (목데이터)`
+  );
+};
 
 export default function ReservationManagePage() {
   const router = useRouter();
@@ -18,7 +73,20 @@ export default function ReservationManagePage() {
     fetchReservations();
   }, [selectedTab]);
 
-  const fetchReservations = async () => {
+  // 목데이터
+  // const fetchReservations = async () => {
+  //   try {
+  //     if (selectedTab === "my") {
+  //       setReservations(mockMyReservations);
+  //     } else {
+  //       setReservations(mockPartnerReservations);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ 예약 정보 불러오기 실패:", error);
+  //   }
+  // };
+
+    const fetchReservations = async () => {
     try {
       if (selectedTab === "my") {
         const data = await getMyReservations();
@@ -31,7 +99,7 @@ export default function ReservationManagePage() {
       console.error("❌ 예약 정보 불러오기 실패:", error);
     }
   };
-
+  
   const handleAccept = async (id: number) => {
     try {
       await updateReservationStatus(id, { isAccepted: 1 });
@@ -135,18 +203,19 @@ export default function ReservationManagePage() {
                   {statusText}
                 </div>
                 <div className="text-base sm:text-2xl font-extrabold text-black font-['NanumSquareRound'] text-right">
-                  {reservation.startDate} {reservation.startTime} ~{" "}
-                  {reservation.endDate} {reservation.endTime}
+                  {reservation.startDate} ~ {reservation.endDate}
                 </div>
               </div>
 
               <div className="w-full flex flex-col sm:flex-row items-center gap-6">
                 {/* 프로필 이미지 */}
-                <div className="flex justify-center items-center w-24 sm:w-40 shrink-0">
-                  <img
+                <div className="w-24 sm:w-40 aspect-square overflow-hidden rounded-full shrink-0">
+                  <Image
                     src={reservation.profilePhotoUrl || "/img/profile.jpeg"}
                     alt="프로필"
-                    className="w-full h-auto rounded-full object-cover"
+                    width={160} // 실제 너비
+                    height={160} // 실제 높이
+                    className="object-cover w-full h-full"
                   />
                 </div>
 
