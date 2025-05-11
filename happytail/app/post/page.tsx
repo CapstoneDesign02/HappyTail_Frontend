@@ -92,7 +92,7 @@ export default function PostListStyledPage() {
                   글 쓰기
                 </li>
                 <li
-                  onClick={() => router.push("/post/posting")}
+                  onClick={() => router.push("/post/mypost")}
                   className="text-lg font-semibold cursor-pointer"
                 >
                   내 게시글

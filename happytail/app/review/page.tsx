@@ -138,7 +138,7 @@ export default function ReviewManagePage() {
           <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
             {selectedTab === "written" && (
               <button
-                onClick={() => alert(`수정 페이지 이동 (id: ${review.id})`)}
+                onClick={() => router.push(`/review/edit/${review.id}`)}
                 className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
               >
                 수정

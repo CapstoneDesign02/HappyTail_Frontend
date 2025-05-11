@@ -183,7 +183,7 @@ export default function Post() {
         </div>
         <div className="w-full h-px bg-yellow-400 my-6"></div>
         
-        <label className="text-2xl font-bold">예약 가능 시간</label>
+        <label className="text-2xl font-bold">예약 가능 날짜</label>
         <DateRangeSelector setAvailableDates={setAvailableDates} />
 
         <div className="w-full h-px bg-yellow-400 my-6"></div>
