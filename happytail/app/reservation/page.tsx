@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   getMyReservations,
   getPartnerReservations,
-  // updateReservationStatus,
   ReservationInfo,
 } from "./api/reservationAPI";
 
@@ -255,18 +254,7 @@ export default function ReservationManagePage() {
                       </button>
                     ) : (
                       <>
-                        <button
-                          onClick={() => router.push("/health-status")}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          건강 상태
-                        </button>
-                        <button
-                          onClick={() => router.push("/care-log")}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          돌봄 일지
-                        </button>
+                        
                         <button
                           onClick={() => router.push(`/chat/${reservation.id}`)}
                           className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
