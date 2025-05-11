@@ -26,18 +26,20 @@ const Step1 = () => {
     formData.append("file", file);
 
     try {
-      const res = await fetch("/api/ocr", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
+      // const res = await fetch("/api/ocr", {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      // const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("ocrResult", JSON.stringify(data));
-        router.push("/join/step2?email=" + email);
-      } else {
-        alert("OCR 실패: " + data.error);
-      }
+      // if (res.ok) {
+      //   localStorage.setItem("ocrResult", JSON.stringify(data));
+      //   router.push("/join/step2?email=" + email);
+      // } else {
+      //   alert("OCR 실패: " + data.error);
+      // }
+
+      router.push("/join/step2?email=" + email);
     } catch (err) {
       console.error("서버 오류:", err);
     } finally {
