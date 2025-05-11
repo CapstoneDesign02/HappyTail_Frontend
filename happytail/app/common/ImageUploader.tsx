@@ -14,7 +14,6 @@ export default function ImageUploader({
   url,
 }: ImageUploaderProps) {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-  const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFiles(e.target.files);
@@ -31,7 +30,6 @@ export default function ImageUploader({
       });
 
       try {
-        setUploading(true);
         const res = await axiosInstance.post("/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
@@ -39,8 +37,6 @@ export default function ImageUploader({
         onUploadSuccess(res.data); // 부모에게 전달
       } catch (err) {
         console.error("업로드 실패:", err);
-      } finally {
-        setUploading(false);
       }
     };
 

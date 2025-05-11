@@ -8,6 +8,7 @@ import {
 } from "../../api/PetAPI";
 import { AnimalForm } from "../../new/page";
 import ImageUploader from "@/app/common/ImageUploader";
+import { File } from "@/app/common/fileType";
 
 const initialForm: AnimalForm = {
   name: "",
@@ -35,7 +36,7 @@ export default function EditPetPage() {
           type: data.type,
           breed: data.breed,
           additionalInfo: data.additionalInfo ?? "",
-          fileIds: data.files?.map((file: any) => file.id) ?? [],
+          fileIds: data.files?.map((file: File) => file.id) ?? [],
         };
 
         if (data.files && data.files[0]) setImage(data.files[0].url);

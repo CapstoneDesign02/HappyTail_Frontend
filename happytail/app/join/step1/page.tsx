@@ -33,7 +33,7 @@ export default function Step1() {
         alert("OCR 실패: " + data.error);
       }
     } catch (err) {
-      alert("서버 오류");
+      console.error("서버 오류:", err);
     } finally {
       setLoading(false);
     }

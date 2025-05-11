@@ -11,6 +11,8 @@ export default function PostImageCarousel({
 }: {
   files: FileData[] | null;
 }) {
+  const [index, setIndex] = useState(0);
+
   if (!files || files.length === 0) {
     return null;
   }
@@ -24,8 +26,6 @@ export default function PostImageCarousel({
       />
     );
   }
-
-  const [index, setIndex] = useState(0);
 
   const prev = () => setIndex((index - 1 + files.length) % files.length);
   const next = () => setIndex((index + 1) % files.length);

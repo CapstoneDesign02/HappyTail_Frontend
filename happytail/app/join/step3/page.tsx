@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
-import { OCRmockdata } from "../mockData";
+import { OCRData, OCRmockdata } from "../mockData";
 
 export default function Step3() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
-  const [ocrData, setOcrData] = useState<any>(null);
+  const [ocrData, setOcrData] = useState<OCRData | null>(null);
   const [phone, setPhone] = useState("");
   const [nickname, setNickname] = useState("");
-  const [isDuplicate, setIsDuplicate] = useState<boolean|null>(null);
+  const [isDuplicate, setIsDuplicate] = useState<boolean | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("ocrResult");
@@ -31,7 +31,7 @@ export default function Step3() {
   };
 
   const handleJoin = async () => {
-    if (!phone || !nickname) return alert("필수 정보를 입력하세요.");
+    if (!phone || !nickname || !ocrData) return alert("필수 정보를 입력하세요.");
     if (isDuplicate) return alert("닉네임 중복 확인하세요.");
 
     const phoneSanitized = phone.replace(/-/g, "");
@@ -128,7 +128,7 @@ export default function Step3() {
               <p className="text-red-500 text-lg mt-2 font-['NanumSquareRound']">
                 🚨 닉네임 중복 확인이 필요합니다.
               </p>
-            ) }
+            )}
             {!isDuplicate && (
               <p className="text-green-500 text-lg mt-2 font-['NanumSquareRound']">
                 ✅ 사용 가능한 닉네임입니다.

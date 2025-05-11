@@ -2,19 +2,19 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { OCRmockdata } from "../mockData";
+import { OCRData, OCRmockdata } from "../mockData";
 
 export default function Step2() {
   const router = useRouter();
   const searchParams = useSearchParams();
-   const email = searchParams.get("email") || "";
-  const [ocrData, setOcrData] = useState<any>(null);
+  const email = searchParams.get("email") || "";
+  const [ocrData, setOcrData] = useState<OCRData | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("ocrResult");
     if (stored) {
       setOcrData(JSON.parse(stored));
-      setOcrData(OCRmockdata)
+      setOcrData(OCRmockdata);
     } else {
       router.push("/join/step1?email=" + email);
     }
