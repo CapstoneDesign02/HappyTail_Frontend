@@ -19,7 +19,8 @@ export default function Step2() {
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem("ocrResult");
+    // const stored = localStorage.getItem("ocrResult");
+    const stored = "test";
     if (stored) {
       setOcrData(JSON.parse(stored));
       setOcrData(OCRmockdata);
