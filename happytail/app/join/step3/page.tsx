@@ -1,9 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
 import { OCRData, OCRmockdata } from "../mockData";
+
+function OCRInfo() {
+  const stored = localStorage.getItem("ocrResult");
+  if (stored) {
+    return JSON.parse(stored);
+  } else {
+    return OCRmockdata;
+  }
+}
 
 export default function Step3() {
   const router = useRouter();
@@ -18,7 +27,6 @@ export default function Step3() {
     const stored = localStorage.getItem("ocrResult");
     if (stored) {
       setOcrData(JSON.parse(stored));
-      setOcrData(OCRmockdata);
     } else {
       router.push("/join/step1");
     }
@@ -31,7 +39,8 @@ export default function Step3() {
   };
 
   const handleJoin = async () => {
-    if (!phone || !nickname || !ocrData) return alert("필수 정보를 입력하세요.");
+    if (!phone || !nickname || !ocrData)
+      return alert("필수 정보를 입력하세요.");
     if (isDuplicate) return alert("닉네임 중복 확인하세요.");
 
     const phoneSanitized = phone.replace(/-/g, "");
@@ -87,6 +96,10 @@ export default function Step3() {
       <div className="w-full h-0.5 bg-yellow-400 mb-16" />
 
       {/* 입력 폼 */}
+      <Suspense fallback={<div>로딩 중...</div>}>
+        <OCRInfo />
+      </Suspense>
+
       <div className="flex flex-col items-center w-full">
         <div className="w-full max-w-2xl flex flex-col space-y-8">
           {/* 전화번호 입력 */}
