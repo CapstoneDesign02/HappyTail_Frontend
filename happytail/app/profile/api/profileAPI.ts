@@ -11,6 +11,16 @@ export const getProfile = async () => {
   }
 };
 
+export const getUserProfile = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/userinfo/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to get profile:", error);
+    throw error;
+  }
+};
+
 export const updateProfile = async (updatedData: {
   nickname?: string;
   phone?: string;

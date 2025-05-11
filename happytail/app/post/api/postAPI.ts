@@ -1,4 +1,5 @@
 import axiosInstance from "@/app/common/axiosInstance";
+import { AnimalProfile } from "@/app/reservation/api/reservationAPI";
 
 export interface FileData {
   id: number;
@@ -32,6 +33,7 @@ export interface PostInfo {
   files: FileData[] | null;
   user: UserInfo | null;
   availableTimes: AvailableTime[];
+  animalProfiles: AnimalProfile[] | null;
 }
 
 export interface CreateOrUpdatePostForm {
@@ -39,7 +41,7 @@ export interface CreateOrUpdatePostForm {
   content: string;
   availableAnimals: string;
   price: number;
-  availableDates: AvailableTime[] ;
+  availableDates: AvailableTime[];
   fileIds: number[];
 }
 
@@ -97,6 +99,26 @@ export const deletePost = async (postId: number) => {
     return response.data;
   } catch (error) {
     console.error(`❌ Failed to delete post with ID ${postId}:`, error);
+    throw error;
+  }
+};
+
+// ✅ 예약하기
+export const createReservation = async (
+  id: string,
+  animalId: number,
+  startDate: String,
+  endDate: String
+) => {
+  try {
+    const response = await axiosInstance.post(`/reservation/apply/${id}`, {
+      animalId,
+      startDate,
+      endDate,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ Failed to reservation:", error);
     throw error;
   }
 };

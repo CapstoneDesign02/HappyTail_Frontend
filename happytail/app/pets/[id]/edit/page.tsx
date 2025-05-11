@@ -88,7 +88,7 @@ export default function EditPetPage() {
   if (loading) return <div className="p-4 text-center">로딩 중...</div>;
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
+    <div className="p-4 max-w-screen-sm mx-auto">
       <div className="flex items-center mb-2">
         <button
           onClick={() => router.back()}

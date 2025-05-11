@@ -40,8 +40,8 @@ export default function PetListPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
-      <div className="w-full max-w-xl mt-4">
+    <div className="max-w-screen-sm mx-auto">
+      <div className="w-full max-w-screen-sm mt-4">
         <div className="flex items-center mb-2">
           <button
             onClick={() => router.back()}
