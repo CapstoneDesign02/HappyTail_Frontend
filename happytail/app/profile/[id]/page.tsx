@@ -1,10 +1,8 @@
-"use client";
-
-import { notFound, useParams, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-import { useEffect, useState } from "react";
 import { getUserProfile } from "../api/profileAPI";
+import BackButton from "./BackButton";
 
 type Review = {
   id: number;
@@ -33,42 +31,26 @@ type User = {
   receivedReviews: Review[];
 };
 
-export default function ProfilePage() {
-  const { id } = useParams();
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState(false);
+export default async function ProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  let user: User | null = null;
 
-  useEffect(() => {
-    if (!id) return;
+  try {
+    user = await getUserProfile(params.id);
+  } catch (error) {
+    console.error("❌ Failed to load user data:", error);
+    notFound();
+  }
 
-    const fetchUser = async () => {
-      try {
-        const data = await getUserProfile(id as string);
-        setUser(data);
-      } catch (err) {
-        console.error("❌ Failed to load user data:", err);
-        setError(true);
-      }
-    };
-
-    fetchUser();
-  }, [id]);
-
-  if (error) return notFound();
-  if (!user) return <p>로딩 중...</p>;
+  if (!user) return notFound();
 
   return (
     <div className="max-w-screen-sm mx-auto">
       <div className="flex items-center my-2">
-        <button
-          onClick={() => router.back()}
-          className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
-        >
-          <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">
-            &lt;
-          </span>
-        </button>
+        <BackButton />
         <h1 className="whitespace-nowrap text-2xl font-extrabold text-black">
           {user.nickname}님의 프로필
         </h1>
