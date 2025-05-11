@@ -1,18 +1,9 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
 import { OCRData, OCRmockdata } from "../mockData";
-
-function OCRInfo() {
-  const stored = localStorage.getItem("ocrResult");
-  if (stored) {
-    return JSON.parse(stored);
-  } else {
-    return OCRmockdata;
-  }
-}
 
 export default function Step3() {
   const router = useRouter();
@@ -26,9 +17,11 @@ export default function Step3() {
   useEffect(() => {
     const stored = localStorage.getItem("ocrResult");
     if (stored) {
-      setOcrData(JSON.parse(stored));
+      setOcrData(OCRmockdata);
     } else {
-      router.push("/join/step1");
+      // 테스트용 데이터 사용 (또는 페이지 이동)
+      setOcrData(OCRmockdata);
+      // 또는: router.push("/join/step1");
     }
   }, [router]);
 
@@ -95,11 +88,6 @@ export default function Step3() {
       {/* 구분선 */}
       <div className="w-full h-0.5 bg-yellow-400 mb-16" />
 
-      {/* 입력 폼 */}
-      <Suspense fallback={<div>로딩 중...</div>}>
-        <OCRInfo />
-      </Suspense>
-
       <div className="flex flex-col items-center w-full">
         <div className="w-full max-w-2xl flex flex-col space-y-8">
           {/* 전화번호 입력 */}
@@ -142,27 +130,30 @@ export default function Step3() {
                 🚨 닉네임 중복 확인이 필요합니다.
               </p>
             )}
-            {!isDuplicate && (
+            {isDuplicate === false && (
               <p className="text-green-500 text-lg mt-2 font-['NanumSquareRound']">
                 ✅ 사용 가능한 닉네임입니다.
               </p>
             )}
           </div>
 
-          <div className="text-2xl sm:text-2xl text-black text-30em flex flex-col gap-8 w-full max-w-2xl">
-            {/* 각 항목 */}
-            {[
-              { label: "이름", value: ocrData.name },
-              { label: "성별", value: ocrData.gender === "M" ? "남" : "여" },
-              { label: "주민등록번호", value: ocrData.idNumber },
-              { label: "주소", value: ocrData.address },
-              { label: "이메일", value: email || "example@domain.com" },
-            ].map(({ label, value }, idx) => (
-              <div key={idx} className="flex flex-col sm:flex-row">
-                <div className="w-full sm:w-1/3 font-bold">{label}</div>
-                <div className="mt-1 sm:mt-0 sm:ml-4 break-words">{value}</div>
-              </div>
-            ))}
+          {/* OCR 결과 출력 */}
+          <div className="text-2xl sm:text-2xl text-black flex flex-col gap-8 w-full max-w-2xl">
+            <p>
+              <strong>이름:</strong> {ocrData.name}
+            </p>
+            <p>
+              <strong>성별:</strong> {ocrData.gender === "M" ? "남" : "여"}
+            </p>
+            <p>
+              <strong>주민등록번호:</strong> {ocrData.idNumber}
+            </p>
+            <p>
+              <strong>주소:</strong> {ocrData.address}
+            </p>
+            <p>
+              <strong>이메일:</strong> {email || "example@domain.com"}
+            </p>
           </div>
 
           {/* 가입하기 버튼 */}
