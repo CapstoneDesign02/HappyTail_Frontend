@@ -1,19 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
 import { OCRData, OCRmockdata } from "../mockData";
 
 export default function Step3() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
+  const [email, setEmail] = useState<string>("");
   const [ocrData, setOcrData] = useState<OCRData | null>(null);
   const [phone, setPhone] = useState("");
   const [nickname, setNickname] = useState("");
   const [isDuplicate, setIsDuplicate] = useState<boolean | null>(null);
-
+  // 클라이언트에서만 `searchParams` 사용
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const emailFromParams = searchParams.get("email");
+    if (emailFromParams) {
+      setEmail(emailFromParams);
+    }
+  }, []);
   useEffect(() => {
     const stored = localStorage.getItem("ocrResult");
     if (stored) {
