@@ -1,16 +1,22 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 const Step1 = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
-  console.log(email);
-
+  const [email, setEmail] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // 클라이언트에서만 `searchParams` 사용
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const emailFromParams = searchParams.get("email");
+    if (emailFromParams) {
+      setEmail(emailFromParams);
+    }
+  }, []);
 
   const handleUpload = async () => {
     if (!file) return alert("파일을 선택하세요.");
