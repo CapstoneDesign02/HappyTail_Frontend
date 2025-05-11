@@ -127,7 +127,7 @@ const UserProfilePage: React.FC = () => {
           <div className="flex justify-center mb-6">
             <div className="w-48 h-48 relative rounded-3xl overflow-hidden shadow-md hover:scale-105 transition-transform duration-300">
               <Image
-                src={user?.files[0].url || "/img/profile.jpeg"}
+                src={user?.files[0]?.url || "/img/profile.jpeg"}
                 alt="User profile"
                 fill
                 style={{ objectFit: "cover" }}
