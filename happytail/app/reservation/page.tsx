@@ -69,7 +69,7 @@ export default function ReservationManagePage() {
   const handleGoBack = () => router.back();
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-screen-sm mx-auto">
       <div className="w-full max-w-xl py-3">
         <div className="flex items-center">
           <button
@@ -123,109 +123,137 @@ export default function ReservationManagePage() {
           예약 내역이 없습니다.
         </div>
       ) : (
-        reservations.map((reservation) => {
-          const statusText =
-            reservation.isAccepted === 0
-              ? "대기중"
-              : reservation.isAccepted === 1
-              ? "돌봄 예정"
-              : reservation.isAccepted === 2
-              ? "거절됨"
-              : reservation.isAccepted === 3
-              ? "돌봄 중"
-              : "돌봄 완료";
+        <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
+          {" "}
+          {/* 스크롤 가능 영역 추가 */}
+          {reservations
+            .slice()
+            .reverse()
+            .map((reservation) => {
+              const statusText =
+                reservation.isAccepted === 0
+                  ? "대기중"
+                  : reservation.isAccepted === 1
+                  ? "돌봄 예정"
+                  : reservation.isAccepted === 2
+                  ? "거절됨"
+                  : reservation.isAccepted === 3
+                  ? "돌봄 중"
+                  : "돌봄 완료";
 
-          const statusColor =
-            reservation.isAccepted === 0
-              ? "text-gray-700"
-              : reservation.isAccepted === 1
-              ? "text-green-400"
-              : reservation.isAccepted === 2
-              ? "text-red-400"
-              : reservation.isAccepted === 3
-              ? "text-amber-400"
-              : "text-gray-700";
+              const statusColor =
+                reservation.isAccepted === 0
+                  ? "text-gray-700"
+                  : reservation.isAccepted === 1
+                  ? "text-green-400"
+                  : reservation.isAccepted === 2
+                  ? "text-red-400"
+                  : reservation.isAccepted === 3
+                  ? "text-amber-400"
+                  : "text-gray-700";
 
-          return (
-            <div
-              key={reservation.id}
-              className="relative mb-8 border-b border-yellow-300 pb-4 pl-5"
-            >
-              <div className="flex flex-col text-sm justify-center sm:flex-row sm:text-xl sm:justify-between items-center mb-2">
+              return (
                 <div
-                  className={`text-base sm:text-2xl font-extrabold ${statusColor}`}
+                  key={reservation.id}
+                  className="relative mb-8 border-b border-yellow-300 pb-4 pl-5"
                 >
-                  {statusText}
-                </div>
-                <div className="text-base sm:text-2xl font-extrabold text-black font-['NanumSquareRound'] text-right">
-                  {reservation.startDate} ~ {reservation.endDate}
-                </div>
-              </div>
+                  <div className="flex flex-col text-sm justify-center sm:flex-row sm:text-xl sm:justify-between items-center mb-2">
+                    <div
+                      className={`text-base sm:text-2xl font-extrabold ${statusColor}`}
+                    >
+                      {statusText}
+                    </div>
+                    <div className="text-base sm:text-2xl font-extrabold text-black font-['NanumSquareRound'] text-right">
+                      {reservation.startDate} ~ {reservation.endDate}
+                    </div>
+                  </div>
 
-              <div className="w-full flex flex-col sm:flex-row items-center gap-6">
-                {/* 프로필 이미지 */}
-                <div className="flex flex-col items-center w-24 sm:w-40 shrink-0">
-                  <Image
-                    src={reservation.profilePhotoUrl || "/img/profile.jpeg"}
-                    alt="프로필"
-                    className="w-24 h-24 rounded-full object-cover"
-                  />
-                  <span className="mt-2 text-xl text-center font-extrabold text-gray-800 font-['NanumSquareRound']">
-                    {selectedTab === "my"
-                      ? reservation.partnerNickname
-                      : reservation.userNickname}
-                  </span>
-                </div>
+                  <div className="w-full flex flex-col sm:flex-row items-center gap-6">
+                    {/* 프로필 이미지 */}
+                    <div
+                      className="flex flex-col items-center w-24 sm:w-40 shrink-0 cursor-pointer"
+                      onClick={() =>
+                        router.push(
+                          `/profile/${
+                            selectedTab === "my"
+                              ? reservation.partnerId
+                              : reservation.userId
+                          }`
+                        )
+                      }
+                    >
+                      <Image
+                        src={reservation.profilePhotoUrl || "/img/profile.jpeg"}
+                        alt="프로필"
+                        className="w-24 h-24 rounded-full object-cover"
+                        width={96}
+                        height={96}
+                        priority
+                      />
 
-                {/* 예약 정보 및 버튼 */}
-                <div className="flex flex-col justify-between w-full whitespace-nowrap">
-                  <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
-                    {reservation.isAccepted === 0 &&
-                    selectedTab === "partner" ? (
-                      <>
-                        <button
-                          onClick={() => handleAccept(reservation.id)}
-                          className="h-14 w-full bg-green-400 hover:bg-green-500 font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          수락
-                        </button>
-                        <button
-                          onClick={() => handleReject(reservation.id)}
-                          className="h-14 w-full  bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          거절
-                        </button>
-                        <button
-                          onClick={() => router.push(`/chat/${reservation.id}`)}
-                          className="h-14 w-full  bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          채팅
-                        </button>
-                      </>
-                    ) : reservation.isAccepted === 1 ||
-                      reservation.isAccepted === 4 ? (
-                      <button
-                        onClick={() => router.push(`/chat/${reservation.id}`)}
-                        className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
-                      >
-                        채팅
-                      </button>
-                    ) : (
-                      reservation.isAccepted === 3 && (
-                        <button
-                          onClick={() => router.push(`/chat/${reservation.id}`)}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
-                        >
-                          채팅
-                        </button>
-                      )
-                    )}
+                      <span className="mt-2 text-xl text-center font-extrabold text-gray-800 font-['NanumSquareRound']">
+                        {selectedTab === "my"
+                          ? reservation.partnerNickname
+                          : reservation.userNickname}
+                      </span>
+                    </div>
+
+                    {/* 예약 정보 및 버튼 */}
+                    <div className="flex flex-col justify-between w-full whitespace-nowrap">
+                      <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
+                        {reservation.isAccepted === 0 &&
+                        selectedTab === "partner" ? (
+                          <>
+                            <button
+                              onClick={() => handleAccept(reservation.id)}
+                              className="h-14 w-full bg-green-400 hover:bg-green-500 font-bold rounded-lg text-base sm:text-lg"
+                            >
+                              수락
+                            </button>
+                            <button
+                              onClick={() => handleReject(reservation.id)}
+                              className="h-14 w-full  bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
+                            >
+                              거절
+                            </button>
+                            <button
+                              onClick={() =>
+                                router.push(`/chat/${reservation.id}`)
+                              }
+                              className="h-14 w-full  bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
+                            >
+                              채팅
+                            </button>
+                          </>
+                        ) : reservation.isAccepted === 1 ||
+                          reservation.isAccepted === 4 ? (
+                          <button
+                            onClick={() =>
+                              router.push(`/chat/${reservation.id}`)
+                            }
+                            className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
+                          >
+                            채팅
+                          </button>
+                        ) : (
+                          reservation.isAccepted === 3 && (
+                            <button
+                              onClick={() =>
+                                router.push(`/chat/${reservation.id}`)
+                              }
+                              className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
+                            >
+                              채팅
+                            </button>
+                          )
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          );
-        })
+              );
+            })}
+        </div>
       )}
 
       {/* 하단 네비게이션 */}

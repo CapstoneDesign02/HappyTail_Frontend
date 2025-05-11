@@ -59,7 +59,10 @@ export default function PostPage() {
       <div className="w-full h-px bg-yellow-400"></div>
 
       <div className="bg-white rounded-xl p-4">
-        <div className="flex items-center gap-2 mb-2">
+        <div
+          className="flex items-center gap-2 mb-2 cursor-pointer"
+          onClick={() => router.push(`/profile/${post.user?.id}`)}
+        >
           <img
             src={post.user?.file?.url ?? "/img/profile.jpeg"}
             alt="작성자 이미지"
@@ -97,7 +100,7 @@ export default function PostPage() {
           onClick={() => router.push(`/post/${id}/reservation`)}
           className="mt-4 text-2xl w-full bg-amber-300 hover:bg-amber-400 text-black font-semibold py-3 rounded"
         >
-          신청하기
+          예약하러 가기
         </button>
       </div>
     </div>

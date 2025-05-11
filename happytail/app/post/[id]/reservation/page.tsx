@@ -2,14 +2,19 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getPostById, PostInfo } from "../../api/postAPI";
-import { AvailableDateSelector } from "../AvailableDateSelecter";
+import { createReservation, getPostById, PostInfo } from "../../api/postAPI";
+import { AvailableRangeSelector } from "./ResevationCalendar";
 
 export default function ReservationRegister() {
   const router = useRouter();
   const { id } = useParams();
   const [post, setPost] = useState<PostInfo | null>(null);
   const [error, setError] = useState(false);
+  const [selectedAnimalId, setSelectedAnimalId] = useState<number | null>(null);
+  const [selectedDates, setSelectedDates] = useState<{
+    start: string;
+    end: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -59,7 +64,10 @@ export default function ReservationRegister() {
       <div className="w-full h-px bg-yellow-400 pl-4"></div>
 
       <div className="bg-white rounded-xl p-4">
-        <div className="flex items-center gap-2 mb-2">
+        <div
+          className="flex items-center gap-2 mb-2 cursor-pointer"
+          onClick={() => router.push(`/profile/${post.user?.id}`)}
+        >
           <img
             src={post.user?.file?.url ?? "/img/profile.jpeg"}
             alt="작성자 이미지"
@@ -87,15 +95,59 @@ export default function ReservationRegister() {
         <div className="w-full h-px bg-yellow-400 my-6"></div>
         {/* 맡길 동물 선택기 */}
         <label className="text-2xl font-bold">맡길 동물 선택</label>
+        <label className="text-2xl font-bold mb-2">맡길 동물 선택</label>
+        <div className="space-y-5 mt-5">
+          {post.animalProfiles?.map((animal) => (
+            <label
+              key={animal.id}
+              className="flex items-center space-x-3 cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="animal"
+                value={animal.id}
+                checked={selectedAnimalId === animal.id}
+                onChange={() => setSelectedAnimalId(animal.id)}
+                className="w-5 h-5"
+              />
+              <img
+                src={animal.files[0].url || "/img/default_pet.avif"}
+                alt={animal.name}
+                className="w-12 h-12 object-cover rounded"
+              />
+              <span className="text-lg font-semibold text-gray-700">
+                {animal.name} | {animal.breed}
+              </span>
+            </label>
+          ))}
+        </div>
         <div className="w-full h-px bg-yellow-400 my-6"></div>
         {/* 예약 가능 날짜 선택기 */}
         <label className="text-2xl font-bold">예약 가능 시간</label>
-        <AvailableDateSelector availableDates={post.availableTimes} />
+        <AvailableRangeSelector
+          onSelect={setSelectedDates}
+          availableDates={post.availableTimes}
+        />
         <button
-          onClick={() => router.push(`/post/${id}/reservation`)}
-          className="mt-4 text-2xl w-full bg-amber-300 hover:bg-amber-400 text-black font-semibold py-3 rounded"
+          disabled={!selectedAnimalId || !selectedDates}
+          onClick={async () => {
+            try {
+              if (!selectedAnimalId || !selectedDates) return;
+              await createReservation(
+                id as string,
+                selectedAnimalId,
+                selectedDates.start,
+                selectedDates.end
+              );
+              alert("✅ 예약이 완료되었습니다!");
+              router.push(`/reservation`);
+            } catch (e) {
+              alert("❌ 예약 중 오류가 발생했습니다.");
+            }
+          }}
+          className="mt-4 text-2xl w-full bg-amber-300 hover:bg-amber-400 text-black font-semibold py-3 rounded disabled:opacity-50"
         >
-          신청하기
+          예약하기
         </button>
       </div>
     </div>
