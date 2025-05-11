@@ -40,6 +40,7 @@ export default function NewPetPage() {
       await addAnimalInfo({ ...form, fileIds: uploadedFileIds }); // 서버에 동물 정보 추가 요청
       router.push("/pets");
     } catch (error) {
+      console.error("❌ 동물 등록 실패:", error);
       alert("동물 등록에 실패했습니다.");
     }
   };

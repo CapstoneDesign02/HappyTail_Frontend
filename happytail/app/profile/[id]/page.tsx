@@ -2,7 +2,7 @@
 
 import { notFound, useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { FaArrowLeft, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getUserProfile } from "../api/profileAPI";
 

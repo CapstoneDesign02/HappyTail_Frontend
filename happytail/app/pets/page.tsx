@@ -35,6 +35,7 @@ export default function PetListPage() {
       await deleteAnimalInfo(id);
       setPets((prev) => prev.filter((pet) => pet.id !== id)); // UI에서 바로 제거
     } catch (err) {
+      console.error("❌ 동물 정보를 삭제하는 데 실패했습니다:", err);
       alert("삭제에 실패했습니다.");
     }
   };

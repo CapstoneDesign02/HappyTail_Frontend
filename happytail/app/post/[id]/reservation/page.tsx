@@ -142,6 +142,7 @@ export default function ReservationRegister() {
               alert("✅ 예약이 완료되었습니다!");
               router.push(`/reservation`);
             } catch (e) {
+              console.error("❌ 예약 중 오류 발생:", e);
               alert("❌ 예약 중 오류가 발생했습니다.");
             }
           }}

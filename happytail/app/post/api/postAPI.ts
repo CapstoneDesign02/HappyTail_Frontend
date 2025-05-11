@@ -107,8 +107,8 @@ export const deletePost = async (postId: number) => {
 export const createReservation = async (
   id: string,
   animalId: number,
-  startDate: String,
-  endDate: String
+  startDate: string,
+  endDate: string
 ) => {
   try {
     const response = await axiosInstance.post(`/reservation/apply/${id}`, {

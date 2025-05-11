@@ -1,7 +1,6 @@
 "use client";
 
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { getCookie, removeCookie, setCookie } from "./cookie";
 
 const axiosInstance = axios.create({
