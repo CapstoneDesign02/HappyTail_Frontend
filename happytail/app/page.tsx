@@ -1,6 +1,6 @@
 "use client";
 
-export default function AppBar() {
+export default function AppBar() {z
   return (
     <nav className="flex items-center justify-between px-6 py-4 shadow-md bg-white dark:bg-gray-900">
       {/* 왼쪽: 로고 */}
