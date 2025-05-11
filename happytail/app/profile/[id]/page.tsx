@@ -8,7 +8,7 @@ interface PageProps {
   };
 }
 
-export default function PageProfile({ params }: PageProps) {
+export default async  function PageProfile({ params }: PageProps) {
   const id = params.id;
 
   if (!id) {
