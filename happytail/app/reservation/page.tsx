@@ -128,7 +128,6 @@ export default function ReservationManagePage() {
           {/* 스크롤 가능 영역 추가 */}
           {reservations
             .slice()
-            .reverse()
             .map((reservation) => {
               const statusText =
                 reservation.isAccepted === 0
