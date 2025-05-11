@@ -3,22 +3,23 @@
 import React, { useEffect, useState } from "react";
 import { ReviewInfo } from "./api/reviewAPI";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 // 목업 데이터
 const writtenMockReviews: ReviewInfo[] = [
   {
     id: 1,
     reservationId: 4,
-    rating: 3,
-    content: "직접 작성한 후기입니다.",
-    profileImage: "https://placehold.co/100x100?text=PartnerA",
+    rating: 5,
+    content: "너무 좋았어요.",
+    profileImage: "/img/profile/winter.jpg",
   },
   {
     id: 2,
     reservationId: 5,
     rating: 4,
-    content: "내가 쓴 두 번째 후기!",
-    profileImage: "https://placehold.co/100x100?text=PartnerB",
+    content: "만족합니다.",
+    profileImage: "/img/profile/jang.jpg",
   },
 ];
 
@@ -27,15 +28,15 @@ const receivedMockReviews: ReviewInfo[] = [
     id: 3,
     reservationId: 6,
     rating: 5,
-    content: "받은 후기: 정말 좋았어요!",
-    profileImage: "https://placehold.co/100x100?text=WriterA",
+    content: "정말 좋았어요!",
+    profileImage: "/img/profile/cha.jpg",
   },
   {
     id: 4,
     reservationId: 7,
     rating: 5,
-    content: "고마워요!",
-    profileImage: "https://placehold.co/100x100?text=WriterB",
+    content: "정말 감사했습니다. 최고입니다.",
+    profileImage: "/img/jennie.jpeg",
   },
 ];
 
@@ -114,11 +115,15 @@ export default function ReviewManagePage() {
           {/* 프로필 + 별점 + 후기내용 */}
           <div className="flex gap-4 items-start">
             {/* 프로필 이미지 */}
-            <img
-              src={review.profileImage}
-              alt="프로필"
-              className="w-24 h-24 rounded-full object-cover"
-            />
+            <div className="w-24 sm:w-40 aspect-square overflow-hidden rounded-full shrink-0">
+              <Image
+                src={review.profileImage || "/img/profile.jpeg"}
+                alt="프로필"
+                width={160} // 실제 너비
+                height={160} // 실제 높이
+                className="object-cover w-full h-full"
+              />
+            </div>
 
             {/* 오른쪽 텍스트 내용 */}
             <div className="flex flex-col gap-2 flex-1">
@@ -128,7 +133,7 @@ export default function ReviewManagePage() {
               </div>
 
               {/* 후기 내용 */}
-              <div className="text-sm sm:text-base text-black break-words">
+              <div className="text-xl sm:text-xl text-black break-words">
                 {review.content}
               </div>
             </div>
