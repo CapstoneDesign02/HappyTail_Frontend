@@ -22,7 +22,7 @@ export default function Step2() {
     // const stored = localStorage.getItem("ocrResult");
     const stored = "test";
     if (stored) {
-      setOcrData(JSON.parse(stored));
+      // setOcrData(JSON.parse(stored));
       setOcrData(OCRmockdata);
     } else {
       router.push("/join/step1?email=" + email);
