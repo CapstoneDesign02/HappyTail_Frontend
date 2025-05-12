@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addAnimalInfo } from "../api/PetAPI";
 import ImageUploader from "@/app/common/ImageUploader";
@@ -38,12 +38,17 @@ export default function NewPetPage() {
   const handleSubmit = async () => {
     try {
       await addAnimalInfo({ ...form, fileIds: uploadedFileIds }); // 서버에 동물 정보 추가 요청
-      router.push("/pets");
+      sessionStorage.setItem("visitedNewPetPage", "true");
+      router.push("/pets?fromNew=true");
     } catch (error) {
       console.error("❌ 동물 등록 실패:", error);
       alert("동물 등록에 실패했습니다.");
     }
   };
+
+  useEffect(() => {
+    sessionStorage.setItem("visitedNewPetPage", "true");
+  }, []);
 
   return (
     <div className="p-4 max-w-screen-sm mx-auto">

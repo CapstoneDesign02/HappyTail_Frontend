@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ReviewInfo } from "./api/reviewAPI";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 // 목업 데이터
@@ -46,6 +46,8 @@ export default function ReviewManagePage() {
   );
   const [reviews, setReviews] = useState<ReviewInfo[]>([]);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromEdit = searchParams.get("fromEdit");
 
   useEffect(() => {
     fetchReviews();
@@ -62,7 +64,17 @@ export default function ReviewManagePage() {
     setReviews((prev) => prev.filter((review) => review.id !== id));
   };
 
-  const handleGoBack = () => router.push(`/post`);
+  const handleGoMain = () => router.push(`/post`);
+
+  const handleGoBack = () => {
+  if (fromEdit === "true" || sessionStorage.getItem("visitedEditPage") === "true") {
+    sessionStorage.removeItem("visitedEditPage");
+    window.history.go(-3);
+  } else {
+    window.history.go(-1);
+  }
+};
+
 
   return (
     <div className="w-full max-w-[760px] min-w-[400px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">

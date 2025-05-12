@@ -55,6 +55,11 @@ export default function ReviewEditPage() {
     }
   };
 
+  useEffect(() => {
+  sessionStorage.setItem("visitedEditPage", "true");
+}, []);
+  
+
   return (
     <div className="w-full max-w-md mx-auto p-6 font-['NanumSquareRound']">
       <h1 className="text-2xl font-bold mb-6 text-center">후기 수정</h1>
