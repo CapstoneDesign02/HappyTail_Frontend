@@ -253,7 +253,6 @@ export default function ReservationManagePage() {
                         className="w-24 h-24 rounded-full object-cover"
                         width={96}
                         height={96}
-                        className="object-cover w-full h-full"
                         priority
                       />
 

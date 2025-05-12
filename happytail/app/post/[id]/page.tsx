@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { AvailableDateSelector } from "./AvailableDateSelecter";
 
 export default function PostPage() {
-  const router = useRouter();
   const { id } = useParams();
   const router = useRouter();
   const [post, setPost] = useState<PostInfo | "NOT_FOUND" | null>(null);
