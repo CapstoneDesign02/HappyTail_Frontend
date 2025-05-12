@@ -9,13 +9,27 @@ import { AvailableDateSelector } from "./AvailableDateSelecter";
 export default function PostPage() {
   const router = useRouter();
   const { id } = useParams();
-  const [post, setPost] = useState<PostInfo | null>(null);
+  const router = useRouter();
+  const [post, setPost] = useState<PostInfo | "NOT_FOUND" | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const data = await getPostById(id as string);
+
+        // 확인용
+        // const data = null;
+
+        if (!data || !data.id) {
+          setTimeout(() => {
+            router.replace("/post/posting");
+          }, 1500);
+          
+          setPost("NOT_FOUND");
+          return;
+        }
+
         setPost(data);
       } catch (err) {
         console.error("❌ Failed to load post data:", err);
@@ -26,10 +40,28 @@ export default function PostPage() {
     fetchPost();
   }, [id]);
 
+  useEffect(() => {
+    if (post === "NOT_FOUND") {
+      const timeout = setTimeout(() => {
+        router.replace("/post/posting");
+      }, 1500);
+
+      return () => clearTimeout(timeout); // cleanup
+    }
+  }, [post]);
+
   if (error) {
     return (
       <main className="p-4 max-w-md mx-auto text-center text-red-500">
         해당 글을 찾을 수 없습니다.
+      </main>
+    );
+  }
+
+  if (post === "NOT_FOUND") {
+    return (
+      <main className="p-4 max-w-md mx-auto text-center text-gray-500">
+        글이 없습니다. <br />새 글 쓰기로 이동합니다...
       </main>
     );
   }

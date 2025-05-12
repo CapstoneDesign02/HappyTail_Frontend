@@ -61,10 +61,12 @@ export const getPostById = async (postId: string): Promise<PostInfo> => {
   try {
     const response = await axiosInstance.get(`/post/${postId}`);
     return response.data;
+    
   } catch (error) {
     console.error(`❌ Failed to fetch post with ID ${postId}:`, error);
     throw error;
   }
+  
 };
 
 // ✅ 게시글 작성

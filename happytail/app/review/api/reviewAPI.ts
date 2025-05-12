@@ -58,3 +58,14 @@ export const deleteReview = async (id: number): Promise<void> => {
     throw error;
   }
 };
+
+// ✅ 후기 단건 조회
+export const getReviewById = async (id: number): Promise<ReviewInfo> => {
+  try {
+    const response = await axiosInstance.get(`/review/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Failed to fetch review by id:", error);
+    throw error;
+  }
+};

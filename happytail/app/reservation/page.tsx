@@ -1,14 +1,67 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   getMyReservations,
   getPartnerReservations,
-  updateReservationStatus,
   ReservationInfo,
 } from "./api/reservationAPI";
-import Image from "next/image";
+
+const mockMyReservations = [
+  {
+    id: 1,
+    profilePhotoUrl: "/img/profile/winter.jpg",
+    startDate: "2025-05-13",
+    endDate: "2025-05-13",
+    startTime: "10:00",
+    endTime: "12:00",
+    isAccepted: 1, // 신청 완료
+  },
+  {
+    id: 2,
+    profilePhotoUrl: "/img/profile/iu.png",
+    startDate: "2025-05-15",
+    endDate: "2025-05-15",
+    startTime: "14:00",
+    endTime: "16:00",
+    isAccepted: 2, // 거절됨
+  },
+];
+
+const mockPartnerReservations = [
+  {
+    id: 3,
+    profilePhotoUrl: "/img/profile/cha.jpg",
+    startDate: "2025-05-16",
+    endDate: "2025-05-16",
+    startTime: "09:00",
+    endTime: "11:00",
+    isAccepted: 0, // 대기중
+  },
+  {
+    id: 4,
+    profilePhotoUrl: "/img/profile/jang.jpg",
+    startDate: "2025-05-17",
+    endDate: "2025-05-17",
+    startTime: "13:00",
+    endTime: "15:00",
+    isAccepted: 1, // 신청 완료
+  },
+];
+
+// 상태 업데이트용 목 함수
+const updateReservationStatus = async (
+  id: number,
+  update: { isAccepted: number }
+) => {
+  alert(
+    `예약 ${id} 상태를 ${
+      update.isAccepted === 1 ? "수락" : "거절"
+    } 처리했습니다. (목데이터)`
+  );
+};
 
 export default function ReservationManagePage() {
   const router = useRouter();
@@ -28,7 +81,20 @@ export default function ReservationManagePage() {
     fetchReservations();
   }, [selectedTab]);
 
-  const fetchReservations = async () => {
+  // 목데이터
+  // const fetchReservations = async () => {
+  //   try {
+  //     if (selectedTab === "my") {
+  //       setReservations(mockMyReservations);
+  //     } else {
+  //       setReservations(mockPartnerReservations);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ 예약 정보 불러오기 실패:", error);
+  //   }
+  // };
+
+    const fetchReservations = async () => {
     try {
       setIsLoading(true);
       setReservations([]);
@@ -43,7 +109,7 @@ export default function ReservationManagePage() {
       setIsLoading(false);
     }
   };
-
+  
   const handleAccept = async (id: number) => {
     try {
       await updateReservationStatus(id, { isAccepted: 1 });
@@ -170,7 +236,7 @@ export default function ReservationManagePage() {
                   <div className="w-full flex flex-col sm:flex-row items-center gap-6">
                     {/* 프로필 이미지 */}
                     <div
-                      className="flex flex-col items-center w-24 sm:w-40 shrink-0 cursor-pointer"
+                      className="flex flex-col aspect-square items-center w-24 rounded-full sm:w-40 shrink-0 cursor-pointer"
                       onClick={() =>
                         router.push(
                           `/profile/${
@@ -187,6 +253,7 @@ export default function ReservationManagePage() {
                         className="w-24 h-24 rounded-full object-cover"
                         width={96}
                         height={96}
+                        className="object-cover w-full h-full"
                         priority
                       />
 
