@@ -95,7 +95,6 @@ export default function ReservationRegister() {
         <div className="w-full h-px bg-yellow-400 my-6"></div>
         {/* 맡길 동물 선택기 */}
         <label className="text-2xl font-bold">맡길 동물 선택</label>
-        <label className="text-2xl font-bold mb-2">맡길 동물 선택</label>
         <div className="space-y-5 mt-5">
           {post.animalProfiles?.map((animal) => (
             <label
