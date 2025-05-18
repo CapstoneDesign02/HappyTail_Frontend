@@ -1,147 +1,107 @@
 "use client";
 
-import { useEffect, useState, ChangeEvent } from "react";
-import { useParams } from "next/navigation";
+import React, { useState } from "react";
+import ChatHeader from "./ChatHeader";
+import ServiceDetails from "./ServiceDetails";
+import CareOptions from "./CareOptions";
+import ChatMessage from "./ChatMessage";
 
-interface Message {
-  id?: string;
-  chatRoomId: string;
-  senderId: string;
-  receiverId: string;
-  content: string;
-  unread?: boolean;
-  timestamp: string;
-  imageUrl?: string;
-}
+export default function ChatScreen() {
+  const chatRoomId = "chatroom-1";
+  const senderId = "user2@naver.com";
+  const receiverId = "user1@naver.com";
 
-export default function ChatPage() {
-  const params = useParams();
-  const chatRoomId = Array.isArray(params.chatRoomId)
-    ? params.chatRoomId[0]
-    : params.chatRoomId;
-
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [message, setMessage] = useState<string>("");
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-
-  useEffect(() => {
-    const email = "user1@naver.com";
-
-    const ws = new WebSocket(
-      `${process.env.NEXT_PUBLIC_SOCKET_ID}/ws/chat?email=${email}`
-    );
-
-    ws.onopen = () => {
-      console.log("✅ WebSocket Connected");
-
-      setMessages([]); // 기존 메시지 초기화
-
-      // 연결 완료 후 이전 메시지 요청
-      ws.send(
-        JSON.stringify({
-          type: "fetchAll",
-          chatRoomId,
-        })
-      );
-    };
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("📩 Message Received:", data);
-      setMessages((prev) => [...prev, data]);
-    };
-
-    ws.onclose = () => {
-      console.log("❌ WebSocket Disconnected");
-    };
-
-    setSocket(ws);
-
-    return () => {
-      ws.close();
-      console.log("❌ WebSocket Disconnected");
-    };
-  }, [chatRoomId]);
-
-  const sendMessage = () => {
-    if (!socket || !message.trim() || !chatRoomId) return;
-
-    const senderId = "user2@naver.com";
-    const receiverId = "user1@naver.com"; // TODO: 실제 receiverId 동적으로 받아오기
-
-    const newMessage: Message = {
+  // ✅ 💬 목데이터
+  const [messages] = useState([
+    {
       chatRoomId,
-      senderId: senderId || "",
+      senderId,
       receiverId,
-      content: message,
-      timestamp: new Date().toISOString(),
-    };
+      content: "안녕하세요! 올데이 강아지 케어 신청자입니다.",
+      timestamp: "2025-05-18T10:00:00Z",
+    },
+    {
+      chatRoomId,
+      senderId: receiverId,
+      receiverId: senderId,
+      content: "네! 잘 부탁드립니다 🐶",
+      timestamp: "2025-05-18T10:01:00Z", // 또는 "2025-05-18 10:01:00"
+    },
 
-    socket.send(JSON.stringify(newMessage));
+    {
+      chatRoomId,
+      senderId,
+      receiverId,
+      content: "강아지 알레르기나 주의사항 있으실까요?",
+      timestamp: "2025-05-18T10:02:30Z",
+    },
+    {
+      chatRoomId,
+      senderId: receiverId,
+      receiverId: senderId,
+      content:
+        "닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.",
+      timestamp: "2025-05-18T10:03:00Z",
+    },
+  ]);
+
+  const [message, setMessage] = useState("");
+
+  const handleSendMessage = () => {
+    alert("목데이터 보기 전용이라 메시지는 실제로 전송되지 않아요.");
     setMessage("");
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  };
-
   return (
-    <div className="flex flex-col h-full p-4">
-      {chatRoomId ? (
-        <>
-          <div className="flex-grow overflow-auto bg-gray-100 p-4 rounded-lg shadow-md">
-            {messages.map((msg, idx) => {
-              const isMine = msg.senderId === "user2@naver.com";
-              return (
-                <div
-                  key={idx}
-                  className={`mb-4 flex ${
-                    isMine ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div className={`max-w-xs`}>
-                    <div
-                      className={`text-xs mb-1 ${
-                        isMine
-                          ? "text-right text-amber-500"
-                          : "text-left text-gray-700"
-                      }`}
-                    >
-                      {msg.senderId}
-                    </div>
-                    <div
-                      className={`p-3 shadow-sm break-words text-sm ${
-                        isMine
-                          ? "bg-amber-400 text-white rounded-xl rounded-br-none"
-                          : "bg-white text-gray-900 rounded-xl rounded-bl-none"
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+    <div className="flex flex-col h-screen bg-white">
+      <div className="sticky top-0 bg-white">
+        {/* 상단 헤더 */}
+        <ChatHeader title="제니제니님과 채팅" />
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+          {/* 서비스 정보 */}
+          <ServiceDetails
+            imageUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/182aed5d24898bb6fb4a3284f9d877f194ab3aca"
+            serviceName="올데이 강아지 케어"
+            dateRange="2025년 2월 27일 ~ 2025년 3월 05일"
+          />
+
+          {/* 케어 옵션 */}
+          <div className="bg-white">
+            <CareOptions />
           </div>
-          <div className="mt-4 flex items-center space-x-2">
-            <input
-              type="text"
-              value={message}
-              onChange={handleInputChange}
-              placeholder="메시지를 입력하세요"
-              className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-            />
-            <button
-              onClick={sendMessage}
-              className="bg-amber-400 text-white px-4 py-2 rounded-lg hover:bg-amber-600 focus:outline-none"
-            >
-              전송
-            </button>
-          </div>
-        </>
-      ) : (
-        <p>Invalid Chat Room</p>
-      )}
+        </div>
+      </div>
+
+      {/* 메시지 말풍선 */}
+      <div className="min-h-[57%]">
+        {messages.map((msg, index) => (
+          <ChatMessage
+            key={index}
+            time={new Date(msg.timestamp).toLocaleTimeString()}
+            text={msg.content}
+            imageUrl="/img/logo192.png"
+            isUser={msg.senderId === senderId}
+          />
+        ))}
+      </div>
+
+      {/* 하단 입력창 */}
+      <div className="sticky bottom-0 h-fit flex items-center border-t border-gray-300 px-4 py-3 bg-white">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="메시지를 입력하세요"
+          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
+        />
+        <button
+          onClick={handleSendMessage}
+          className="bg-amber-400 hover:bg-amber-600 text-white px-4 py-2 rounded-lg"
+        >
+          전송
+        </button>
+      </div>
     </div>
   );
 }
