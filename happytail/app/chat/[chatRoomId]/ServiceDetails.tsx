@@ -1,5 +1,4 @@
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
 
 interface ServiceDetailsProps {
   imageUrl: string;
@@ -7,14 +6,17 @@ interface ServiceDetailsProps {
   dateRange: string;
 }
 
-const ServiceDetails = ({ imageUrl, serviceName, dateRange }: ServiceDetailsProps) => {
+const ServiceDetails = ({
+  imageUrl,
+  serviceName,
+  dateRange,
+}: ServiceDetailsProps) => {
   return (
     <div className="flex items-center p-2 border-b border-gray-200 bg-white">
-      <div className="relative w-16 h-16 mb-2">
-        <Image
+      <div className="relative w-20 h-20 mb-2">
+        <img
           src={imageUrl}
           alt={serviceName}
-          fill
           className="rounded-lg object-cover"
         />
       </div>

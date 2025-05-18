@@ -11,7 +11,6 @@ export default function ChatScreen() {
   const senderId = "user2@naver.com";
   const receiverId = "user1@naver.com";
 
-  // ✅ 💬 목데이터
   const [messages] = useState([
     {
       chatRoomId,
@@ -25,9 +24,8 @@ export default function ChatScreen() {
       senderId: receiverId,
       receiverId: senderId,
       content: "네! 잘 부탁드립니다 🐶",
-      timestamp: "2025-05-18T10:01:00Z", // 또는 "2025-05-18 10:01:00"
+      timestamp: "2025-05-18T10:01:00Z",
     },
-
     {
       chatRoomId,
       senderId,
@@ -40,7 +38,7 @@ export default function ChatScreen() {
       senderId: receiverId,
       receiverId: senderId,
       content:
-        "닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.닭고기 알레르기 있어서 급여 시 주의 부탁드려요.",
+        "닭고기 알레르기 있어서 급여 시 주의 부탁드려요. 닭고기 알레르기 있어서 급여 시 주의 부탁드려요.",
       timestamp: "2025-05-18T10:03:00Z",
     },
   ]);
@@ -53,28 +51,24 @@ export default function ChatScreen() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      <div className="sticky top-0 bg-white">
-        {/* 상단 헤더 */}
+    <div className="flex flex-col h-[100dvh] max-w-screen-sm mx-auto bg-white font-['NanumSquareRound']">
+      {/* 상단 고정 헤더 */}
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
         <ChatHeader title="제니제니님과 채팅" />
-
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-          {/* 서비스 정보 */}
-          <ServiceDetails
-            imageUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/182aed5d24898bb6fb4a3284f9d877f194ab3aca"
-            serviceName="올데이 강아지 케어"
-            dateRange="2025년 2월 27일 ~ 2025년 3월 05일"
-          />
-
-          {/* 케어 옵션 */}
-          <div className="bg-white">
-            <CareOptions />
-          </div>
-        </div>
       </div>
 
-      {/* 메시지 말풍선 */}
-      <div className="min-h-[57%]">
+      {/* 서비스 정보 및 케어 옵션 */}
+      <div className="px-4 border-b border-gray-100">
+        <ServiceDetails
+          imageUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/182aed5d24898bb6fb4a3284f9d877f194ab3aca"
+          serviceName="올데이 강아지 케어"
+          dateRange="2025년 2월 27일 ~ 2025년 3월 05일"
+        />
+        <CareOptions />
+      </div>
+
+      {/* 메시지 스크롤 영역 */}
+      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
         {messages.map((msg, index) => (
           <ChatMessage
             key={index}
@@ -86,8 +80,8 @@ export default function ChatScreen() {
         ))}
       </div>
 
-      {/* 하단 입력창 */}
-      <div className="sticky bottom-0 h-fit flex items-center border-t border-gray-300 px-4 py-3 bg-white">
+      {/* 하단 고정 입력창 */}
+      <div className="sticky bottom-0 z-10 bg-white border-t border-gray-300 px-4 py-2 flex items-center">
         <input
           type="text"
           value={message}
