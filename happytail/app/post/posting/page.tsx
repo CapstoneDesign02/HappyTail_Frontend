@@ -17,7 +17,7 @@ export default function Post() {
   const [description, setDescription] = useState("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [animalType, setAnimalType] = useState<number>(1); // 1: 강아지, 2: 고양이, 3: 기타
+  const [animalType, setAnimalType] = useState<number>(0); // 0: 강아지, 1: 고양이
   const [price, setPrice] = useState<number>(0);
 
   const [availableDates, setAvailableDates] = useState<AvailableTime[]>([]);
@@ -53,13 +53,16 @@ export default function Post() {
   const handleSubmit = async () => {
     const fileIds = await uploadImagesAndGetFileIds();
     if (fileIds.length === 0) return alert("이미지 업로드 실패");
+    if (availableDates.length === 0) {
+      return alert("예약 가능 날짜를 1개 이상 선택해주세요.");
+    }
 
     const formData: CreateOrUpdatePostForm = {
       title,
       content: description,
       availableAnimals: animalType.toString(),
       price,
-      availableDates,
+      availableTimes: availableDates, // ✅ 여기서 키 이름 바꿈
       fileIds,
     };
 
@@ -67,8 +70,8 @@ export default function Post() {
       await createPost(formData);
       alert("글이 등록되었습니다.");
       router.push("/post");
-    } catch (err) {
-      console.error("❌ 글 등록 실패:", err);
+    } catch (err: any) {
+      console.error("❌ 글 등록 실패:", err.response?.data || err.message, err);
       alert("글 등록 실패");
     }
   };
@@ -178,12 +181,11 @@ export default function Post() {
           <input
             className="w-full h-16 border border-black/30 rounded p-4 my-2 text-1xl mt-2"
             value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-            placeholder="가격"
+            onChange={(e) => setPrice(Number(e.target.value || 0))}
           />
         </div>
         <div className="w-full h-px bg-yellow-400 my-6"></div>
-        
+
         <label className="text-2xl font-bold">예약 가능 날짜</label>
         <DateRangeSelector setAvailableDates={setAvailableDates} />
 
