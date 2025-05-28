@@ -2,13 +2,13 @@
 
 import { useEffect, useState, ChangeEvent, useRef } from "react";
 
-interface Message {
+export interface Message {
   id?: string;
   chatRoomId: string;
   senderId: string;
   receiverId: string;
   content: string;
-  unread?: boolean;
+  unread: boolean;
   timestamp: string;
   imageUrl?: string;
   type?: string;
@@ -170,6 +170,12 @@ export default function ChatPage() {
           type="text"
           value={message}
           onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault(); // 줄바꿈 방지
+              sendMessage();
+            }
+          }}
           placeholder="메시지를 입력하세요"
         />
         <button

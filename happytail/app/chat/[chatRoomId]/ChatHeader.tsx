@@ -1,6 +1,6 @@
 "use client";
 
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface ChatHeaderProps {
@@ -8,6 +8,7 @@ interface ChatHeaderProps {
 }
 
 const ChatHeader = ({ title }: ChatHeaderProps) => {
+  const router = useRouter();
   return (
     <>
       <div className="w-full max-w-xl px-6 mt-2 bg-white">
@@ -21,7 +22,7 @@ const ChatHeader = ({ title }: ChatHeaderProps) => {
             </span>
           </button>
           <h1 className="whitespace-nowrap text-2xl  font-extrabold text-black">
-            누군가와 채팅
+            {title}
           </h1>
         </div>
       </div>

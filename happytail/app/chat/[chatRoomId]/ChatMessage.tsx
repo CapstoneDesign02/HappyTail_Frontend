@@ -6,10 +6,20 @@ interface ChatMessageProps {
   imageUrl?: string;
   text: string;
   isUser: boolean;
+  unread: boolean;
 }
 
-const ChatMessage = ({ time, imageUrl, text, isUser }: ChatMessageProps) => {
-  
+const ChatMessage = ({
+  time,
+  imageUrl,
+  text,
+  isUser,
+  unread,
+}: ChatMessageProps) => {
+  const formatTime = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
   return (
     <div
@@ -33,13 +43,13 @@ const ChatMessage = ({ time, imageUrl, text, isUser }: ChatMessageProps) => {
                 isUser
                   ? "bg-amber-400 text-white rounded-tr-none"
                   : "bg-gray-100 text-black rounded-tl-none"
-              } w-fitmin-w-[6rem] max-w-[60%] whitespace-pre-wrap break-words`}
+              } w-fitmin-w-[6rem] max-w-[80%] whitespace-pre-wrap break-words`}
             >
               {text}
             </div>
 
             <span className="text-[12px] text-gray-400 mt-1">
-              {time}
+              {formatTime(time)} {unread ? "읽지 않음" : "읽음"}
             </span>
           </div>
         </div>
@@ -67,7 +77,7 @@ const ChatMessage = ({ time, imageUrl, text, isUser }: ChatMessageProps) => {
             </div>
 
             <span className="text-[12px] text-gray-400 mt-1">
-              {time}
+              {formatTime(time)} {unread ? "읽지 않음" : "읽음"}
             </span>
           </div>
         </div>

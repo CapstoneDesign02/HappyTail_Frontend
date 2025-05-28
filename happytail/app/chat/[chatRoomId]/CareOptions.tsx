@@ -1,12 +1,32 @@
 import React from "react";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 
 const CareOptions = () => {
+  const { chatRoomId } = useParams();
+  const router = useRouter();
+
   const options = [
-    { label: "돌봄 일지", icon: "/img/icons/diary2.png", route: "" },
-    { label: "내 반려동물 프로필", icon: "/img/icons/pets2.png", route: "" },
-    { label: "반려동물 피부 상태", icon: "/img/icons/health.png", route: "" },
-    { label: "홈캠", icon: "/img/icons/homecam.png", route: "" },
+    {
+      label: "돌봄 일지",
+      icon: "/img/icons/diary2.png",
+      route: `/diary`,
+    },
+    {
+      label: "반려동물 프로필",
+      icon: "/img/icons/pets2.png",
+      route: `/pet-profile/${chatRoomId}`,
+    },
+    {
+      label: "반려동물 피부 상태",
+      icon: "/img/icons/health.png",
+      route: `/skin-check/${chatRoomId}`,
+    },
+    {
+      label: "홈캠",
+      icon: "/img/icons/homecam.png",
+      route: `/cam/${chatRoomId}`,
+    },
   ];
 
   return (
@@ -16,6 +36,7 @@ const CareOptions = () => {
           <button
             key={index}
             className="flex flex-col items-center justify-center bg-white rounded-xl p-1 hover:bg-amber-200 transition-colors h-15"
+            onClick={() => router.push(option.route)}
           >
             <div className="mb-2">
               <Image
@@ -26,7 +47,6 @@ const CareOptions = () => {
                 className="object-contain"
               />
             </div>
-
             <span className="text-md text-center break-keep leading-tight">
               {option.label}
             </span>
