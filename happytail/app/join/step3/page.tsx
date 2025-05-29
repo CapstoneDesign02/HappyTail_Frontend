@@ -63,7 +63,7 @@ export default function Step3() {
   if (!ocrData) return null;
 
   return (
-    <div className="w-full max-w-4xl min-w-min min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full min-w-[450px] min-h-screen bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 상단 타이틀 */}
       <div className="flex items-center mb-12">
         <button

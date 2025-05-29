@@ -91,7 +91,7 @@ const UserProfilePage: React.FC = () => {
   }
   //w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm
   return (
-    <div className="relative overflow-x-hidden flex flex-col items-center w-full min-h-screen font-bold text-black bg-white pb-24 px-4 max-w-screen-sm  mx-auto font-['NanumSquareRound']">
+    <div className="relative overflow-x-hidden flex flex-col items-center min-h-screen font-bold text-black bg-white pb-24 px-4 w-[80%] w-min-[400px]  mx-auto font-['NanumSquareRound']">
       <div className="w-full">
         <div className="w-full flex items-center justify-between py-3">
           <div className="flex items-center">
@@ -217,7 +217,7 @@ const UserProfilePage: React.FC = () => {
       </div>
 
       {/* 하단 네비게이션 */}
-      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+      <footer className="w-full w-min-[400px] h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
         {navItems.map(({ icon, route }, i) => (
           <button
             key={i}

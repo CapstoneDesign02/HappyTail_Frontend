@@ -69,7 +69,7 @@ export default function ReservationManagePage() {
   const handleGoBack = () => router.back();
 
   return (
-    <div className="max-w-screen-sm mx-auto">
+    <div className="w-[90%] w-min-[400px] mx-auto">
       <div className="w-full max-w-xl py-3">
         <div className="flex items-center">
           <button
@@ -253,7 +253,7 @@ export default function ReservationManagePage() {
       )}
 
       {/* 하단 네비게이션 */}
-      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
         {navItems.map(({ icon, route }, i) => (
           <button
             key={i}

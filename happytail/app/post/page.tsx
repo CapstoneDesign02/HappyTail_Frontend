@@ -58,7 +58,7 @@ export default function PostListStyledPage() {
   ];
 
   return (
-    <div className="relative min-w-[320px] flex flex-col items-center w-full min-h-screen font-bold bg-white pb-24 px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
+    <div className="relative w-[80%] w-min-[400px] flex flex-col items-center min-h-screen font-bold bg-white pb-24 px-4 mx-auto font-['NanumSquareRound']">
       {/* 슬라이딩 메뉴 */}
       {isMenuOpen && (
         <div className="text-black fixed inset-0 z-50 flex">
@@ -236,7 +236,7 @@ export default function PostListStyledPage() {
       </div>
 
       {/* 하단 네비게이션 */}
-      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto max-w-screen-sm">
+      <footer className="w-full w-min-[400px] h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
         {navItems.map(({ icon, route }, i) => (
           <button
             key={i}

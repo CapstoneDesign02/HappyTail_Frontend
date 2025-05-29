@@ -1,79 +1,91 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-export default function DiaryPage() {
+type AnalysisEntry = {
+  id: number;
+  imageUrl: string;
+  resultText: string;
+};
+
+export default function AiResultList() {
   const [modalUrl, setModalUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const fromEdit = searchParams.get("fromEdit");
 
   const handleGoBack = () => router.back();
 
+  const results: AnalysisEntry[] = [
+    {
+      id: 1,
+      imageUrl: "/img/poppy.jpg",
+      resultText:
+        "피부가 약간 붉고 건조합니다. 알레르기 반응 가능성이 있습니다.",
+    },
+    {
+      id: 2,
+      imageUrl: "/img/nabi.jpeg",
+      resultText: "피부 상태는 양호하나, 털 빠짐이 관찰됩니다. 추가 관리 필요.",
+    },
+  ];
+
   return (
-    <div className="w-full min-w-[400px] min-h-screen mx-auto bg-white px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
-      <div className="flex items-center mb-4">
-        <button
-          onClick={handleGoBack}
-          className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
-        >
-          <span className="text-3xl sm:text-4xl font-extrabold text-black">
-            &lt;
-          </span>
+    <div className="w-full w-min-[400px]  min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+      {/* 타이틀 */}
+      <div className="flex items-center mb-6">
+        <button onClick={handleGoBack}>
+          <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
+            <span className="text-3xl font-extrabold">{"<"}</span>
+          </div>
         </button>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-black">
+        <div className="ml-4 text-3xl sm:text-4xl whitespace-nowrap font-extrabold text-black font-['NanumSquareRound']">
           반려동물 상태 기록
-        </h1>
+        </div>
       </div>
 
+      {/* 구분선 */}
+      <div className="w-full h-0.5 bg-yellow-400 mb-16" />
 
-      {filteredDiaries.map((entry) => (
-        <div key={entry.id} className="mb-12">
-          <div className="flex justify-between items-center mb-3">
-            <div className="text-base sm:text-lg font-bold">
-              {formatDate(entry.createdAt)}
-            </div>
-            <div className="flex items-center gap-2">
-              <Image
-                src={entry.userPhotoUrl || "/img/profile.jpeg"}
-                alt="유저 이미지"
-                width={36}
-                height={36}
-                className="rounded-full object-cover"
-              />
-              <span className="text-sm font-medium text-gray-800">
-                {entry.userNickname || "내 프로필"}
-              </span>
-            </div>
+      {results.map((entry) => (
+        <div
+          key={entry.id}
+          className="flex gap-4 mb-8 items-start border-b pb-6 border-amber-400 last:border-none"
+        >
+          {/* 이미지 */}
+          <div
+            className="w-36 h-36 rounded aspect-square overflow-hidden cursor-pointer"
+            onClick={() => setModalUrl(entry.imageUrl)}
+          >
+            <Image
+              src={entry.imageUrl}
+              alt="분석 이미지"
+              width={144}
+              height={144}
+              className="object-cover w-full h-full"
+            />
           </div>
 
-          {entry.files && entry.files.length > 0 && (
-            <div className="w-full max-h-[300px] mb-4">
-              <Image src={entry.files} onImageClick={setModalUrl} />
+          <div className="w-full flex flex-col justify-between items-start h-full relative">
+            {/* 텍스트 */}
+            <div className="flex-1 text-lg text-gray-800 whitespace-pre-line">
+              {entry.resultText}
             </div>
-          )}
 
-          <div className="flex gap-4 items-start">
-            <div className="w-16 aspect-square overflow-hidden rounded-full">
-              <Image
-                src={entry.animalInfo?.files?.url || null}
-                alt="동물 이미지"
-                width={80}
-                height={80}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <div className="flex-1 text-xl text-black whitespace-pre-line">
-              {entry.logContent}
+            {/* 버튼 - 우하단 고정 */}
+            <div className="w-full flex justify-end mt-4">
+              <button
+                // onClick={() => ...}
+                className="h-14 sm:h-16 w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
+              >
+                채팅으로 공유
+              </button>
             </div>
           </div>
         </div>
       ))}
+
+      {/* 모달 */}
       {modalUrl && (
         <div
           onClick={() => setModalUrl(null)}

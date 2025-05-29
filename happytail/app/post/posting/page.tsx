@@ -77,7 +77,7 @@ export default function Post() {
   };
 
   return (
-    <div className="relative overflow-x-hidden min-w-[320px] flex flex-col items-center w-full min-h-screen font-bold text-black bg-white pb-24 px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
+    <div className="relative overflow-x-hidden w-full w-min-[400px] flex flex-col items-center min-h-screen font-bold text-black bg-white pb-24 px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
       <div className="w-full max-w-xl px-6">
         <div className="w-full flex items-center justify-between py-3">
           <div className="flex items-center">

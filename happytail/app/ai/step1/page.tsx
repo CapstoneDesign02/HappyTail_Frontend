@@ -41,9 +41,9 @@ const Ai_Step1 = () => {
   };
 
   return (
-    <div className="w-full max-w-full min-w-[300px] min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full w-min-[400px]  min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 타이틀 */}
-      <div className="flex items-center mb-12">
+      <div className="flex items-center mb-6">
         <button onClick={handleGoBack}>
           <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
             <span className="text-3xl font-extrabold">{"<"}</span>

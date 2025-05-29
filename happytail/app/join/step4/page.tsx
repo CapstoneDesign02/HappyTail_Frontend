@@ -10,7 +10,7 @@ export default function JoinComplete() {
   };
 
   return (
-    <div className="w-full min-w-[320px] min-h-screen flex flex-col items-center justify-center bg-white px-6 sm:px-8 lg:px-10">
+    <div className="w-full min-w-[450px] min-h-screen flex flex-col items-center justify-center bg-white px-6 sm:px-8 lg:px-10">
       {/* 로고 + 문구 */}
       <div className="flex flex-row flex-wrap items-center justify-center mb-12 text-center">
         <img

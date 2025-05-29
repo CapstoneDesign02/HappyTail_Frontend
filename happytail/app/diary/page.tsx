@@ -82,7 +82,7 @@ export default function DiaryPage() {
   // };
 
   return (
-    <div className="w-full max-w-[760px] min-w-[400px] min-h-screen mx-auto bg-white px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
+    <div className="w-[90%] min-w-[400px] min-h-screen mx-auto bg-white px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
       {/* <div className="flex items-center mb-4">
         <button
           onClick={handleGoBack}
