@@ -76,7 +76,7 @@ export default function ChatScreen() {
       } else if (data.type === "readUpdate") {
         setMessages((prev) =>
           prev.map((msg) =>
-            msg.receiverId === sender && msg.unread
+            msg.senderId === sender && msg.unread
               ? { ...msg, unread: false }
               : msg
           )
