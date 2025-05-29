@@ -7,9 +7,13 @@ import { useState } from "react";
 
 interface SwiperGalleryProps {
   images: { id: number; url: string }[];
+  onImageClick: (url: string) => void;
 }
 
-export default function SwiperGallery({ images }: SwiperGalleryProps) {
+export default function SwiperGallery({
+  images,
+  onImageClick,
+}: SwiperGalleryProps) {
   const [modalUrl, setModalUrl] = useState<string | null>(null);
 
   return (
@@ -23,6 +27,7 @@ export default function SwiperGallery({ images }: SwiperGalleryProps) {
               width={600}
               height={300}
               className="w-auto h-[300px] object-contain mx-auto"
+              onClick={() => onImageClick(file.url)}
             />
           </SwiperSlide>
         ))}
@@ -34,13 +39,11 @@ export default function SwiperGallery({ images }: SwiperGalleryProps) {
           onClick={() => setModalUrl(null)}
           className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center cursor-zoom-out"
         >
-          <div className="relative w-[90vw] h-[90vh]">
-            <Image
+          <div className="relative w-[90vw] h-auto max-h-[90vh]">
+            <img
               src={modalUrl}
               alt="확대 이미지"
-              fill
-              className="object-contain rounded"
-              sizes="100vw"
+              className="object-contain w-full max-h-[90vh] rounded mx-auto"
             />
           </div>
         </div>

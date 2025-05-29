@@ -137,6 +137,7 @@ export function DateRangeSelector({ setAvailableDates }: DateRange) {
         }}
         modifiers={{ selected: isSelected }}
         modifiersClassNames={{
+          today: "font-extrabold text-black",
           selected: "bg-amber-400 text-white rounded-full p-3",
         }}
         className="

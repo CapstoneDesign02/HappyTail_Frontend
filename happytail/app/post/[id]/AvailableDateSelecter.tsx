@@ -31,6 +31,7 @@ export function AvailableDateSelector({ availableDates }: DateRangeProps) {
         modifiers={{ available: isAvailableDate }}
         modifiersClassNames={{
           available: "bg-amber-400 text-white rounded-full p-3",
+          today: "font-extrabold text-black",
         }}
         className="
           text-3xl m-2

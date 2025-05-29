@@ -30,9 +30,13 @@ export default function ReviewEditPage() {
     const fetchReview = async () => {
       try {
         if (!id) return;
+        console.log("🔍 id param:", id);
+        console.log("🔍 token:", localStorage.getItem("accessToken"));
         const review = await getReviewById(Number(id));
         setForm({ rating: review.rating, content: review.content });
       } catch (error) {
+        console.log("🔍 id param:", id);
+        console.log("🔍 token:", localStorage.getItem("accessToken"));
         alert("리뷰 정보를 불러오는 데 실패했습니다.");
         router.push("/review");
       }
@@ -56,9 +60,8 @@ export default function ReviewEditPage() {
   };
 
   useEffect(() => {
-  sessionStorage.setItem("visitedEditPage", "true");
-}, []);
-  
+    sessionStorage.setItem("visitedEditPage", "true");
+  }, []);
 
   return (
     <div className="w-full max-w-md mx-auto p-6 font-['NanumSquareRound']">

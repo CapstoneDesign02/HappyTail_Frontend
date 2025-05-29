@@ -71,19 +71,31 @@ export function AvailableRangeSelector({
   };
 
   return (
-    <div className="p-4">
+    <div className="w-full max-w-full p-4 text-xl margin-auto ml-8">
       <DayPicker
         mode="range"
         selected={range}
         onSelect={handleSelect}
         disabled={isDisabled}
         modifiersClassNames={{
-          selected: "bg-amber-700 text-white",
+          today: "font-extrabold text-black",
+          selected: "bg-amber-400 text-white rounded-full p-3",
+          range_start: "bg-amber-400 text-white rounded-full p-3",
+          range_end: "bg-amber-400 text-white rounded-full p-3",
+          range_middle: "bg-amber-200 text-white",
         }}
-        showOutsideDays
+        className="
+          text-3xl 
+          [&_.rdp-day]:w-16
+          [&_.rdp-day]:h-16 
+          [&_.rdp-day]:text-2xl 
+          [&_.rdp-caption_label]:text-3xl 
+          [&_.rdp-head_cell]:text-3xl
+        "
+        // showOutsideDays
       />
       {range?.from && range?.to && (
-        <p className="mt-4 text-blue-700">
+        <p className="text-1xl mb-2 color-gray-700">
           선택된 날짜: {range.from.toDateString()} ~ {range.to.toDateString()}
         </p>
       )}
