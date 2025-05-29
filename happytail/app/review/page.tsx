@@ -7,7 +7,7 @@ import {
   deleteReview,
   ReviewInfo,
 } from "./api/reviewAPI";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function ReviewManagePage() {
@@ -16,8 +16,6 @@ export default function ReviewManagePage() {
   );
   const [reviews, setReviews] = useState<ReviewInfo[]>([]);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const fromEdit = searchParams.get("fromEdit");
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -58,26 +56,16 @@ export default function ReviewManagePage() {
     }
   };
 
-  // const handleGoMain = () => router.push(`/post`);
+  const handleGoMain = () => router.push(`/post`);
 
-  const handleGoBack = () => {
-    if (
-      fromEdit === "true" ||
-      sessionStorage.getItem("visitedEditPage") === "true"
-    ) {
-      sessionStorage.removeItem("visitedEditPage");
-      window.history.go(-3);
-    } else {
-      window.history.go(-1);
-    }
-  };
+
 
   return (
     <div className="w-full max-w-[760px] min-w-[400px] min-h-screen mx-auto bg-white overflow-hidden px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
       {/* 상단 타이틀 */}
       <div className="flex items-center mb-4">
         <button
-          onClick={handleGoBack}
+          onClick={handleGoMain}
           className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
         >
           <span className="text-3xl sm:text-4xl font-extrabold text-black font-['NanumSquareRound']">

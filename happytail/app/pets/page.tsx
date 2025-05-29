@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimalInfo, getAnimalInfo, deleteAnimalInfo } from "./api/PetAPI";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function PetListPage() {
@@ -11,9 +11,6 @@ export default function PetListPage() {
   useEffect(() => {
     fetchPets();
   }, []);
-  const searchParams = useSearchParams();
-  const fromNew = searchParams.get("fromNew");
-  const visitedNew = sessionStorage.getItem("visitedNewPetPage");
 
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
@@ -43,21 +40,14 @@ export default function PetListPage() {
     }
   };
 
-  const handleGoBack = () => {
-    if (fromNew === "true" || visitedNew === "true") {
-      sessionStorage.removeItem("visitedNewPetPage");
-      window.history.go(-3); // 👈 여기 -3으로 변경
-    } else {
-      window.history.go(-1);
-    }
-  };
+
 
   return (
     <div className="max-w-screen-sm mx-auto">
       <div className="w-full max-w-screen-sm mt-4">
         <div className="flex items-center mb-2">
           <button
-            onClick={handleGoBack}
+            onClick={() => router.back()}
             className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
           >
             <span className="text-3xl font-extrabold text-black font-['NanumSquareRound']">
