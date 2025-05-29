@@ -43,8 +43,6 @@ export default function PetListPage() {
     }
   };
 
-  const handleGoMain = () => router.push(`/post`);
-
   const handleGoBack = () => {
     if (fromNew === "true" || visitedNew === "true") {
       sessionStorage.removeItem("visitedNewPetPage");

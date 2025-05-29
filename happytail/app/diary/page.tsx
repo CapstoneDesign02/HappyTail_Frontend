@@ -14,8 +14,6 @@ export default function DiaryPage() {
   const [diaries, setDiaries] = useState<DiaryInfo[]>([]);
   const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
   const [modalUrl, setModalUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
 
   const router = useRouter();
@@ -25,8 +23,6 @@ export default function DiaryPage() {
   
   useEffect(() => {
     const fetchDiaries = async () => {
-      setLoading(true);
-      setError(null);
       try {
         const data =
           selectedTab === "written"
@@ -35,10 +31,7 @@ export default function DiaryPage() {
         setDiaries(data);
       } catch (err) {
         console.error("❌ 일지 로딩 오류:", err);
-        setError("일지를 불러오는 데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchDiaries();
@@ -50,6 +43,7 @@ export default function DiaryPage() {
       await deleteDiary(id);
       setDiaries((prev) => prev.filter((entry) => entry.id !== id));
     } catch (err) {
+      console.error("❌ 일지 삭제 오류:", err);
       alert("삭제 실패");
     }
   };
