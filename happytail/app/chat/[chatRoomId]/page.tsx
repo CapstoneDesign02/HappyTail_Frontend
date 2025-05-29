@@ -27,6 +27,10 @@ export default function ChatScreen() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log("Messages:", messages);
+  }, [messages]);
+
+  useEffect(() => {
     const fetchChatInfo = async () => {
       const response = await getChatInfo(chatRoomId as string);
       if (!response) {
@@ -70,6 +74,7 @@ export default function ChatScreen() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log("Received message:", data);
 
       if (data.type === "fetchAllResponse" && Array.isArray(data.messages)) {
         setMessages(data.messages);
