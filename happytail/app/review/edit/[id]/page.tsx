@@ -34,6 +34,7 @@ export default function ReviewEditPage() {
         const review = await getReviewById(Number(id));
         setForm({ rating: review.rating, content: review.content });
       } catch (error) {
+        console.error
         console.log("🔍 id param:", id);
         console.log("🔍 token:", localStorage.getItem("accessToken"));
         alert("리뷰 정보를 불러오는 데 실패했습니다.");
@@ -52,6 +53,7 @@ export default function ReviewEditPage() {
       alert("후기가 수정되었습니다.");
       router.push("/review"); // 리스트 페이지로 이동
     } catch (error) {
+      console.error("후기 수정 실패:", error);
       alert("후기 수정에 실패했습니다.");
     } finally {
       setLoading(false);

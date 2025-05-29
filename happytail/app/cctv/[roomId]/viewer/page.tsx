@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 export default function Viewer() {
   const { roomId } = useParams();
   const [room, setRoom] = useState<Room | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function start() {
@@ -47,9 +46,8 @@ export default function Viewer() {
         });
 
         setRoom(room);
-      } catch (e: any) {
-        setError(e.message);
-      }
+      } catch (e) {
+        console.error("Error connecting to room:", e);}
     }
     start();
 
@@ -61,7 +59,6 @@ export default function Viewer() {
   return (
     <div>
       <h1>Viewer (Room: {roomId})</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
       <video
         id="remote-video"
         autoPlay

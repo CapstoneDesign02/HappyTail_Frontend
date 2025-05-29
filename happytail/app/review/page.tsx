@@ -10,41 +10,6 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
-// 목업 데이터
-// const writtenMockReviews: ReviewInfo[] = [
-//   {
-//     id: 1,
-//     reservationId: 4,
-//     rating: 5,
-//     content: "너무 좋았어요.",
-//     profileImage: "/img/profile/winter.jpg",
-//   },
-//   {
-//     id: 2,
-//     reservationId: 5,
-//     rating: 4,
-//     content: "만족합니다.",
-//     profileImage: "/img/profile/jang.jpg",
-//   },
-// ];
-
-// const receivedMockReviews: ReviewInfo[] = [
-//   {
-//     id: 3,
-//     reservationId: 6,
-//     rating: 5,
-//     content: "정말 좋았어요!",
-//     profileImage: "/img/profile/cha.jpg",
-//   },
-//   {
-//     id: 4,
-//     reservationId: 7,
-//     rating: 5,
-//     content: "정말 감사했습니다. 최고입니다.",
-//     profileImage: "/img/jennie.jpeg",
-//   },
-// ];
-
 export default function ReviewManagePage() {
   const [selectedTab, setSelectedTab] = useState<"written" | "received">(
     "written"
@@ -66,19 +31,19 @@ export default function ReviewManagePage() {
     fetchReviews();
   }, [selectedTab]);
 
-  const fetchReviews = async () => {
-    try {
-      if (selectedTab === "written") {
-        const data = await getWrittenReviews();
-        setReviews(data);
-      } else {
-        const data = await getReceivedReviews();
-        setReviews(data);
-      }
-    } catch (error) {
-      console.error("❌ 리뷰 불러오기 실패:", error);
-    }
-  };
+  // const fetchReviews = async () => {
+  //   try {
+  //     if (selectedTab === "written") {
+  //       const data = await getWrittenReviews();
+  //       setReviews(data);
+  //     } else {
+  //       const data = await getReceivedReviews();
+  //       setReviews(data);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ 리뷰 불러오기 실패:", error);
+  //   }
+  // };
 
   const handleDelete = async (id: number) => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
@@ -93,7 +58,7 @@ export default function ReviewManagePage() {
     }
   };
 
-  const handleGoMain = () => router.push(`/post`);
+  // const handleGoMain = () => router.push(`/post`);
 
   const handleGoBack = () => {
     if (

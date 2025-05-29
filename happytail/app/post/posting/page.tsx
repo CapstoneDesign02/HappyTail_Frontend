@@ -70,8 +70,8 @@ export default function Post() {
       await createPost(formData);
       alert("글이 등록되었습니다.");
       router.push("/post");
-    } catch (err: any) {
-      console.error("❌ 글 등록 실패:", err.response?.data || err.message, err);
+    } catch (err) {
+      console.error("❌ Failed to fetch animal info:", err);
       alert("글 등록 실패");
     }
   };
