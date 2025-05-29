@@ -8,7 +8,7 @@ export const getChatInfo = async (
     const response = await axiosInstance.get(`/api/chat/info/${reservationId}`);
     return response.data;
   } catch (error) {
-    console.error("❌ Failed to fetch animal info:", error);
+    console.error("❌", error);
     throw error;
   }
 };

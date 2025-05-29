@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatHeader from "./ChatHeader";
 import ServiceDetails from "./ServiceDetails";
 import CareOptions from "./CareOptions";
@@ -20,11 +20,14 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [myPhotoUrl, setMyPhotoUrl] = useState<string | null>(null);
+  const [otherPhotoUrl, setOtherPhotoUrl] = useState<string | null>(null);
+  // 메시지 스크롤 위치를 관리하기 위한 ref
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(messages);
+    console.log("Messages:", messages);
   }, [messages]);
 
   useEffect(() => {
@@ -34,8 +37,19 @@ export default function ChatScreen() {
         router.push("/reservation");
       }
       setData(response);
-      setSender(response.userEmail);
-      setReceiver(response.partnerEmail);
+      if (response?.ispartner) {
+        setSender(response.partnerEmail);
+        setReceiver(response.userEmail);
+        setMyPhotoUrl(response.partnerPhotoUrl);
+        setOtherPhotoUrl(response.userPhotoUrl);
+        console.log(response.partnerEmail);
+      } else {
+        setSender(response.userEmail);
+        setReceiver(response.partnerEmail);
+        setMyPhotoUrl(response.userPhotoUrl);
+        setOtherPhotoUrl(response.partnerPhotoUrl);
+        console.log(response.userEmail);
+      }
     };
     fetchChatInfo();
   }, [chatRoomId]);
@@ -60,14 +74,14 @@ export default function ChatScreen() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("📩 수신 메시지:", data);
+      console.log("Received message:", data);
 
       if (data.type === "fetchAllResponse" && Array.isArray(data.messages)) {
         setMessages(data.messages);
-      } else if (data.type === "readUpdate") {
+      } else if (data.type === "readUpdate" && data.chatRoomId === chatRoomId) {
         setMessages((prev) =>
           prev.map((msg) =>
-            msg.receiverId === sender && msg.unread
+            msg.senderId === sender && msg.unread
               ? { ...msg, unread: false }
               : msg
           )
@@ -114,7 +128,7 @@ export default function ChatScreen() {
         type: "read",
         chatRoomId,
         senderId: receiver,
-        reveiverId: sender,
+        receiverId: sender,
       })
     );
 
@@ -136,14 +150,22 @@ export default function ChatScreen() {
       {/* 상단 고정 헤더 */}
       {data && (
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
-          <ChatHeader title={`${data.partnerNickname}님과 채팅`} />
+          <ChatHeader
+            title={`${
+              data.ispartner ? data.userNickname : data.partnerNickname
+            }님과 채팅`}
+          />
         </div>
       )}
 
       {/* 서비스 정보 및 케어 옵션 */}
       <div className="px-4 border-b border-gray-100">
         <ServiceDetails
-          imageUrl={data?.partnerPhotoUrl || "./img/profile.jpeg"}
+          imageUrl={
+            data?.ispartner
+              ? data.userPhotoUrl
+              : data?.partnerPhotoUrl || "/img/profile.jpeg"
+          }
           serviceName={data?.postTitle || "서비스 제목"}
           dateRange={`${data?.startDate} ~ ${data?.endDate}`}
         />
@@ -167,8 +189,8 @@ export default function ChatScreen() {
             text={msg.content}
             imageUrl={
               msg.senderId === sender
-                ? data?.userPhotoUrl
-                : data?.partnerPhotoUrl
+                ? myPhotoUrl || "/img/profile.jpeg"
+                : otherPhotoUrl || "/img/profile.jpeg"
             }
             isUser={msg.senderId === sender}
             unread={msg.unread}

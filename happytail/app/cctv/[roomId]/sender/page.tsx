@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Room } from "livekit-client";
 import { useParams } from "next/navigation";
 
-const LIVEKIT_URL = process.env.NEXT_PUBLIC_LIVEKIT_URL!;
+const LIVEKIT_URL = process.env.NEXT_PUBLIC_LIVEKIT_SOCKET_URL!;
 
 export default function SenderPage() {
   const { roomId } = useParams<{ roomId: string }>();
-  const [error, setError] = useState<string | null>(null);
-  const [room, setRoom] = useState<Room | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const room = new Room();
@@ -17,13 +16,10 @@ export default function SenderPage() {
     async function connectRoom() {
       try {
         const identity = `sender-${roomId}-1`;
-        console.log("Connecting as identity:", identity);
-        console.log("Connecting to room:", roomId);
         const res = await fetch(
           `/api/token?identity=${identity}&roomName=${roomId}`
         );
         const data = await res.json();
-        console.log("Received token:", data.token);
 
         if (!data.token) throw new Error("토큰 발급 실패");
 
@@ -34,24 +30,23 @@ export default function SenderPage() {
           video: true,
           audio: true,
         });
+
+        // 📷 자신의 화면을 video 요소에 연결
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+
         const tracks = stream.getTracks();
-
-        // 로컬 트랙 퍼블리시
-        // 기존: await room.localParticipant.publishTracks(tracks);
-
         for (const track of tracks) {
           await room.localParticipant.publishTrack(track);
         }
-
-        setRoom(room);
-      } catch (e: any) {
-        setError(e.message);
+      } catch (e) {
+        console.error("Error connecting to room:", e);
       }
     }
 
     connectRoom();
 
-    // 컴포넌트 언마운트 시 disconnect
     return () => {
       room.disconnect();
     };
@@ -60,8 +55,18 @@ export default function SenderPage() {
   return (
     <div>
       <h1>Sender - Room {roomId}</h1>
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
       <p>카메라와 마이크가 자동으로 방송됩니다.</p>
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        playsInline
+        style={{
+          width: "400px",
+          borderRadius: "8px",
+          border: "2px solid #ccc",
+        }}
+      />
     </div>
   );
 }

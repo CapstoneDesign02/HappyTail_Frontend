@@ -34,9 +34,7 @@ export default function ReviewEditPage() {
         const review = await getReviewById(Number(id));
         setForm({ rating: review.rating, content: review.content });
       } catch (error) {
-        console.error
-        console.log("🔍 id param:", id);
-        console.log("🔍 token:", localStorage.getItem("accessToken"));
+        console.error("후기 정보 불러오기 실패:", error);
         alert("리뷰 정보를 불러오는 데 실패했습니다.");
         router.push("/review");
       }
