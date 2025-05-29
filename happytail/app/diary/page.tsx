@@ -1,129 +1,57 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DiaryInfo } from "./api/DiaryAPI";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getWrittenDiaries, getReceivedDiaries, DiaryInfo, deleteDiary } from "./api/DiaryAPI";
 import Image from "next/image";
 import { DropdownFilter } from "./dropdownFilter";
 import dynamic from "next/dynamic";
 const SwiperGallery = dynamic(() => import("./swiperGallery"), { ssr: false });
 
-const mockWrittenDiaries: DiaryInfo[] = [
-  {
-    id: 1,
-    reservationId: 6,
-    userId: 4,
-    logContent: "깜장이와 함께한 즐거운 산책 💛",
-    createdAt: "2025-05-19T00:44:45",
-    files: [
-      { id: 1, url: "/img/room01.jpg" },
-      { id: 2, url: "/img/room02.jpg" },
-    ],
-    animalInfo: {
-      id: 10,
-      name: "깜장이",
-      type: 1,
-      breed: "샴",
-      additionalInfo: "예민함",
-      files: [
-        { id: 2, url: "/img/poppy.jpg" },
-      ],
-    },
-    reservation: undefined,
-    userNickname: "주형",
-    userPhotoUrl: "/img/profile.jpeg",
-  },
-  {
-    id: 2,
-    reservationId: 7,
-    userId: 44,
-    logContent: "몽이랑 놀이터에서 신나게 놀았어요 🎾",
-    createdAt: "2025-05-19T10:30:00",
-    files: [
-      { id: 3, url: "/img/room01.jpg" },
-      { id: 4, url: "/img/room02.jpg" },
-    ],
-    animalInfo: {
-      id: 11,
-      name: "몽이",
-      type: 1,
-      breed: "페르시안",
-      additionalInfo: "활발함",
-      files: [
-        { id: 4, url: "/img/room02.jpg" }
-      ],
-    },
-    reservation: undefined,
-    userNickname: "밤밤",
-    userPhotoUrl: "/img/profile.jpeg",
-  },
-];
-
-const mockReceivedDiaries: DiaryInfo[] = [
-  {
-    id: 3,
-    reservationId: 8,
-    userId: 5,
-    logContent: "밤비는 정말 얌전하고 착했어요 😊",
-    createdAt: "2025-05-18T23:35:09",
-    files: [
-      { id: 10, url: "/img/room03.jpg" },
-      { id: 11, url: "/img/room02.jpg" },
-    ],
-    animalInfo: {
-      id: 12,
-      name: "밤비",
-      type: 0,
-      breed: "푸들",
-      additionalInfo: "조용함",
-      files: [{ id: 3, url: "/img/profile.jpeg" }],
-    },
-    userNickname: "크리스탈",
-    userPhotoUrl: "/img/profile.jpeg",
-  },
-  {
-    id: 4,
-    reservationId: 9,
-    userId: 6,
-    logContent: "콩이랑 공놀이 하면서 하루가 금방 갔네요 🐾",
-    createdAt: "2025-05-18T22:00:00",
-    files: [
-      { id: 13, url: "/img/poppy.jpg" },
-      { id: 12, url: "/img/room03.jpg" },
-    ],
-    animalInfo: {
-      id: 13,
-      name: "콩이",
-      type: 0,
-      breed: "비숑",
-      additionalInfo: "장난꾸러기",
-      files: [{ id: 4, url: "/img/profile.jpeg" }],
-    },
-    userNickname: "지후",
-    userPhotoUrl: "/img/profile.jpeg",
-  },
-];
 
 export default function DiaryPage() {
-  const [selectedTab, setSelectedTab] = useState<"written" | "received">(
-    "written"
-  );
+  const [selectedTab, setSelectedTab] = useState<"written" | "received">("written");
   const [diaries, setDiaries] = useState<DiaryInfo[]>([]);
   const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
+  const [modalUrl, setModalUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const fromEdit = searchParams.get("fromEdit");
 
+  
   useEffect(() => {
-    setSelectedAnimal(null);
-    setDiaries(
-      selectedTab === "written" ? mockWrittenDiaries : mockReceivedDiaries
-    );
+    const fetchDiaries = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data =
+          selectedTab === "written"
+            ? await getWrittenDiaries()
+            : await getReceivedDiaries();
+        setDiaries(data);
+      } catch (err) {
+        console.error("❌ 일지 로딩 오류:", err);
+        setError("일지를 불러오는 데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDiaries();
   }, [selectedTab]);
 
-  const handleDelete = (id: number) => {
-    alert(`일지 ${id} 삭제 (목업)`);
-    setDiaries((prev) => prev.filter((entry) => entry.id !== id));
+   const handleDelete = async (id: number) => {
+    if (!confirm("정말로 삭제하시겠습니까?")) return;
+    try {
+      await deleteDiary(id);
+      setDiaries((prev) => prev.filter((entry) => entry.id !== id));
+    } catch (err) {
+      alert("삭제 실패");
+    }
   };
 
   const handleGoBack = () => {
@@ -220,7 +148,7 @@ export default function DiaryPage() {
 
           {entry.files && entry.files.length > 0 && (
             <div className="w-full max-h-[300px] mb-4">
-              <SwiperGallery images={entry.files} />
+              <SwiperGallery images={entry.files} onImageClick={setModalUrl} />
             </div>
           )}
 
@@ -258,6 +186,20 @@ export default function DiaryPage() {
           <div className="w-full h-0.5 bg-yellow-400 my-8" />
         </div>
       ))}
+      {modalUrl && (
+        <div
+          onClick={() => setModalUrl(null)}
+          className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center cursor-zoom-out"
+        >
+          <div className="max-w-[90vw] max-h-[90vh] overflow-auto">
+            <img
+              src={modalUrl}
+              alt="확대 이미지"
+              className="object-contain max-w-full max-h-[90vh] rounded"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
