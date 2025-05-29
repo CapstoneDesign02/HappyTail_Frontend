@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   ReviewForm,
   submitReview,
-  ReviewInfo,
   getReviewById,
 } from "../../api/reviewAPI";
 import StarRating from "./starRating";
