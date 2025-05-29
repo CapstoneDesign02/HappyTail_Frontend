@@ -1,89 +1,89 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { getWrittenDiaries, getReceivedDiaries, DiaryInfo, deleteDiary } from "./api/DiaryAPI";
-import Image from "next/image";
-import { DropdownFilter } from "./dropdownFilter";
-import dynamic from "next/dynamic";
-const SwiperGallery = dynamic(() => import("./swiperGallery"), { ssr: false });
+// import React, { useEffect, useState } from "react";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import { getWrittenDiaries, getReceivedDiaries, DiaryInfo, deleteDiary } from "./api/DiaryAPI";
+// import Image from "next/image";
+// import { DropdownFilter } from "./dropdownFilter";
+// import dynamic from "next/dynamic";
+// const SwiperGallery = dynamic(() => import("./swiperGallery"), { ssr: false });
 
 
 export default function DiaryPage() {
-  const [selectedTab, setSelectedTab] = useState<"written" | "received">("written");
-  const [diaries, setDiaries] = useState<DiaryInfo[]>([]);
-  const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
-  const [modalUrl, setModalUrl] = useState<string | null>(null);
+  // const [selectedTab, setSelectedTab] = useState<"written" | "received">("written");
+  // const [diaries, setDiaries] = useState<DiaryInfo[]>([]);
+  // const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
+  // const [modalUrl, setModalUrl] = useState<string | null>(null);
 
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const fromEdit = searchParams.get("fromEdit");
+  // const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const fromEdit = searchParams.get("fromEdit");
 
   
-  useEffect(() => {
-    const fetchDiaries = async () => {
-      try {
-        const data =
-          selectedTab === "written"
-            ? await getWrittenDiaries()
-            : await getReceivedDiaries();
-        setDiaries(data);
-      } catch (err) {
-        console.error("❌ 일지 로딩 오류:", err);
-      } 
-    };
+  // useEffect(() => {
+  //   const fetchDiaries = async () => {
+  //     try {
+  //       const data =
+  //         selectedTab === "written"
+  //           ? await getWrittenDiaries()
+  //           : await getReceivedDiaries();
+  //       setDiaries(data);
+  //     } catch (err) {
+  //       console.error("❌ 일지 로딩 오류:", err);
+  //     } 
+  //   };
 
-    fetchDiaries();
-  }, [selectedTab]);
+  //   fetchDiaries();
+  // }, [selectedTab]);
 
-   const handleDelete = async (id: number) => {
-    if (!confirm("정말로 삭제하시겠습니까?")) return;
-    try {
-      await deleteDiary(id);
-      setDiaries((prev) => prev.filter((entry) => entry.id !== id));
-    } catch (err) {
-      console.error("❌ 일지 삭제 오류:", err);
-      alert("삭제 실패");
-    }
-  };
+  //  const handleDelete = async (id: number) => {
+  //   if (!confirm("정말로 삭제하시겠습니까?")) return;
+  //   try {
+  //     await deleteDiary(id);
+  //     setDiaries((prev) => prev.filter((entry) => entry.id !== id));
+  //   } catch (err) {
+  //     console.error("❌ 일지 삭제 오류:", err);
+  //     alert("삭제 실패");
+  //   }
+  // };
 
-  const handleGoBack = () => {
-    if (
-      fromEdit === "true" ||
-      sessionStorage.getItem("visitedEditPage") === "true"
-    ) {
-      sessionStorage.removeItem("visitedEditPage");
-      window.history.go(-3);
-    } else {
-      window.history.go(-1);
-    }
-  };
+  // const handleGoBack = () => {
+  //   if (
+  //     fromEdit === "true" ||
+  //     sessionStorage.getItem("visitedEditPage") === "true"
+  //   ) {
+  //     sessionStorage.removeItem("visitedEditPage");
+  //     window.history.go(-3);
+  //   } else {
+  //     window.history.go(-1);
+  //   }
+  // };
 
-  const uniqueAnimals = Array.from(
-    new Set(diaries.map((d) => d.animalInfo?.name).filter(Boolean) as string[])
-  );
+  // const uniqueAnimals = Array.from(
+  //   new Set(diaries.map((d) => d.animalInfo?.name).filter(Boolean) as string[])
+  // );
 
-  const filteredDiaries = selectedAnimal
-    ? diaries.filter((d) => d.animalInfo?.name === selectedAnimal)
-    : diaries;
+  // const filteredDiaries = selectedAnimal
+  //   ? diaries.filter((d) => d.animalInfo?.name === selectedAnimal)
+  //   : diaries;
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      weekday: "long",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  };
+  // const formatDate = (dateStr: string) => {
+  //   const date = new Date(dateStr);
+  //   return date.toLocaleDateString("ko-KR", {
+  //     year: "numeric",
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //     weekday: "long",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     hour12: false,
+  //   });
+  // };
 
   return (
     <div className="w-full max-w-[760px] min-w-[400px] min-h-screen mx-auto bg-white px-4 sm:px-6 lg:px-8 py-4 font-['NanumSquareRound']">
-      <div className="flex items-center mb-4">
+      {/* <div className="flex items-center mb-4">
         <button
           onClick={handleGoBack}
           className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
@@ -193,7 +193,7 @@ export default function DiaryPage() {
             />
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
