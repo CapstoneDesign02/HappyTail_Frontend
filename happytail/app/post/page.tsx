@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { removeCookie } from "../common/cookie";
 
-
 export default function PostListStyledPage() {
   const [posts, setPosts] = useState<PostInfo[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -221,7 +220,11 @@ export default function PostListStyledPage() {
                 </div>
                 <div className="text-sm text-gray-700 truncate">
                   {post.title}{" "}
-                  {post.availableAnimals == "0"? "강아지" : post.availableAnimals == "1" ? "고양이" : "기타"}
+                  {post.availableAnimals == "0"
+                    ? "강아지"
+                    : post.availableAnimals == "1"
+                    ? "고양이"
+                    : "기타"}
                 </div>
                 <div className="text-sm text-gray-500">
                   ⭐ {post.user?.ratingAvg} | {post.user?.reviewCount} 건 완료
@@ -244,7 +247,6 @@ export default function PostListStyledPage() {
           </button>
         ))}
       </footer>
-
     </div>
   );
 }
