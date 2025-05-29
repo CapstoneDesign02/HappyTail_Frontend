@@ -49,7 +49,7 @@ const Step1 = () => {
 
   return (
     <Suspense fallback={<div>로딩 중...</div>}>
-      <div className="w-full max-w-4xl min-w-min min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+      <div className="w-full min-w-[450px] min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
         {/* 1. 뒤로가기 + 회원가입 */}
         <div className="flex items-center mb-12">
           <div className="size-12 sm:size-14 bg-white shadow-md flex items-center justify-center">
