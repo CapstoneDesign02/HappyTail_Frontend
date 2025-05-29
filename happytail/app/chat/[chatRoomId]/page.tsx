@@ -78,7 +78,7 @@ export default function ChatScreen() {
 
       if (data.type === "fetchAllResponse" && Array.isArray(data.messages)) {
         setMessages(data.messages);
-      } else if (data.type === "readUpdate") {
+      } else if (data.type === "readUpdate" && data.chatRoomId === chatRoomId) {
         setMessages((prev) =>
           prev.map((msg) =>
             msg.senderId === sender && msg.unread
