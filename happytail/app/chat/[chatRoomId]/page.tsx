@@ -20,6 +20,9 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [myPhotoUrl, setMyPhotoUrl] = useState<string | null>(null);
+  const [otherPhotoUrl, setOtherPhotoUrl] = useState<string | null>(null);
+  // 메시지 스크롤 위치를 관리하기 위한 ref
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -33,9 +36,15 @@ export default function ChatScreen() {
       if (response?.ispartner) {
         setSender(response.partnerEmail);
         setReceiver(response.userEmail);
+        setMyPhotoUrl(response.partnerPhotoUrl);
+        setOtherPhotoUrl(response.userPhotoUrl);
+        console.log(response.partnerEmail);
       } else {
         setSender(response.userEmail);
         setReceiver(response.partnerEmail);
+        setMyPhotoUrl(response.userPhotoUrl);
+        setOtherPhotoUrl(response.partnerPhotoUrl);
+        console.log(response.userEmail);
       }
     };
     fetchChatInfo();
@@ -174,9 +183,9 @@ export default function ChatScreen() {
             time={msg.timestamp}
             text={msg.content}
             imageUrl={
-              msg.senderId === sender && data?.ispartner
-                ? data.partnerPhotoUrl
-                : data?.userPhotoUrl || "/img/profile.jpeg"
+              msg.senderId === sender
+                ? myPhotoUrl || "/img/profile.jpeg"
+                : otherPhotoUrl || "/img/profile.jpeg"
             }
             isUser={msg.senderId === sender}
             unread={msg.unread}
