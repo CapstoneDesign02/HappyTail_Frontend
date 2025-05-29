@@ -24,4 +24,5 @@ export interface Reservation {
   startDate: string; // ISO 형식 날짜 (예: '2025-05-03')
   endDate: string;   // ISO 형식 날짜 (예: '2025-05-10')
   reservationId: number;
+  ispartner: boolean; // true면 파트너, false면 사용자
 }

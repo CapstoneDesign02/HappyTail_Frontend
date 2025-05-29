@@ -7,19 +7,8 @@ import {
   getMyReservations,
   getPartnerReservations,
   ReservationInfo,
+  updateReservationStatus,
 } from "./api/reservationAPI";
-
-// 상태 업데이트용 목 함수
-const updateReservationStatus = async (
-  id: number,
-  update: { isAccepted: number }
-) => {
-  alert(
-    `예약 ${id} 상태를 ${
-      update.isAccepted === 1 ? "수락" : "거절"
-    } 처리했습니다. (목데이터)`
-  );
-};
 
 export default function ReservationManagePage() {
   const router = useRouter();
@@ -233,7 +222,8 @@ export default function ReservationManagePage() {
                             채팅
                           </button>
                         </>
-                      ) : reservation.isAccepted === 1 ||
+                      ) : reservation.isAccepted === 0 ||
+                        reservation.isAccepted === 1 ||
                         reservation.isAccepted === 4 ? (
                         <button
                           onClick={() => router.push(`/chat/${reservation.id}`)}

@@ -28,15 +28,17 @@ const ChatMessage = ({
       {isUser ? (
         <div className="flex items-end min-w-8 gap-1 flex-row-reverse">
           {imageUrl && (
-            <div className="relative min-w-8 w-8 h-8 ml-1 shrink-0">
+            <div className="w-8 h-8 mr-1 shrink-0 relative">
               <Image
                 src={imageUrl}
                 alt="Profile"
-                fill
-                className="rounded-full object-cover"
+                width={32}
+                height={32}
+                className="rounded-full object-cover w-8 h-8"
               />
             </div>
           )}
+
           <div className="flex flex-col items-end">
             <div
               className={`inline-block p-3 rounded-2xl ${

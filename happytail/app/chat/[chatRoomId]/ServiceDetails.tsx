@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface ServiceDetailsProps {
   imageUrl: string;
@@ -13,16 +14,17 @@ const ServiceDetails = ({
 }: ServiceDetailsProps) => {
   return (
     <div className="flex items-center p-2 border-b border-gray-200 bg-white">
-      <div className="relative w-20 h-20 mb-2">
-        <img
+      <div className="relative w-20 h-20 flex-shrink-0">
+        <Image
           src={imageUrl}
           alt={serviceName}
-          className="rounded-lg object-cover"
+          fill
+          className="rounded-lg object-contain"
         />
       </div>
       <div className="ml-4">
         <h2 className="text-lg font-medium">{serviceName}</h2>
-        <p className="text-medium text-gray-500 mt-1">{dateRange}</p>
+        <p className="text-sm text-gray-500 mt-1">{dateRange}</p>
       </div>
     </div>
   );

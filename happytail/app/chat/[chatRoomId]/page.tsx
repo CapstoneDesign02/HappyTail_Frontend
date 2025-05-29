@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatHeader from "./ChatHeader";
 import ServiceDetails from "./ServiceDetails";
 import CareOptions from "./CareOptions";
@@ -24,18 +24,19 @@ export default function ChatScreen() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(messages);
-  }, [messages]);
-
-  useEffect(() => {
     const fetchChatInfo = async () => {
       const response = await getChatInfo(chatRoomId as string);
       if (!response) {
         router.push("/reservation");
       }
       setData(response);
-      setSender(response.userEmail);
-      setReceiver(response.partnerEmail);
+      if (response?.ispartner) {
+        setSender(response.partnerEmail);
+        setReceiver(response.userEmail);
+      } else {
+        setSender(response.userEmail);
+        setReceiver(response.partnerEmail);
+      }
     };
     fetchChatInfo();
   }, [chatRoomId]);
@@ -60,7 +61,6 @@ export default function ChatScreen() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("📩 수신 메시지:", data);
 
       if (data.type === "fetchAllResponse" && Array.isArray(data.messages)) {
         setMessages(data.messages);
@@ -114,7 +114,7 @@ export default function ChatScreen() {
         type: "read",
         chatRoomId,
         senderId: receiver,
-        reveiverId: sender,
+        receiverId: sender,
       })
     );
 
@@ -136,14 +136,22 @@ export default function ChatScreen() {
       {/* 상단 고정 헤더 */}
       {data && (
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
-          <ChatHeader title={`${data.partnerNickname}님과 채팅`} />
+          <ChatHeader
+            title={`${
+              data.ispartner ? data.userNickname : data.partnerNickname
+            }님과 채팅`}
+          />
         </div>
       )}
 
       {/* 서비스 정보 및 케어 옵션 */}
       <div className="px-4 border-b border-gray-100">
         <ServiceDetails
-          imageUrl={data?.partnerPhotoUrl || "./img/profile.jpeg"}
+          imageUrl={
+            data?.ispartner
+              ? data.userPhotoUrl
+              : data?.partnerPhotoUrl || "/img/profile.jpeg"
+          }
           serviceName={data?.postTitle || "서비스 제목"}
           dateRange={`${data?.startDate} ~ ${data?.endDate}`}
         />
@@ -166,9 +174,9 @@ export default function ChatScreen() {
             time={msg.timestamp}
             text={msg.content}
             imageUrl={
-              msg.senderId === sender
-                ? data?.userPhotoUrl
-                : data?.partnerPhotoUrl
+              msg.senderId === sender && data?.ispartner
+                ? data.partnerPhotoUrl
+                : data?.userPhotoUrl || "/img/profile.jpeg"
             }
             isUser={msg.senderId === sender}
             unread={msg.unread}
