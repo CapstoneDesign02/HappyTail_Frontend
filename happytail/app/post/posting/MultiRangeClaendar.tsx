@@ -18,10 +18,16 @@ export function DateRangeSelector({ setAvailableDates }: DateRange) {
   const today = startOfDay(new Date());
 
   useEffect(() => {
-    // 날짜를 ISO 8601 형식으로 변환
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
     const formattedRanges = ranges.map((range) => ({
-      start_Date: range.startDate.toISOString().split("T")[0], // yyyy-MM-dd 형식
-      end_Date: range.endDate.toISOString().split("T")[0], // yyyy-MM-dd 형식
+      start_Date: formatDate(range.startDate),
+      end_Date: formatDate(range.endDate),
     }));
 
     setAvailableDates(formattedRanges); // 부모 컴포넌트로 전달

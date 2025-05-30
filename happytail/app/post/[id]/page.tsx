@@ -24,7 +24,7 @@ export default function PostPage() {
           setTimeout(() => {
             router.replace("/post/posting");
           }, 1500);
-          
+
           setPost("NOT_FOUND");
           return;
         }
@@ -38,16 +38,6 @@ export default function PostPage() {
 
     fetchPost();
   }, [id]);
-
-  useEffect(() => {
-    if (post === "NOT_FOUND") {
-      const timeout = setTimeout(() => {
-        router.replace("/post/posting");
-      }, 1500);
-
-      return () => clearTimeout(timeout); // cleanup
-    }
-  }, [post]);
 
   if (error) {
     return (
@@ -74,20 +64,18 @@ export default function PostPage() {
   }
 
   return (
-    <div className="relative min-w-[320px] flex flex-col items-center w-full font-bold bg-white px-4 max-w-screen-sm mx-auto font-['NanumSquareRound']">
-      <div className="w-full max-w-xl">
-        <div className="w-full flex items-center justify-between py-3">
-          <div className="flex items-center">
-            <button onClick={() => window.history.back()}>
-              <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
-                <span className="text-3xl font-extrabold">{"<"}</span>
-              </div>
-            </button>
-            <h1 className="text-2xl font-extrabold">{post.title}</h1>
-          </div>
+    <div className="relative overflow-x-hidden flex flex-col items-center min-h-screen font-bold text-black bg-white pb-24 px-4 w-[80%] w-min-[400px]  mx-auto font-['NanumSquareRound']">
+      <div className="w-full flex items-center justify-between py-3">
+        <div className="flex items-center">
+          <button onClick={() => window.history.back()}>
+            <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
+              <span className="text-3xl font-extrabold">{"<"}</span>
+            </div>
+          </button>
+          <h1 className="text-2xl font-extrabold">{post.title}</h1>
         </div>
       </div>
-      <div className="w-full h-px bg-yellow-400"></div>
+      <div className="w-full h-px bg-yellow-400 mb-2"></div>
 
       <div className="bg-white rounded-xl p-4">
         <div

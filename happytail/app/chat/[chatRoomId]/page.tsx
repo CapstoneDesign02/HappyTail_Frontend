@@ -22,7 +22,6 @@ export default function ChatScreen() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [myPhotoUrl, setMyPhotoUrl] = useState<string | null>(null);
   const [otherPhotoUrl, setOtherPhotoUrl] = useState<string | null>(null);
-  // 메시지 스크롤 위치를 관리하기 위한 ref
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -169,7 +168,12 @@ export default function ChatScreen() {
           serviceName={data?.postTitle || "서비스 제목"}
           dateRange={`${data?.startDate} ~ ${data?.endDate}`}
         />
-        <CareOptions />
+        {data && (
+          <CareOptions
+            chatRoomId={data.reservationId}
+            isPartner={data?.ispartner}
+          />
+        )}{" "}
       </div>
 
       {/* 메시지 스크롤 영역 */}

@@ -10,10 +10,11 @@ export interface ReservationInfo {
   profilePhotoUrl: string;
   partnerNickname: string;
   userNickname: string;
-  userAnimalProfiles : AnimalProfile[];
+  userAnimalProfiles: AnimalProfile[];
   startDate: string;
   endDate: string;
   isAccepted: number;
+  unreadMessageCount: number;
 }
 
 export interface AnimalProfile {
@@ -52,9 +53,15 @@ export const getPartnerReservations = async (): Promise<ReservationInfo[]> => {
 };
 
 // ✅ 예약 신청하기
-export const applyReservation = async (postId: number, formData: ApplyReservationForm) => {
+export const applyReservation = async (
+  postId: number,
+  formData: ApplyReservationForm
+) => {
   try {
-    const response = await axiosInstance.post(`/reservation/apply/${postId}`, formData);
+    const response = await axiosInstance.post(
+      `/reservation/apply/${postId}`,
+      formData
+    );
     return response.data;
   } catch (error) {
     console.error("❌ Failed to apply reservation:", error);
@@ -63,9 +70,15 @@ export const applyReservation = async (postId: number, formData: ApplyReservatio
 };
 
 // ✅ 예약 수락/거절하기
-export const updateReservationStatus = async (reservationId: number, statusData: UpdateReservationStatusForm) => {
+export const updateReservationStatus = async (
+  reservationId: number,
+  statusData: UpdateReservationStatusForm
+) => {
   try {
-    const response = await axiosInstance.put(`/reservation/${reservationId}/status`, statusData);
+    const response = await axiosInstance.put(
+      `/reservation/${reservationId}/status`,
+      statusData
+    );
     return response.data;
   } catch (error) {
     console.error("❌ Failed to update reservation status:", error);

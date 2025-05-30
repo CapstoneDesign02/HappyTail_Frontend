@@ -217,9 +217,14 @@ export default function ReservationManagePage() {
                             onClick={() =>
                               router.push(`/chat/${reservation.id}`)
                             }
-                            className="h-14 w-full  bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="relative h-14 w-full  bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
                           >
-                            채팅
+                            채팅{" "}
+                            {reservation.unreadMessageCount > 0 && (
+                              <span className="absolute top-3 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 mb-3 rounded-full shadow-md">
+                                {reservation.unreadMessageCount}
+                              </span>
+                            )}
                           </button>
                         </>
                       ) : reservation.isAccepted === 0 ||
@@ -227,9 +232,14 @@ export default function ReservationManagePage() {
                         reservation.isAccepted === 4 ? (
                         <button
                           onClick={() => router.push(`/chat/${reservation.id}`)}
-                          className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
+                          className="relative h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                         >
-                          채팅
+                          채팅{" "}
+                          {reservation.unreadMessageCount > 0 && (
+                            <span className="absolute top-3 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 mb-3 rounded-full shadow-md">
+                              {reservation.unreadMessageCount}
+                            </span>
+                          )}
                         </button>
                       ) : (
                         reservation.isAccepted === 3 && (
@@ -237,9 +247,14 @@ export default function ReservationManagePage() {
                             onClick={() =>
                               router.push(`/chat/${reservation.id}`)
                             }
-                            className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="relative h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                           >
-                            채팅
+                            채팅{" "}
+                            {reservation.unreadMessageCount > 0 && (
+                              <span className="absolute top-3 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 mb-3 rounded-full shadow-md">
+                                {reservation.unreadMessageCount}
+                              </span>
+                            )}
                           </button>
                         )
                       )}

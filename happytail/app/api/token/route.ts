@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   const grant: VideoGrant = {
     room: roomName,
     roomJoin: true,
-    canPublish: true,
+    canPublish: identity.toString().startsWith("sender"),
     canSubscribe: true,
   };
   at.addGrant(grant);

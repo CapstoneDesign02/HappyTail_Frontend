@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { Room } from "livekit-client";
 import { useParams } from "next/navigation";
 
-const LIVEKIT_URL = process.env.NEXT_PUBLIC_LIVEKIT_SOCKET_URL!;
+const LIVEKIT_URL = process.env.NEXT_PUBLIC_LIVEKIT_URL!;
 
 export default function SenderPage() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -25,13 +25,11 @@ export default function SenderPage() {
 
         await room.connect(LIVEKIT_URL, data.token);
 
-        // 내 카메라, 마이크 트랙 얻기
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
 
-        // 📷 자신의 화면을 video 요소에 연결
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }

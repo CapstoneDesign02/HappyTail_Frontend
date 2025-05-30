@@ -21,7 +21,7 @@ export default function Viewer() {
 
         const room = new Room();
 
-        await room.connect(`${process.env.NEXT_PUBLIC_LIVEKIT_SOCKET_URL}`, data.token, {
+        await room.connect(`${process.env.NEXT_PUBLIC_LIVEKIT_URL}`, data.token, {
           autoSubscribe: true,
         });
 

@@ -6,6 +6,7 @@ import Image from "next/image";
 import {
   AvailableTime,
   CreateOrUpdatePostForm,
+  CreateOrUpdatePostFormMy,
   createPost,
 } from "../api/postAPI";
 import axiosInstance from "@/app/common/axiosInstance";
@@ -57,12 +58,12 @@ export default function Post() {
       return alert("예약 가능 날짜를 1개 이상 선택해주세요.");
     }
 
-    const formData: CreateOrUpdatePostForm = {
+    const formData: CreateOrUpdatePostFormMy = {
       title,
       content: description,
       availableAnimals: animalType.toString(),
       price,
-      availableTimes: availableDates, // ✅ 여기서 키 이름 바꿈
+      availableDates, // ✅ 여기서 키 이름 바꿈
       fileIds,
     };
 

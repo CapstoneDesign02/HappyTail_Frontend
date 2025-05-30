@@ -45,6 +45,21 @@ export interface CreateOrUpdatePostForm {
   fileIds: number[];
 }
 
+export interface CreateOrUpdatePostFormMy {
+  title: string;
+  content: string;
+  availableAnimals: string;
+  price: number;
+  availableDates: AvailableTime[]; // ✅ 수정
+  fileIds: number[];
+}
+
+interface MyPost {
+  data: PostInfo[];
+  message: string;
+  status: string;
+}
+
 // ✅ 전체 게시글 조회
 export const getAllPosts = async (): Promise<PostInfo[]> => {
   try {
@@ -52,6 +67,26 @@ export const getAllPosts = async (): Promise<PostInfo[]> => {
     return response.data;
   } catch (error) {
     console.error("❌ Failed to fetch all posts:", error);
+    throw error;
+  }
+};
+// ✅ 전체 게시글 조회
+export const getMyPost = async (): Promise<MyPost> => {
+  try {
+    const response = await axiosInstance.get("/post/mypost");
+    return response.data;
+  } catch (error) {
+    console.error("❌ Failed to fetch all posts:", error);
+    throw error;
+  }
+};
+
+export const deleteMyPost = async (postId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/post/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Failed to delete my post with ID ${postId}:`, error);
     throw error;
   }
 };
@@ -68,7 +103,7 @@ export const getPostById = async (postId: string): Promise<PostInfo> => {
 };
 
 // ✅ 게시글 작성
-export const createPost = async (formData: CreateOrUpdatePostForm) => {
+export const createPost = async (formData: CreateOrUpdatePostFormMy) => {
   try {
     const response = await axiosInstance.post("/post", formData);
     return response.data;
@@ -81,7 +116,7 @@ export const createPost = async (formData: CreateOrUpdatePostForm) => {
 // ✅ 게시글 수정
 export const updatePost = async (
   postId: number,
-  formData: CreateOrUpdatePostForm
+  formData: CreateOrUpdatePostFormMy
 ) => {
   try {
     const response = await axiosInstance.put(`/post/${postId}`, formData);

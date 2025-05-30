@@ -1,9 +1,13 @@
 import React from "react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const CareOptions = () => {
-  const { chatRoomId } = useParams();
+interface CareOptionsProps {
+  chatRoomId: number;
+  isPartner: boolean;
+}
+
+const CareOptions = ({ chatRoomId, isPartner }: CareOptionsProps) => {
   const router = useRouter();
 
   const options = [
@@ -25,7 +29,7 @@ const CareOptions = () => {
     {
       label: "홈캠",
       icon: "/img/icons/homecam.png",
-      route: `/cam/${chatRoomId}`,
+      route: `/cctv/${chatRoomId}/${isPartner ? "sender" : "viewer"}`,
     },
   ];
 
