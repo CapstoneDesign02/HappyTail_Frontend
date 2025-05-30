@@ -114,7 +114,7 @@ export default function MyPost() {
             const confirmDelete = confirm("정말 삭제하시겠습니까?");
             if (confirmDelete) {
               try {
-                const res = await deleteMyPost(post.id);
+                await deleteMyPost(post.id);
                 alert("삭제되었습니다.");
                 router.push("/post"); // 메인 페이지로 이동
               } catch (error) {

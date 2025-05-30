@@ -20,6 +20,7 @@ const Ai_Step1 = () => {
       const res = await axiosInstance.post("/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log(res);
       router.push("/ai/step2");
     } catch (err) {
       console.error("❌ 이미지 업로드 실패:", err);

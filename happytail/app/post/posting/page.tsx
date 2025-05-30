@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   AvailableTime,
-  CreateOrUpdatePostForm,
   CreateOrUpdatePostFormMy,
   createPost,
 } from "../api/postAPI";
