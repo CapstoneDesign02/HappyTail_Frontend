@@ -45,7 +45,7 @@ const ChatMessage = ({
                 isUser
                   ? "bg-amber-400 text-white rounded-tr-none"
                   : "bg-gray-100 text-black rounded-tl-none"
-              } w-fitmin-w-[6rem] max-w-[80%] whitespace-pre-wrap break-words`}
+              } `}
             >
               {text}
             </div>
@@ -73,7 +73,7 @@ const ChatMessage = ({
                 isUser
                   ? "bg-amber-400 text-white rounded-tr-none"
                   : "bg-gray-100 text-black rounded-tl-none"
-              } w-auto min-w-[6rem] max-w-[60%] whitespace-pre-wrap break-words`}
+              } w-auto `}
             >
               {text}
             </div>
