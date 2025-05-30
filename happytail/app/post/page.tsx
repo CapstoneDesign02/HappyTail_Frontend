@@ -6,6 +6,7 @@ import { PostInfo } from "./api/postAPI";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { removeCookie } from "../common/cookie";
+import { getUnreadMessageCounts } from "../common/unreadApi";
 
 export default function PostListStyledPage() {
   const [posts, setPosts] = useState<PostInfo[]>([]);
@@ -13,6 +14,8 @@ export default function PostListStyledPage() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -20,6 +23,8 @@ export default function PostListStyledPage() {
       try {
         setIsLoading(true);
         const data = await getAllPosts();
+        const unreadMessage = await getUnreadMessageCounts();
+        setUnreadCount(unreadMessage);
         if (Array.isArray(data)) {
           setPosts(data);
           console.log("게시글 불러오기 성공", data);
@@ -241,9 +246,14 @@ export default function PostListStyledPage() {
           <button
             key={i}
             onClick={() => router.push(route)}
-            className="w-14 h-14 flex items-center justify-center"
+            className="relative w-14 h-14 flex items-center justify-center"
           >
             <Image src={icon} alt="nav-icon" width={60} height={60} />
+            {route === "/reservation" && unreadCount > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </button>
         ))}
       </footer>

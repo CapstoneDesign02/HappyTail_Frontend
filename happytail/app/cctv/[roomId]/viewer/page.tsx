@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { Room, RemoteVideoTrack, RemoteAudioTrack } from "livekit-client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Viewer() {
+  const router = useRouter();
   const { roomId } = useParams();
   const [room, setRoom] = useState<Room | null>(null);
 
@@ -21,9 +22,13 @@ export default function Viewer() {
 
         const room = new Room();
 
-        await room.connect(`${process.env.NEXT_PUBLIC_LIVEKIT_URL}`, data.token, {
-          autoSubscribe: true,
-        });
+        await room.connect(
+          `${process.env.NEXT_PUBLIC_LIVEKIT_URL}`,
+          data.token,
+          {
+            autoSubscribe: true,
+          }
+        );
 
         room.on("trackSubscribed", (track) => {
           if (track.kind === "video") {
@@ -47,7 +52,8 @@ export default function Viewer() {
 
         setRoom(room);
       } catch (e) {
-        console.error("Error connecting to room:", e);}
+        console.error("Error connecting to room:", e);
+      }
     }
     start();
 
@@ -57,13 +63,23 @@ export default function Viewer() {
   }, [roomId]);
 
   return (
-    <div>
-      <h1>Viewer (Room: {roomId})</h1>
+    <div className="relative overflow-x-hidden flex flex-col items-center min-h-screen font-bold text-black bg-white pb-24 px-4 w-[80%] w-min-[400px]  mx-auto font-['NanumSquareRound']">
+      <div className="w-full flex items-center justify-between py-3">
+        <div className="flex items-center">
+          <button onClick={() => router.push("/reservation")}>
+            <div className="w-12 h-12 flex items-center justify-center mr-4">
+              <span className="text-3xl font-extrabold">{"<"}</span>
+            </div>
+          </button>
+          <h1 className="text-2xl font-extrabold">반려동물 홈캠</h1>
+        </div>
+      </div>
+      <div className="w-full h-px bg-yellow-400 mb-6"></div>{" "}
       <video
         id="remote-video"
         autoPlay
         playsInline
-        style={{ width: "480px", height: "360px", backgroundColor: "#000" }}
+        style={{ width: "1200px", height: "700px", backgroundColor: "#000" }}
       />
       <audio id="remote-audio" autoPlay />
     </div>

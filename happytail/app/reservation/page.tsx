@@ -9,12 +9,14 @@ import {
   ReservationInfo,
   updateReservationStatus,
 } from "./api/reservationAPI";
+import { getUnreadMessageCounts } from "../common/unreadApi";
 
 export default function ReservationManagePage() {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<"my" | "partner">("my");
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
@@ -37,6 +39,8 @@ export default function ReservationManagePage() {
           ? await getMyReservations()
           : await getPartnerReservations();
       setReservations(data);
+      const unreadMessage = await getUnreadMessageCounts();
+      setUnreadCount(unreadMessage);
     } catch (error) {
       console.error("❌ 예약 정보 불러오기 실패:", error);
     } finally {
@@ -203,13 +207,13 @@ export default function ReservationManagePage() {
                         <>
                           <button
                             onClick={() => handleAccept(reservation.id)}
-                            className="h-14 w-full bg-green-400 hover:bg-green-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="h-14 w-[120px] bg-green-400 hover:bg-green-500 font-bold rounded-lg text-base sm:text-lg"
                           >
                             수락
                           </button>
                           <button
                             onClick={() => handleReject(reservation.id)}
-                            className="h-14 w-full  bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="h-14 w-[120px]  bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
                           >
                             거절
                           </button>
@@ -217,7 +221,7 @@ export default function ReservationManagePage() {
                             onClick={() =>
                               router.push(`/chat/${reservation.id}`)
                             }
-                            className="relative h-14 w-full  bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="relative h-14 w-[120px] bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
                           >
                             채팅{" "}
                             {reservation.unreadMessageCount > 0 && (
@@ -268,14 +272,19 @@ export default function ReservationManagePage() {
       )}
 
       {/* 하단 네비게이션 */}
-      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
+      <footer className="w-full w-min-[400px] h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
         {navItems.map(({ icon, route }, i) => (
           <button
             key={i}
             onClick={() => router.push(route)}
-            className="w-14 h-14 flex items-center justify-center"
+            className="relative w-14 h-14 flex items-center justify-center"
           >
             <Image src={icon} alt="nav-icon" width={60} height={60} />
+            {route === "/reservation" && unreadCount > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </button>
         ))}
       </footer>

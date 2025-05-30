@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { AnimalInfo, getAnimalInfo, deleteAnimalInfo } from "./api/PetAPI";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getUnreadMessageCounts } from "../common/unreadApi";
 
 export default function PetListPage() {
   const [pets, setPets] = useState<AnimalInfo[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const router = useRouter();
   useEffect(() => {
     fetchPets();
@@ -23,6 +26,8 @@ export default function PetListPage() {
   const fetchPets = async () => {
     try {
       const data = await getAnimalInfo();
+      const unreadMessage = await getUnreadMessageCounts();
+      setUnreadCount(unreadMessage);
       setPets(data);
     } catch (err) {
       console.error("❌ 동물 정보를 불러오는 데 실패했습니다:", err);
@@ -110,14 +115,19 @@ export default function PetListPage() {
       </div>
 
       {/* 하단 네비게이션 */}
-      <footer className="w-full h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
+      <footer className="w-full w-min-[400px] h-20 bg-amber-100 flex justify-around items-center fixed bottom-0 left-0 right-0 mx-auto">
         {navItems.map(({ icon, route }, i) => (
           <button
             key={i}
             onClick={() => router.push(route)}
-            className="w-14 h-14 flex items-center justify-center"
+            className="relative w-14 h-14 flex items-center justify-center"
           >
             <Image src={icon} alt="nav-icon" width={60} height={60} />
+            {route === "/reservation" && unreadCount > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </button>
         ))}
       </footer>

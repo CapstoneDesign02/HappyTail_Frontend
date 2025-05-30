@@ -21,7 +21,6 @@ export default function Post() {
   const [price, setPrice] = useState<number>(0);
 
   const [availableDates, setAvailableDates] = useState<AvailableTime[]>([]);
-  const handleGoBack = () => router.back();
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -81,7 +80,7 @@ export default function Post() {
       <div className="w-full max-w-xl px-6">
         <div className="w-full flex items-center justify-between py-3">
           <div className="flex items-center">
-            <button onClick={handleGoBack}>
+            <button onClick={()=>router.push("/post")}>
               <div className="w-12 h-12 flex items-center justify-center shadow-md mr-4">
                 <span className="text-3xl font-extrabold">{"<"}</span>
               </div>

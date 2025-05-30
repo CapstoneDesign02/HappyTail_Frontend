@@ -9,6 +9,7 @@ import ImageUploader from "../common/ImageUploader";
 import { FiCheck, FiSettings } from "react-icons/fi";
 import { checkNicknameAPI } from "../join/joinAPI";
 import { File } from "../common/fileType";
+import { getUnreadMessageCounts } from "../common/unreadApi";
 
 interface UserProfile {
   id: number;
@@ -29,6 +30,7 @@ const UserProfilePage: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState<Partial<UserProfile>>({});
   const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const router = useRouter();
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
@@ -40,6 +42,8 @@ const UserProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const data = await getProfile();
+      const unreadMessage = await getUnreadMessageCounts();
+      setUnreadCount(unreadMessage);
       if (data) {
         setUser(data);
         setEditedUser({
@@ -222,9 +226,14 @@ const UserProfilePage: React.FC = () => {
           <button
             key={i}
             onClick={() => router.push(route)}
-            className="w-14 h-14 flex items-center justify-center"
+            className="relative w-14 h-14 flex items-center justify-center"
           >
             <Image src={icon} alt="nav-icon" width={60} height={60} />
+            {route === "/reservation" && unreadCount > 0 && (
+              <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
           </button>
         ))}
       </footer>
