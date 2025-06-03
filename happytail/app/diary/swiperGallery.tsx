@@ -40,7 +40,7 @@ export default function SwiperGallery({
           className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center cursor-zoom-out"
         >
           <div className="relative w-[90vw] h-auto max-h-[90vh]">
-            <img
+            <Image
               src={modalUrl}
               alt="확대 이미지"
               className="object-contain w-full max-h-[90vh] rounded mx-auto"

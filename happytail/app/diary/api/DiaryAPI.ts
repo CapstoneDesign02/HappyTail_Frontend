@@ -2,7 +2,7 @@ import axiosInstance from "@/app/common/axiosInstance";
 import { File } from "@/app/common/fileType";
 
 export interface DiaryInfo {
-  userNickname: boolean;
+  userNickname: string;
   userPhotoUrl: string;
   id: number;
   reservationId: number;
@@ -32,15 +32,25 @@ export interface DiaryInfo {
 
 // ✅ 내가 받은 일지
 export const getReceivedDiaries = async (): Promise<DiaryInfo[]> => {
+  try{
   const res = await axiosInstance.get("/careLog/received");
-  return res.data;
+  return res.data || [];
+  } catch(e) {
+    console.error("❌ 받은 일지 불러오기 실패:", e);
+    return[];
+  }
 };
 
 
 // ✅ 내가 쓴 일지
 export const getWrittenDiaries = async (): Promise<DiaryInfo[]> => {
-  const res = await axiosInstance.get("/careLog/written");
-  return res.data;
+  try {
+    const res = await axiosInstance.get("/careLog/written");
+    return res.data || [];
+  } catch (e) {
+    console.error("❌ 작성한 일지 불러오기 실패:", e);
+    return [];
+  }
 };
 
 // ✅ 특정 예약의 일지 전체 조회 (채팅창 등)
