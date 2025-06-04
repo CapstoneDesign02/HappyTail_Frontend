@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createReservation, getPostById, PostInfo } from "../../api/postAPI";
 import { AvailableRangeSelector } from "./ResevationCalendar";
 
@@ -16,19 +16,20 @@ export default function ReservationRegister() {
     end: string;
   } | null>(null);
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const data = await getPostById(id as string);
-        setPost(data);
-      } catch (err) {
-        console.error("❌ Failed to load post data:", err);
-        setError(true);
-      }
-    };
-
-    fetchPost();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchPost = useCallback(async () => {
+    try {
+      const data = await getPostById(id as string);
+      setPost(data);
+    } catch (err) {
+      console.error("❌ Failed to load post data:", err);
+      setError(true);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]); // ✅ 이제 ESLint 경고 없음
 
   if (error) {
     return (

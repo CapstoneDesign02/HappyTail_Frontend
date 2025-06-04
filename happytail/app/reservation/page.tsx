@@ -80,7 +80,7 @@ export default function ReservationManagePage() {
             onClick={handleGoBack}
             className="size-10 sm:size-12 bg-white shadow-md flex items-center justify-center mr-4"
           >
-            <span className="text-3xl sm:text-4xl  text-black font-['NanumSquareRound']">
+            <span className="text-3xl sm:text-4xl text-black font-['NanumSquareRound']">
               &lt;
             </span>
           </button>
@@ -95,20 +95,16 @@ export default function ReservationManagePage() {
         <div className="grid grid-cols-2">
           <button
             onClick={() => setSelectedTab("my")}
-            className={`w-full text-ellipsis overflow-hidden whitespace-nowrap h-12 sm:h-16 flex items-center justify-center text-sm sm:text-xl font-extrabold rounded-lg ${
-              selectedTab === "my"
-                ? "bg-yellow-400 text-black"
-                : "bg-white text-black"
+            className={`w-full h-12 sm:h-16 flex items-center justify-center text-sm sm:text-xl font-extrabold rounded-lg ${
+              selectedTab === "my" ? "bg-yellow-400" : "bg-white"
             }`}
           >
             내가 신청한 예약
           </button>
           <button
             onClick={() => setSelectedTab("partner")}
-            className={`w-full text-ellipsis overflow-hidden whitespace-nowrap h-12 sm:h-16 flex items-center justify-center text-sm sm:text-xl font-extrabold rounded-lg ${
-              selectedTab === "partner"
-                ? "bg-yellow-400 text-black"
-                : "bg-white text-black"
+            className={`w-full h-12 sm:h-16 flex items-center justify-center text-sm sm:text-xl font-extrabold rounded-lg ${
+              selectedTab === "partner" ? "bg-yellow-400" : "bg-white"
             }`}
           >
             내가 받은 예약
@@ -170,7 +166,6 @@ export default function ReservationManagePage() {
                 </div>
 
                 <div className="w-full flex flex-col sm:flex-row items-center gap-6">
-                  {/* 프로필 이미지 */}
                   <div
                     className="flex flex-col aspect-square items-center w-24 rounded-full sm:w-40 shrink-0 cursor-pointer"
                     onClick={() =>
@@ -191,17 +186,15 @@ export default function ReservationManagePage() {
                       height={96}
                       priority
                     />
-
                     <span className="mt-2 text-xl text-center font-extrabold text-gray-800 font-['NanumSquareRound']">
                       {selectedTab === "my"
                         ? reservation.partnerNickname
                         : reservation.userNickname}
                     </span>
                   </div>
-
                   {/* 예약 정보 및 버튼 */}
                   <div className="flex flex-col justify-between w-full whitespace-nowrap">
-                    <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
+                    <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4">
                       {reservation.isAccepted === 0 &&
                       selectedTab === "partner" ? (
                         <>
@@ -213,7 +206,7 @@ export default function ReservationManagePage() {
                           </button>
                           <button
                             onClick={() => handleReject(reservation.id)}
-                            className="h-14 w-[120px]  bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="h-14 w-[120px] bg-red-400 hover:bg-red-500 font-bold rounded-lg text-base sm:text-lg"
                           >
                             거절
                           </button>
@@ -223,7 +216,7 @@ export default function ReservationManagePage() {
                             }
                             className="relative h-14 w-[120px] bg-blue-400 hover:bg-blue-500 font-bold rounded-lg text-base sm:text-lg"
                           >
-                            채팅{" "}
+                            채팅
                             {reservation.unreadMessageCount > 0 && (
                               <span className="absolute top-3 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 mb-3 rounded-full shadow-md">
                                 {reservation.unreadMessageCount}
@@ -231,36 +224,32 @@ export default function ReservationManagePage() {
                             )}
                           </button>
                         </>
-                      ) : reservation.isAccepted === 0 ||
-                        reservation.isAccepted === 1 ||
-                        reservation.isAccepted === 4 ? (
+                      ) : (
                         <button
                           onClick={() => router.push(`/chat/${reservation.id}`)}
                           className="relative h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                         >
-                          채팅{" "}
+                          채팅
                           {reservation.unreadMessageCount > 0 && (
                             <span className="absolute top-3 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 mb-3 rounded-full shadow-md">
                               {reservation.unreadMessageCount}
                             </span>
                           )}
                         </button>
-                      ) : (
-                        reservation.isAccepted === 3 && (
+                      )}
+
+                      {/* 후기 작성 또는 보기 버튼 */}
+                      {reservation.isAccepted === 4 && selectedTab === "my" && (
+                        <div className="flex gap-2">
                           <button
                             onClick={() =>
-                              router.push(`/chat/${reservation.id}`)
+                              router.push(`/review/edit/${reservation.id}`)
                             }
-                            className="relative h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
+                            className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                           >
-                            채팅{" "}
-                            {reservation.unreadMessageCount > 0 && (
-                              <span className="absolute top-3 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 mb-3 rounded-full shadow-md">
-                                {reservation.unreadMessageCount}
-                              </span>
-                            )}
+                            후기 {reservation.reviewWritten ? "보기" : "작성"}
                           </button>
-                        )
+                        </div>
                       )}
                     </div>
                   </div>

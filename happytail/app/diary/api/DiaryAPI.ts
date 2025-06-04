@@ -42,7 +42,6 @@ export const getReceivedDiaries = async (): Promise<DiaryInfo[]> => {
 };
 
 
-// ✅ 내가 쓴 일지
 export const getWrittenDiaries = async (): Promise<DiaryInfo[]> => {
   try {
     const res = await axiosInstance.get("/careLog/written");
@@ -53,33 +52,48 @@ export const getWrittenDiaries = async (): Promise<DiaryInfo[]> => {
   }
 };
 
-// ✅ 특정 예약의 일지 전체 조회 (채팅창 등)
 export const getDiariesByReservation = async (
   reservationId: number
 ): Promise<DiaryInfo[]> => {
-  const res = await axiosInstance.get(`/careLog/${reservationId}`);
-  return res.data;
+  try {
+    const res = await axiosInstance.get(`/careLog/${reservationId}`);
+    return res.data || [];
+  } catch (e) {
+    console.error("❌ 예약별 일지 조회 실패:", e);
+    return [];
+  }
 };
 
-// ✅ 일지 작성
 export const writeDiary = async (
   reservationId: number,
   payload: { logContent: string; fileIds: number[] }
 ): Promise<void> => {
-  await axiosInstance.post(`/careLog/${reservationId}`, payload);
+  try {
+    await axiosInstance.post(`/careLog/${reservationId}`, payload);
+  } catch (e) {
+    console.error("❌ 일지 작성 실패:", e);
+    throw e;
+  }
 };
 
-// ✅ 일지 수정
 export const updateDiary = async (
   diaryId: number,
   payload: { logContent: string; fileIds: number[] }
 ): Promise<void> => {
-  await axiosInstance.put(`/careLog/${diaryId}`, payload);
+  try {
+    await axiosInstance.put(`/careLog/${diaryId}`, payload);
+  } catch (e) {
+    console.error("❌ 일지 수정 실패:", e);
+    throw e;
+  }
 };
 
-
-// ✅ 일지 삭제
 export const deleteDiary = async (diaryId: number): Promise<void> => {
-  await axiosInstance.delete(`/careLog/${diaryId}`);
+  try {
+    await axiosInstance.delete(`/careLog/${diaryId}`);
+  } catch (e) {
+    console.error("❌ 일지 삭제 실패:", e);
+    throw e;
+  }
 };
 

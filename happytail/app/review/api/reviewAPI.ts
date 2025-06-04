@@ -10,6 +10,7 @@ export interface ReviewInfo {
 }
 
 
+
 // 후기 작성/수정 시 사용할 데이터 타입
 export interface ReviewForm {
   rating: number;
@@ -39,9 +40,9 @@ export const getReceivedReviews = async (): Promise<ReviewInfo[]> => {
 };
 
 // ✅ 후기 작성/수정
-export const submitReview = async (id: number, reviewData: ReviewForm) => {
+export const submitReview = async (id: number, data: ReviewForm) => {
   try {
-    const response = await axiosInstance.post(`/review/${id}`, reviewData);
+    const response = await axiosInstance.post(`/review/${id}`, data);
     return response.data;
   } catch (error) {
     console.error("❌ Failed to submit review:", error);

@@ -3,6 +3,8 @@ import { File } from "@/app/common/fileType";
 
 // 예약 정보 타입
 export interface ReservationInfo {
+  reviewWritten: boolean;
+  reviewId: number;
   id: number;
   partnerId: number;
   userId: number;
