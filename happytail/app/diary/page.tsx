@@ -2,7 +2,12 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getWrittenDiaries, getReceivedDiaries, DiaryInfo, deleteDiary } from "./api/DiaryAPI";
+import {
+  getWrittenDiaries,
+  getReceivedDiaries,
+  DiaryInfo,
+  deleteDiary,
+} from "./api/DiaryAPI";
 import Image from "next/image";
 import { DropdownFilter } from "./dropdownFilter";
 import dynamic from "next/dynamic";
@@ -10,7 +15,9 @@ const SwiperGallery = dynamic(() => import("./swiperGallery"), { ssr: false });
 
 // Separate component that uses useSearchParams
 function DiaryContent() {
-  const [selectedTab, setSelectedTab] = useState<"written" | "received">("written");
+  const [selectedTab, setSelectedTab] = useState<"written" | "received">(
+    "written"
+  );
   const [diaries, setDiaries] = useState<DiaryInfo[]>([]);
   const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
   const [modalUrl, setModalUrl] = useState<string | null>(null);
@@ -29,7 +36,7 @@ function DiaryContent() {
         setDiaries(data);
       } catch (err) {
         console.error("❌ 일지 로딩 오류:", err);
-      } 
+      }
     };
 
     fetchDiaries();
@@ -192,6 +199,15 @@ function DiaryContent() {
           </div>
         </div>
       )}
+
+      {/* 글쓰기 + 버튼 - 우측 하단 */}
+      <button
+        onClick={() => router.push("/diary/post")}
+        className="fixed bottom-6 right-6 z-50 w-16 h-16 sm:w-20 sm:h-20 bg-yellow-400 hover:bg-yellow-500 rounded-full shadow-lg flex items-center justify-center text-3xl sm:text-4xl font-bold text-white"
+        aria-label="일지 작성"
+      >
+        +
+      </button>
     </div>
   );
 }
