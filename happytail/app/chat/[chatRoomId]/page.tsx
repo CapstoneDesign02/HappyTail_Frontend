@@ -55,6 +55,7 @@ export default function ChatScreen() {
 
   useEffect(() => {
     if (!chatRoomId || !sender) return;
+
     const ws = new WebSocket(
       `${process.env.NEXT_PUBLIC_SOCKET_ID}/ws/chat?email=${sender}&chatRoomId=${chatRoomId}`
     );
@@ -88,17 +89,26 @@ export default function ChatScreen() {
       } else {
         setMessages((prev) => [...prev, data]);
       }
+    };
 
-      ws.onclose = () => {
-        console.log("❌ WebSocket Disconnected");
-      };
+    ws.onclose = () => {
+      console.log("❌ WebSocket Disconnected");
+    };
 
-      setSocket(ws);
+    setSocket(ws);
 
-      return () => {
-        ws.close();
-        setSocket(null);
-      };
+    // 뒤로가기 시 WebSocket 종료
+    const handlePopState = () => {
+      console.log("🔙 뒤로가기 감지, WebSocket 종료");
+      ws.close();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      ws.close();
+      setSocket(null);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, [chatRoomId, sender]);
 
@@ -172,8 +182,9 @@ export default function ChatScreen() {
           <CareOptions
             chatRoomId={data.reservationId}
             isPartner={data?.ispartner}
+            animalProfile={data.animalProfile}
           />
-        )}{" "}
+        )}
       </div>
 
       {/* 메시지 스크롤 영역 */}
