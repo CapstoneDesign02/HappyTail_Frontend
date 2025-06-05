@@ -7,13 +7,20 @@ import {
   updateDiary,
   writeDiary,
 } from "../api/DiaryAPI";
+import Image from "next/image";
 
-export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) {
+export default function DiaryFormPage({
+  isEdit = false,
+}: {
+  isEdit?: boolean;
+}) {
   const { id } = useParams(); // reservationId 또는 diaryId
   const router = useRouter();
 
   const [logContent, setLogContent] = useState("");
-  const [existingImages, setExistingImages] = useState<{ id: number; url: string }[]>([]);
+  const [existingImages, setExistingImages] = useState<
+    { id: number; url: string }[]
+  >([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,17 +31,14 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
     if (!isEdit || !diaryId) return;
 
     const fetchDiary = async () => {
-      try {
-        const diaries = await getDiariesByReservation(diaryId);
-        const target = diaries.find((d) => d.id === diaryId);
-        if (!target) throw new Error("일지를 찾을 수 없습니다");
+      const diaries = await getDiariesByReservation(diaryId);
+      const target = diaries.find((d) => d.id === diaryId);
+      if (!target) throw new Error("일지를 찾을 수 없습니다");
 
-        setLogContent(target.logContent);
-        setExistingImages(target.files.map((file) => ({ id: file.id, url: file.url })));
-      } catch (err) {
-        alert("일지를 불러오는 데 실패했습니다.");
-        router.push("/diary");
-      }
+      setLogContent(target.logContent);
+      setExistingImages(
+        target.files.map((file) => ({ id: file.id, url: file.url }))
+      );
     };
 
     fetchDiary();
@@ -76,7 +80,10 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
     try {
       setLoading(true);
       const uploadedIds = await Promise.all(newImages.map(uploadImage));
-      const allFileIds = [...existingImages.map((img) => img.id), ...uploadedIds];
+      const allFileIds = [
+        ...existingImages.map((img) => img.id),
+        ...uploadedIds,
+      ];
 
       if (isEdit) {
         await updateDiary(diaryId, { logContent, fileIds: allFileIds });
@@ -117,7 +124,11 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
         <div className="flex flex-wrap gap-2 mb-2">
           {existingImages.map((img) => (
             <div key={img.id} className="relative">
-              <img src={img.url} alt="old" className="w-20 h-20 object-cover rounded border" />
+              <Image
+                src={img.url}
+                alt="old"
+                className="w-20 h-20 object-cover rounded border"
+              />
               <button
                 onClick={() => handleDeleteExistingImage(img.id)}
                 className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
@@ -127,7 +138,7 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
             </div>
           ))}
           {previewUrls.map((url, i) => (
-            <img
+            <Image
               key={i}
               src={url}
               alt={`preview-${i}`}
@@ -135,7 +146,12 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
             />
           ))}
         </div>
-        <input type="file" accept="image/*" multiple onChange={handleImageChange} />
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImageChange}
+        />
       </div>
 
       <div className="flex justify-between gap-4 mt-6">
