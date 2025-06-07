@@ -39,13 +39,24 @@ export const getReceivedReviews = async (): Promise<ReviewInfo[]> => {
   }
 };
 
-// ✅ 후기 작성/수정
-export const submitReview = async (id: number, data: ReviewForm) => {
+// 후기 작성 (예약 ID 기준)
+export const createReview = async (reservationId: number, data: ReviewForm) => {
   try {
-    const response = await axiosInstance.post(`/review/${id}`, data);
+    const response = await axiosInstance.post(`/review/${reservationId}`, data);
     return response.data;
   } catch (error) {
-    console.error("❌ Failed to submit review:", error);
+    console.error("❌ Failed to create review:", error);
+    throw error;
+  }
+};
+
+// 후기 수정 (리뷰 ID 기준)
+export const updateReview = async (reviewId: number, data: ReviewForm) => {
+  try {
+    const response = await axiosInstance.post(`/review/${reviewId}`, data); // POST 방식 유지
+    return response.data;
+  } catch (error) {
+    console.error("❌ Failed to update review:", error);
     throw error;
   }
 };

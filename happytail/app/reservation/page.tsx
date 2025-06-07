@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   getMyReservations,
   getPartnerReservations,
@@ -17,6 +17,14 @@ export default function ReservationManagePage() {
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [reservationId, setReservationId] = useState<number | null>(null);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const id = searchParams.get("reservationId");
+    if (id) setReservationId(Number(id));
+  }, [searchParams]);
 
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
@@ -243,11 +251,15 @@ export default function ReservationManagePage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() =>
-                              router.push(`/review/edit/${reservation.id}`)
+                              router.push(
+                                reservation.reviewWritten
+                                  ? `/review/form?reservationId=${reservation.id}&reviewId=${reservation.reviewId}`
+                                  : `/review/form?reservationId=${reservation.id}`
+                              )
                             }
                             className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"
                           >
-                            후기 {reservation.reviewWritten ? "보기" : "작성"}
+                            후기
                           </button>
                         </div>
                       )}

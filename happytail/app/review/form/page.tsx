@@ -1,52 +1,78 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ReviewForm, submitReview, getReviewById } from "../../api/reviewAPI";
+import {
+  createReview,
+  updateReview,
+  getReviewById,
+  getWrittenReviews,
+  ReviewForm,
+} from "../api/reviewAPI";
 import StarRating from "./starRating";
 
-export default function ReviewWriteOrEditPage() {
-  const { reservationId } = useParams();
+export default function ReviewFormPage() {
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const reservationId = searchParams.get("reservationId");
+  
+
+  const [reviewId, setReviewId] = useState<number | null>(null);
   const [form, setForm] = useState<ReviewForm>({ rating: 0, content: "" });
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [reviewId, setReviewId] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!reservationId) return;
+
     const fetchReview = async () => {
       try {
-        const res = await fetch(`/api/review/by-reservation/${reservationId}`);
-        if (!res.ok) throw new Error("Not found");
-        const review = await res.json();
-        setForm({ rating: review.rating, content: review.content });
-        setIsEdit(true);
-        setReviewId(review.id);
-      } catch {
-        setIsEdit(false);
+        const reviews = await getWrittenReviews();
+        const matched = reviews.find(
+          (r) => r.reservationId === Number(reservationId)
+        );
+
+        if (matched) {
+          setIsEdit(true);
+          setReviewId(matched.id);
+          setForm({ rating: matched.rating, content: matched.content });
+        }
+      } catch (error) {
+        console.error("❌ 리뷰 조회 실패:", error);
       }
     };
 
-    if (reservationId) fetchReview();
+    fetchReview();
   }, [reservationId]);
 
   const handleSubmit = async () => {
-    if (!form.content.trim()) return alert("후기 내용을 입력해주세요.");
+    if (!form.content.trim()) {
+      alert("내용을 입력해주세요");
+      return;
+    }
 
-    const parsedId = parseInt(reservationId as string, 10);
-    if (isNaN(parsedId)) {
-      alert("잘못된 예약 정보입니다.");
+    const parsedReservationId = Number(reservationId);
+    if (isNaN(parsedReservationId)) {
+      alert("잘못된 예약 ID");
       return;
     }
 
     try {
       setLoading(true);
-      await submitReview(parsedId, form);
-      alert(isEdit ? "후기가 수정되었습니다." : "후기가 등록되었습니다.");
+
+      if (typeof reviewId === "number" && reviewId > 0) {
+        await updateReview(reviewId, form);
+        alert("후기 수정 완료");
+      } else {
+        await createReview(parsedReservationId, form);
+        alert("후기 작성 완료");
+      }
+
       router.push("/review");
     } catch (error) {
-      console.error("후기 저장 실패:", error);
-      alert("후기 저장에 실패했습니다.");
+      console.error("❌ 후기 저장 실패", error);
+      alert("❌ 후기 저장 실패");
     } finally {
       setLoading(false);
     }
