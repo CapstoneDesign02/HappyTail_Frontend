@@ -6,9 +6,10 @@ export interface ReviewInfo {
   reservationId: number;
   rating: number;
   content: string;
-  profileImage: string; 
-  userFileUrl:string;// ✅ 상대방 프로필 이미지
-  nickname: string;     // ✅ 상대방 닉네임
+  userFileUrl:string;
+  nickname: string;
+  yourUserFileUrl: string;
+  yourNickname: string;
 }
 
 

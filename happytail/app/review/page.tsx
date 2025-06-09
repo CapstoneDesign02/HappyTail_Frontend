@@ -37,23 +37,21 @@ export default function ReviewManagePage() {
     fetchReviews();
   }, [selectedTab]);
 
- const handleDelete = async (id: number) => {
-  const targetReview = reviews.find((r) => r.id === id);
-  console.log("리뷰 작성자:", targetReview?.nickname);
+  const handleDelete = async (id: number) => {
+    const targetReview = reviews.find((r) => r.id === id);
+    console.log("리뷰 작성자:", targetReview?.nickname);
 
-  if (!confirm("정말 삭제하시겠습니까?")) return;
+    if (!confirm("정말 삭제하시겠습니까?")) return;
 
-  try {
-    await deleteReview(id);
-    alert("삭제되었습니다.");
-    setReviews((prev) => prev.filter((r) => r.id !== id));
-  } catch (error) {
-    console.error("❌ 리뷰 삭제 실패:", error);
-    alert("리뷰 삭제에 실패했습니다.");
-  }
-};
-
-
+    try {
+      await deleteReview(id);
+      alert("삭제되었습니다.");
+      setReviews((prev) => prev.filter((r) => r.id !== id));
+    } catch (error) {
+      console.error("❌ 리뷰 삭제 실패:", error);
+      alert("리뷰 삭제에 실패했습니다.");
+    }
+  };
 
   const handleGoMain = () => router.push(`/post`);
 
@@ -110,7 +108,11 @@ export default function ReviewManagePage() {
             {/* 프로필 이미지 */}
             <div className="w-24 sm:w-40 aspect-square overflow-hidden rounded-full shrink-0">
               <Image
-                src={review.profileImage || "/img/profile.jpeg"}
+                src={
+                  selectedTab === "written"
+                    ? review.yourUserFileUrl || "/img/profile.jpeg"
+                    : review.userFileUrl || "/img/profile.jpeg"
+                }
                 alt="프로필"
                 width={80}
                 height={80}
@@ -122,7 +124,9 @@ export default function ReviewManagePage() {
             <div className="flex flex-col gap-2 flex-1">
               {/* 닉네임 */}
               <div className="text-base sm:text-lg font-bold">
-                {review.nickname}
+                {selectedTab === "written"
+                  ? review.yourNickname
+                  : review.nickname}
               </div>
 
               {/* 별점 */}
@@ -142,9 +146,7 @@ export default function ReviewManagePage() {
             {selectedTab === "written" && (
               <button
                 onClick={() =>
-                  router.push(
-                    `/review/form/${review.reservationId}`
-                  )
+                  router.push(`/review/form/${review.reservationId}`)
                 }
                 className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
               >
