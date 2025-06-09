@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("OCR 처리 실패:");
+    console.error("OCR 처리 실패:", error);
 
     return new Response(JSON.stringify({ error: "OCR 처리 실패" }), {
       status: 500,
