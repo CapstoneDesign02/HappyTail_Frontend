@@ -20,10 +20,6 @@ export default function ReservationManagePage() {
 
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const id = searchParams.get("reservationId");
-  }, [searchParams]);
-
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
     { icon: "/img/icons/pets.png", route: "/pets" },
