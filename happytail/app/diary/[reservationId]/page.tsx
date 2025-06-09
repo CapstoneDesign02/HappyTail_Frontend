@@ -93,7 +93,7 @@ export default function ReservationDiariesPage() {
             {entry.files && entry.files.length > 0 && (
               <div className="w-full max-h-[300px] mb-4">
                 <SwiperGallery
-                  images={entry.files}
+                  files={entry.files}
                   onImageClick={setModalUrl}
                 />
               </div>

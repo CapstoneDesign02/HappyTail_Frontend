@@ -17,7 +17,9 @@ export default function DiaryEditPage() {
     { id: number; url: string }[]
   >([]);
   const [newImages, setNewImages] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [previewFiles, setPreviewFiles] = useState<
+    { url: string; type: "image" | "video" }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [resolvedReservationId, setResolvedReservationId] = useState<
     number | null
@@ -38,21 +40,26 @@ export default function DiaryEditPage() {
       setExistingImages(
         diary.files.map((file) => ({ id: file.id, url: file.url }))
       );
-
     };
 
     fetchDiary();
   }, [diaryId]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
     const selected = Array.from(files);
+
     setNewImages((prev) => [...prev, ...selected]);
-    setPreviewUrls((prev) => [
-      ...prev,
-      ...selected.map((file) => URL.createObjectURL(file)),
-    ]);
+
+    const newPreview = selected.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith("image/")
+        ? "image"
+        : ("video" as "image" | "video"),
+    }));
+
+    setPreviewFiles((prev) => [...prev, ...newPreview]);
   };
 
   const handleDeleteExistingImage = (imageId: number) => {
@@ -98,7 +105,7 @@ export default function DiaryEditPage() {
       />
 
       <div className="my-4">
-        <label className="block font-semibold mb-1">이미지</label>
+        <label className="block font-semibold mb-1">사진 및 영상</label>
         <div className="flex flex-wrap gap-2 mb-2">
           {existingImages.map((img) => (
             <div key={img.id} className="relative">
@@ -117,22 +124,33 @@ export default function DiaryEditPage() {
               </button>
             </div>
           ))}
-          {previewUrls.map((url, i) => (
-            <Image
-              key={i}
-              src={url}
-              alt={`preview-${i}`}
-              width={80}
-              height={80}
-              className="rounded border"
-            /> // ✅ 문자열 템플릿 수정
-          ))}
+          {previewFiles.map((file, i) =>
+            file.type === "image" ? (
+              <Image
+                key={i}
+                src={file.url}
+                alt={`preview-${i}`}
+                width={80}
+                height={80}
+                className="rounded border"
+              />
+            ) : (
+              <video
+                key={i}
+                src={file.url}
+                controls
+                width={80}
+                height={80}
+                className="rounded border"
+              />
+            )
+          )}
         </div>
         <input
           type="file"
           multiple
-          accept="image/*"
-          onChange={handleImageChange}
+          accept="image/*,video/*"
+          onChange={handleFileChange}
         />
       </div>
 

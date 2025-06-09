@@ -149,7 +149,7 @@ function DiaryContent() {
 
           {entry.files && entry.files.length > 0 && (
             <div className="w-full max-h-[300px] mb-4">
-              <SwiperGallery images={entry.files} onImageClick={setModalUrl} />
+              <SwiperGallery files={entry.files} onImageClick={setModalUrl} />
             </div>
           )}
 

@@ -2,24 +2,30 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  getDiaryById,
-  writeDiary,
-} from "../api/DiaryAPI";
+import { getDiaryById, writeDiary } from "../api/DiaryAPI";
 import Image from "next/image";
 import axiosInstance from "@/app/common/axiosInstance";
 
-export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) {
+export default function DiaryFormPage({
+  isEdit = false,
+}: {
+  isEdit?: boolean;
+}) {
   const router = useRouter();
   const { reservationId: reservationIdRaw, id } = useParams();
   const reservationId = Number(reservationIdRaw);
   const diaryId = Number(id);
 
   const [logContent, setLogContent] = useState("");
-  const [existingImages, setExistingImages] = useState<{ id: number; url: string }[]>([]);
+  const [existingImages, setExistingImages] = useState<
+    { id: number; url: string }[]
+  >([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [previewFiles, setPreviewFiles] = useState<
+    { url: string; type: "image" | "video" }[]
+  >([]);
 
   useEffect(() => {
     if (!isEdit || !diaryId) return;
@@ -33,47 +39,42 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
       }
 
       setLogContent(diary.logContent);
-      setExistingImages(diary.files.map(file => ({ id: file.id, url: file.url })));
+      setExistingImages(
+        diary.files.map((file) => ({ id: file.id, url: file.url }))
+      );
     };
 
     fetchDiary();
   }, [isEdit, diaryId, router]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-
     const selected = Array.from(files);
-    setNewImages(prev => [...prev, ...selected]);
-    const previews = selected.map(file => URL.createObjectURL(file));
-    setPreviewUrls(prev => [...prev, ...previews]);
+
+    setNewImages((prev) => [...prev, ...selected]);
+
+    const newPreview = selected.map((file) => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith("image/")
+        ? "image"
+        : ("video" as "image" | "video"),
+    }));
+
+    setPreviewFiles((prev) => [...prev, ...newPreview]);
   };
 
   const handleDeleteExistingImage = (imageId: number) => {
-    setExistingImages(prev => prev.filter(img => img.id !== imageId));
-  };
-
-  const handleDeleteNewImage = (index: number) => {
-    setNewImages(prev => prev.filter((_, i) => i !== index));
-    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
+    setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
   };
 
   const uploadImage = async (file: File): Promise<number> => {
     const formData = new FormData();
     formData.append("files", file);
-
-    try {
-      const res = await axiosInstance.post("/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      const id = res.data?.[0]?.id ?? res.data?.[0];
-      if (typeof id !== "number") throw new Error("업로드 결과에서 ID를 찾을 수 없습니다.");
-      return id;
-    } catch (err) {
-      console.error("❌ 이미지 업로드 실패:", err);
-      throw new Error("이미지 업로드 실패");
-    }
+    const res = await axiosInstance.post("/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data[0];
   };
 
   const handleSubmit = async () => {
@@ -81,14 +82,19 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
 
     const idToUse = isEdit ? diaryId : reservationId;
     if (!idToUse || isNaN(idToUse)) {
-      alert(isEdit ? "일지 ID가 유효하지 않습니다." : "예약 ID가 유효하지 않습니다.");
+      alert(
+        isEdit ? "일지 ID가 유효하지 않습니다." : "예약 ID가 유효하지 않습니다."
+      );
       return;
     }
 
     try {
       setLoading(true);
       const uploadedIds = await Promise.all(newImages.map(uploadImage));
-      const allFileIds = [...existingImages.map(img => img.id), ...uploadedIds];
+      const allFileIds = [
+        ...existingImages.map((img) => img.id),
+        ...uploadedIds,
+      ];
 
       if (isEdit) {
         await axiosInstance.post(`/careLog/${diaryId}`, {
@@ -127,7 +133,7 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
       </div>
 
       <div className="mb-6">
-        <label className="block font-semibold mb-1">이미지</label>
+        <label className="block font-semibold mb-1">사진 및 영상</label>
         <div className="flex flex-wrap gap-2 mb-2">
           {existingImages.map((img) => (
             <div key={img.id} className="relative">
@@ -146,29 +152,33 @@ export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) 
               </button>
             </div>
           ))}
-          {previewUrls.map((url, i) => (
-            <div key={i} className="relative">
+          {previewFiles.map((file, i) =>
+            file.type === "image" ? (
               <Image
-                src={url}
+                key={i}
+                src={file.url}
                 alt={`preview-${i}`}
                 width={80}
                 height={80}
-                className="object-cover rounded border"
+                className="rounded border"
               />
-              <button
-                onClick={() => handleDeleteNewImage(i)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
-              >
-                ×
-              </button>
-            </div>
-          ))}
+            ) : (
+              <video
+                key={i}
+                src={file.url}
+                controls
+                width={80}
+                height={80}
+                className="rounded border"
+              />
+            )
+          )}
         </div>
         <input
           type="file"
-          accept="image/*"
           multiple
-          onChange={handleImageChange}
+          accept="image/*,video/*"
+          onChange={handleFileChange}
         />
       </div>
 
