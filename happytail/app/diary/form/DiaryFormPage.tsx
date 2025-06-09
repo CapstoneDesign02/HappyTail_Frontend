@@ -3,98 +3,105 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  getDiariesByReservation,
-  updateDiary,
+  getDiaryById,
   writeDiary,
 } from "../api/DiaryAPI";
 import Image from "next/image";
+import axiosInstance from "@/app/common/axiosInstance";
 
-export default function DiaryFormPage({
-  isEdit = false,
-}: {
-  isEdit?: boolean;
-}) {
-  const { id } = useParams(); // reservationId 또는 diaryId
+export default function DiaryFormPage({ isEdit = false }: { isEdit?: boolean }) {
   const router = useRouter();
+  const { reservationId: reservationIdRaw, id } = useParams();
+  const reservationId = Number(reservationIdRaw);
+  const diaryId = Number(id);
 
   const [logContent, setLogContent] = useState("");
-  const [existingImages, setExistingImages] = useState<
-    { id: number; url: string }[]
-  >([]);
+  const [existingImages, setExistingImages] = useState<{ id: number; url: string }[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const diaryId = Number(id);
 
   useEffect(() => {
     if (!isEdit || !diaryId) return;
 
     const fetchDiary = async () => {
-      const diaries = await getDiariesByReservation(diaryId);
-      const target = diaries.find((d) => d.id === diaryId);
-      if (!target) throw new Error("일지를 찾을 수 없습니다");
+      const diary = await getDiaryById(diaryId);
+      if (!diary) {
+        alert("일지를 찾을 수 없습니다.");
+        router.back();
+        return;
+      }
 
-      setLogContent(target.logContent);
-      setExistingImages(
-        target.files.map((file) => ({ id: file.id, url: file.url }))
-      );
+      setLogContent(diary.logContent);
+      setExistingImages(diary.files.map(file => ({ id: file.id, url: file.url })));
     };
 
     fetchDiary();
-  }, [isEdit, diaryId]);
+  }, [isEdit, diaryId, router]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
     const selected = Array.from(files);
-    setNewImages((prev) => [...prev, ...selected]);
-    const previews = selected.map((file) => URL.createObjectURL(file));
-    setPreviewUrls((prev) => [...prev, ...previews]);
+    setNewImages(prev => [...prev, ...selected]);
+    const previews = selected.map(file => URL.createObjectURL(file));
+    setPreviewUrls(prev => [...prev, ...previews]);
   };
 
   const handleDeleteExistingImage = (imageId: number) => {
-    setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
+    setExistingImages(prev => prev.filter(img => img.id !== imageId));
+  };
+
+  const handleDeleteNewImage = (index: number) => {
+    setNewImages(prev => prev.filter((_, i) => i !== index));
+    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
   };
 
   const uploadImage = async (file: File): Promise<number> => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("files", file);
 
-    const res = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await axiosInstance.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-    if (!res.ok) throw new Error("이미지 업로드 실패");
-
-    const result = await res.json();
-    return result.fileId;
+      const id = res.data?.[0]?.id ?? res.data?.[0];
+      if (typeof id !== "number") throw new Error("업로드 결과에서 ID를 찾을 수 없습니다.");
+      return id;
+    } catch (err) {
+      console.error("❌ 이미지 업로드 실패:", err);
+      throw new Error("이미지 업로드 실패");
+    }
   };
 
   const handleSubmit = async () => {
     if (!logContent.trim()) return alert("내용을 입력해주세요.");
-    if (!diaryId) return;
+
+    const idToUse = isEdit ? diaryId : reservationId;
+    if (!idToUse || isNaN(idToUse)) {
+      alert(isEdit ? "일지 ID가 유효하지 않습니다." : "예약 ID가 유효하지 않습니다.");
+      return;
+    }
 
     try {
       setLoading(true);
       const uploadedIds = await Promise.all(newImages.map(uploadImage));
-      const allFileIds = [
-        ...existingImages.map((img) => img.id),
-        ...uploadedIds,
-      ];
+      const allFileIds = [...existingImages.map(img => img.id), ...uploadedIds];
 
       if (isEdit) {
-        await updateDiary(diaryId, { logContent, fileIds: allFileIds });
+        await axiosInstance.post(`/careLog/${diaryId}`, {
+          logContent,
+          fileIds: allFileIds,
+        });
         alert("일지가 수정되었습니다.");
       } else {
-        await writeDiary(diaryId, { logContent, fileIds: allFileIds });
+        await writeDiary(reservationId, { logContent, fileIds: allFileIds });
         alert("일지가 등록되었습니다.");
       }
 
-      sessionStorage.setItem("visitedEditPage", "true");
-      router.push("/diary");
+      router.push(`/diary/${reservationId}`);
     } catch (err) {
       console.error("❌ 실패:", err);
       alert("처리 중 오류가 발생했습니다.");
@@ -127,7 +134,9 @@ export default function DiaryFormPage({
               <Image
                 src={img.url}
                 alt="old"
-                className="w-20 h-20 object-cover rounded border"
+                width={80}
+                height={80}
+                className="object-cover rounded border"
               />
               <button
                 onClick={() => handleDeleteExistingImage(img.id)}
@@ -138,12 +147,21 @@ export default function DiaryFormPage({
             </div>
           ))}
           {previewUrls.map((url, i) => (
-            <Image
-              key={i}
-              src={url}
-              alt={`preview-${i}`}
-              className="w-20 h-20 object-cover rounded border"
-            />
+            <div key={i} className="relative">
+              <Image
+                src={url}
+                alt={`preview-${i}`}
+                width={80}
+                height={80}
+                className="object-cover rounded border"
+              />
+              <button
+                onClick={() => handleDeleteNewImage(i)}
+                className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
+              >
+                ×
+              </button>
+            </div>
           ))}
         </div>
         <input

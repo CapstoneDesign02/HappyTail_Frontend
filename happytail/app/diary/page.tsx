@@ -47,6 +47,7 @@ function DiaryContent() {
     try {
       await deleteDiary(id);
       setDiaries((prev) => prev.filter((entry) => entry.id !== id));
+      confirm("일지가 삭제되었습니다.");
     } catch (err) {
       console.error("❌ 일지 삭제 오류:", err);
       alert("삭제 실패");
@@ -128,20 +129,21 @@ function DiaryContent() {
       {filteredDiaries.map((entry) => (
         <div key={entry.id} className="mb-12">
           <div className="flex justify-between items-center mb-3">
+            {/* 날짜 */}
             <div className="text-base sm:text-lg font-bold">
               {formatDate(entry.createdAt)}
             </div>
+
+            {/* 닉네임 + 프로필 */}
             <div className="flex items-center gap-2">
-              <Image
-                src={entry.userPhotoUrl || "/img/profile.jpeg"}
-                alt="유저 이미지"
-                width={36}
-                height={36}
-                className="rounded-full object-cover"
+              <img
+                src={entry.partnerUrl}
+                alt="상대방 프로필"
+                className="w-10 h-10 rounded-full object-cover"
               />
-              <span className="text-sm font-medium text-gray-800">
-                {entry.userNickname || "내 프로필"}
-              </span>
+              <div className="text-sm sm:text-base font-medium">
+                {entry.partnerNickname}
+              </div>
             </div>
           </div>
 
@@ -169,7 +171,11 @@ function DiaryContent() {
           <div className="flex gap-2 sm:gap-4 justify-end mt-4 text-black">
             {selectedTab === "written" && (
               <button
-                onClick={() => router.push(`/diary/edit/${entry.id}`)}
+                onClick={() =>
+                  router.push(
+                    `/diary/edit/${entry.id}`
+                  )
+                }
                 className="h-16 w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base"
               >
                 수정
@@ -199,15 +205,6 @@ function DiaryContent() {
           </div>
         </div>
       )}
-
-      {/* 글쓰기 + 버튼 - 우측 하단 */}
-      <button
-        onClick={() => router.push("/diary/post")}
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 sm:w-20 sm:h-20 bg-yellow-400 hover:bg-yellow-500 rounded-full shadow-lg flex items-center justify-center text-3xl sm:text-4xl font-bold text-white"
-        aria-label="일지 작성"
-      >
-        +
-      </button>
     </div>
   );
 }

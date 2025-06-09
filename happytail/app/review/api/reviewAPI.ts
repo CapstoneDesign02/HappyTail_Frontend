@@ -6,9 +6,10 @@ export interface ReviewInfo {
   reservationId: number;
   rating: number;
   content: string;
-  profileImage: string;
+  profileImage: string; 
+  userFileUrl:string;// ✅ 상대방 프로필 이미지
+  nickname: string;     // ✅ 상대방 닉네임
 }
-
 
 
 // 후기 작성/수정 시 사용할 데이터 타입
@@ -62,9 +63,9 @@ export const updateReview = async (reviewId: number, data: ReviewForm) => {
 };
 
 // ✅ 후기 삭제
-export const deleteReview = async (id: number): Promise<void> => {
+export const deleteReview = async (reviewId: number): Promise<void> => {
   try {
-    await axiosInstance.delete(`/review/delete/${id}`);
+    await axiosInstance.put(`/review/delete/${reviewId}`);
   } catch (error) {
     console.error("❌ Failed to delete review:", error);
     throw error;

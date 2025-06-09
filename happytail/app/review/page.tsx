@@ -11,12 +11,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const navItems = [
-    { icon: "/img/icons/reservation.png", route: "/reservation" },
-    { icon: "/img/icons/pets.png", route: "/pets" },
-    { icon: "/img/icons/home.png", route: "/post" },
-    { icon: "/img/icons/diary.png", route: "/diary" },
-    { icon: "/img/icons/profile.png", route: "/profile" },
-  ];
+  { icon: "/img/icons/reservation.png", route: "/reservation" },
+  { icon: "/img/icons/pets.png", route: "/pets" },
+  { icon: "/img/icons/home.png", route: "/post" },
+  { icon: "/img/icons/diary.png", route: "/diary" },
+  { icon: "/img/icons/profile.png", route: "/profile" },
+];
 
 export default function ReviewManagePage() {
   const [selectedTab, setSelectedTab] = useState<"written" | "received">(
@@ -37,32 +37,23 @@ export default function ReviewManagePage() {
     fetchReviews();
   }, [selectedTab]);
 
-  // const fetchReviews = async () => {
-  //   try {
-  //     if (selectedTab === "written") {
-  //       const data = await getWrittenReviews();
-  //       setReviews(data);
-  //     } else {
-  //       const data = await getReceivedReviews();
-  //       setReviews(data);
-  //     }
-  //   } catch (error) {
-  //     console.error("❌ 리뷰 불러오기 실패:", error);
-  //   }
-  // };
+ const handleDelete = async (id: number) => {
+  const targetReview = reviews.find((r) => r.id === id);
+  console.log("리뷰 작성자:", targetReview?.nickname);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+  if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    try {
-      await deleteReview(id);
-      alert("삭제되었습니다.");
-      setReviews((prev) => prev.filter((review) => review.id !== id));
-    } catch (error) {
-      console.error("❌ 리뷰 삭제 실패:", error);
-      alert("리뷰 삭제에 실패했습니다.");
-    }
-  };
+  try {
+    await deleteReview(id);
+    alert("삭제되었습니다.");
+    setReviews((prev) => prev.filter((r) => r.id !== id));
+  } catch (error) {
+    console.error("❌ 리뷰 삭제 실패:", error);
+    alert("리뷰 삭제에 실패했습니다.");
+  }
+};
+
+
 
   const handleGoMain = () => router.push(`/post`);
 
@@ -129,7 +120,12 @@ export default function ReviewManagePage() {
 
             {/* 오른쪽 텍스트 내용 */}
             <div className="flex flex-col gap-2 flex-1">
-              {/* 별점 (유니코드) */}
+              {/* 닉네임 */}
+              <div className="text-base sm:text-lg font-bold">
+                {review.nickname}
+              </div>
+
+              {/* 별점 */}
               <div className="text-yellow-400 text-lg sm:text-xl">
                 {"★".repeat(review.rating)}
               </div>
@@ -145,7 +141,11 @@ export default function ReviewManagePage() {
           <div className="w-full flex flex-col sm:flex-row gap-2 sm:gap-4 sm:justify-end mt-4 sm:mt-4 text-black">
             {selectedTab === "written" && (
               <button
-                onClick={() => router.push(`/review/edit/${review.id}`)}
+                onClick={() =>
+                  router.push(
+                    `/review/form/${review.reservationId}`
+                  )
+                }
                 className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg"
               >
                 수정
@@ -153,7 +153,7 @@ export default function ReviewManagePage() {
             )}
             <button
               onClick={() => handleDelete(review.id)}
-              className={`${
+              className={`$${
                 selectedTab === "written" ? "flex-2" : "w-full"
               } h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500  font-bold rounded-lg text-base sm:text-lg`}
             >
