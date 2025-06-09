@@ -23,7 +23,7 @@ const CareOptions = ({
     {
       label: "돌봄 일지",
       icon: "/img/icons/diary2.png",
-      onClick: () => router.push(`/diary`),
+      onClick: () => router.push(`/diary/${chatRoomId}`),
     },
     {
       label: "반려동물 프로필",
@@ -33,7 +33,7 @@ const CareOptions = ({
     {
       label: "반려동물 피부 상태",
       icon: "/img/icons/health.png",
-      onClick: () => router.push(`/skin-check/${chatRoomId}`),
+      onClick: () => router.push(`/ai/list/${chatRoomId}`),
     },
     {
       label: "홈캠",
