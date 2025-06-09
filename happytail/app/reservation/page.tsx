@@ -17,13 +17,11 @@ export default function ReservationManagePage() {
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [reservationId, setReservationId] = useState<number | null>(null);
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const id = searchParams.get("reservationId");
-    if (id) setReservationId(Number(id));
   }, [searchParams]);
 
   const navItems = [

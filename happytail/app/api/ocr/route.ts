@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
     // MIME type에서 확장자 추출
     const mime = file.type; // e.g. "image/jpeg"
-    let format = mime.split("/")[1]; // "jpeg"
+    const format = mime.split("/")[1]; // "jpeg"
 
     const payload = {
       version: "V2",
@@ -50,16 +50,12 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error: any) {
-    const errMsg = error.response?.data || error.message;
-    console.error("OCR 처리 실패:", errMsg);
+  } catch (error) {
+    console.error("OCR 처리 실패:");
 
-    return new Response(
-      JSON.stringify({ error: "OCR 처리 실패", detail: errMsg }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return new Response(JSON.stringify({ error: "OCR 처리 실패" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

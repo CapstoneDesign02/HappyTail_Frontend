@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   createReview,
   updateReview,
-  getReviewById,
   getWrittenReviews,
   ReviewForm,
 } from "../api/reviewAPI";

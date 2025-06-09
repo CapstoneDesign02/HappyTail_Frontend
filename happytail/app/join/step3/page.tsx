@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
-import { OCRData, OCRmockdata } from "../mockData";
-import { ro } from "date-fns/locale";
+import { OCRData } from "../mockData";
 
 export default function Step3() {
   const router = useRouter();
