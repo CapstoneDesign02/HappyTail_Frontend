@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
+import { OCRData } from "../mockData";
 
 const Step1 = () => {
   const router = useRouter();
@@ -26,20 +27,44 @@ const Step1 = () => {
     formData.append("file", file);
 
     try {
-      // const res = await fetch("/api/ocr", {
-      //   method: "POST",
-      //   body: formData,
-      // });
-      // const data = await res.json();
+      const res = await fetch("/api/ocr", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
 
-      // if (res.ok) {
-      //   localStorage.setItem("ocrResult", JSON.stringify(data));
-      //   router.push("/join/step2?email=" + email);
-      // } else {
-      //   alert("OCR 실패: " + data.error);
-      // }
+      const rawId = data.images[0].idCard.result.ic.personalNum[0].text;
+      const cleanedId = rawId.replace(/\s/g, ""); // 공백 제거
+      const genderCode = cleanedId.split("-")[1]?.charAt(0); // 뒷자리 첫 글자
 
+      let genders = "기타";
+      if (
+        genderCode === "1" ||
+        genderCode === "3" ||
+        genderCode === "5" ||
+        genderCode === "7"
+      ) {
+        genders = "남성";
+      } else if (
+        genderCode === "2" ||
+        genderCode === "4" ||
+        genderCode === "6" ||
+        genderCode === "8"
+      ) {
+        genders = "여성";
+      }
+
+      const OCRdata: OCRData = {
+        name: data.images[0].idCard.result.ic.name[0].text,
+        idNumber: rawId,
+        gender: genders,
+        address: data.images[0].idCard.result.ic.address[0].text,
+        valid: data.images[0].message,
+      };
+      console.log("OCRmockdata:", OCRdata);
+      localStorage.setItem("ocrResult", JSON.stringify(OCRdata));
       router.push("/join/step2?email=" + email);
+
     } catch (err) {
       console.error("서버 오류:", err);
     } finally {

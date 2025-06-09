@@ -12,6 +12,8 @@
     "axios": "^1.7.9",
     "cookies-next": "^5.1.0",
     "date-fns": "^4.1.0",
+    "form-data": "^4.0.2",
+    "formidable": "^3.5.4",
     "livekit-client": "^2.13.3",
     "livekit-server-sdk": "^2.13.0",
     "lucide-react": "^0.511.0",
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-date-range": "^1.4.10",

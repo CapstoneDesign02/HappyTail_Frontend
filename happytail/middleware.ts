@@ -14,7 +14,8 @@ export function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/info") ||
     req.nextUrl.pathname.startsWith("/login/callback") ||
     req.nextUrl.pathname.startsWith("/join") ||
-    req.nextUrl.pathname.startsWith("/img")
+    req.nextUrl.pathname.startsWith("/img") ||
+    req.nextUrl.pathname.startsWith("/api")
   ) {
     return NextResponse.next();
   }

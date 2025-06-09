@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { checkNicknameAPI, joinAPI } from "../joinAPI";
 import { OCRData, OCRmockdata } from "../mockData";
+import { ro } from "date-fns/locale";
 
 export default function Step3() {
   const router = useRouter();
@@ -23,11 +24,9 @@ export default function Step3() {
   useEffect(() => {
     const stored = localStorage.getItem("ocrResult");
     if (stored) {
-      setOcrData(OCRmockdata);
+      setOcrData(JSON.parse(stored));
     } else {
-      // 테스트용 데이터 사용 (또는 페이지 이동)
-      setOcrData(OCRmockdata);
-      // 또는: router.push("/join/step1");
+      router.push("/join/step1?email=" + email);
     }
   }, [router]);
 
@@ -43,7 +42,7 @@ export default function Step3() {
     if (isDuplicate) return alert("닉네임 중복 확인하세요.");
 
     const phoneSanitized = phone.replace(/-/g, "");
-    const gender = ocrData.gender === "M" ? 1 : 2;
+    const gender = ocrData.gender === "남성" ? 1 : 2;
 
     const data = await joinAPI(
       email,

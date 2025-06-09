@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import { OCRData, OCRmockdata } from "../mockData";
+import { OCRData } from "../mockData";
 
 export default function Step2() {
   const router = useRouter();
@@ -19,11 +19,9 @@ export default function Step2() {
   }, []);
 
   useEffect(() => {
-    // const stored = localStorage.getItem("ocrResult");
-    const stored = "test";
+    const stored = localStorage.getItem("ocrResult");
     if (stored) {
-      // setOcrData(JSON.parse(stored));
-      setOcrData(OCRmockdata);
+      setOcrData(JSON.parse(stored));
     } else {
       router.push("/join/step1?email=" + email);
     }
@@ -98,8 +96,8 @@ export default function Step2() {
               ))}
             </div>
           ) : (
-            <div className="w-full max-w-2xl bg-red-100 text-red-600 text-xl sm:text-2xl p-6 sm:p-8 rounded-md text-center font-['NanumSquareRound']">
-              🚨 인증 실패: {ocrData.reason}
+            <div className="text-2xl sm:text-2xl text-red-500 font-bold">
+              OCR 인증에 실패했습니다. 다시 시도해주세요.
             </div>
           )}
         </div>
