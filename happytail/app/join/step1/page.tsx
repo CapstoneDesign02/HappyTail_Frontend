@@ -61,7 +61,6 @@ const Step1 = () => {
         address: data.images[0].idCard.result.ic.address[0].text,
         valid: data.images[0].message,
       };
-      console.log("OCRmockdata:", OCRdata);
       localStorage.setItem("ocrResult", JSON.stringify(OCRdata));
       router.push("/join/step2?email=" + email);
 
