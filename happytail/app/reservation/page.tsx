@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   getMyReservations,
   getPartnerReservations,
@@ -17,8 +17,6 @@ export default function ReservationManagePage() {
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState(0);
-
-  const searchParams = useSearchParams();
 
   const navItems = [
     { icon: "/img/icons/reservation.png", route: "/reservation" },
