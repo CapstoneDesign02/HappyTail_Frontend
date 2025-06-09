@@ -21,7 +21,6 @@ export default function DiaryFormPage({
     { id: number; url: string }[]
   >([]);
   const [newImages, setNewImages] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [previewFiles, setPreviewFiles] = useState<
     { url: string; type: "image" | "video" }[]

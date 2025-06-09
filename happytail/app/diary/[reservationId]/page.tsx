@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getDiariesByReservation, DiaryInfo } from "../api/DiaryAPI";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 const SwiperGallery = dynamic(() => import("../swiperGallery"), { ssr: false });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getDiaryById, updateDiary } from "../../api/DiaryAPI";
 import axiosInstance from "@/app/common/axiosInstance";
@@ -21,9 +21,6 @@ export default function DiaryEditPage() {
     { url: string; type: "image" | "video" }[]
   >([]);
   const [loading, setLoading] = useState(false);
-  const [resolvedReservationId, setResolvedReservationId] = useState<
-    number | null
-  >(null);
 
   useEffect(() => {
     if (!diaryId) return;
