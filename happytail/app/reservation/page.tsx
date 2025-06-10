@@ -245,8 +245,8 @@ export default function ReservationManagePage() {
                             onClick={() =>
                               router.push(
                                 reservation.reviewWritten
-                                  ? `/review/form?reservationId=${reservation.id}&reviewId=${reservation.reviewId}`
-                                  : `/review/form?reservationId=${reservation.id}`
+                                  ? `/review/form/${reservation.id}`
+                                  : `/review/form/${reservation.id}`
                               )
                             }
                             className="h-14 w-full sm:h-16 sm:w-32 bg-amber-400 hover:bg-amber-500 font-bold rounded-lg text-base sm:text-lg"

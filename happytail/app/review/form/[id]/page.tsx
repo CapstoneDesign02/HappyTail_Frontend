@@ -11,31 +11,29 @@ import {
 import StarRating from "./starRating";
 
 export default function ReviewFormPage() {
-  const { id } = useParams(); // URL에서 reservationId
   const router = useRouter();
-
+  const { id } = useParams();
   const reservationId = Number(id);
 
-  const [reviewId, setReviewId] = useState<number | null>(null);
   const [form, setForm] = useState<ReviewForm>({ rating: 0, content: "" });
   const [loading, setLoading] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    if (!reservationId || isNaN(reservationId)) return;
-
     const fetchReview = async () => {
       try {
         const reviews = await getWrittenReviews();
-        const matched = reviews.find((r) => r.reservationId === reservationId);
+        const existing = reviews.find((r) => r.reservationId === reservationId);
 
-        if (matched) {
-          setIsEdit(true);
-          setReviewId(matched.id);
-          setForm({ rating: matched.rating, content: matched.content });
+        if (existing) {
+          setForm({
+            rating: existing.rating ?? 0,
+            content: existing.content ?? "",
+          });
+          if (existing.rating > 0) setIsEditMode(true);
         }
-      } catch (error) {
-        console.error("❌ 리뷰 조회 실패:", error);
+      } catch (err) {
+        console.error("❌ 리뷰 불러오기 실패:", err);
       }
     };
 
@@ -44,30 +42,40 @@ export default function ReviewFormPage() {
 
   const handleSubmit = async () => {
     if (!form.content.trim()) {
-      alert("내용을 입력해주세요");
+      alert("내용을 입력해주세요.");
       return;
     }
 
-    if (!reservationId || isNaN(reservationId)) {
-      alert("잘못된 예약 ID입니다.");
+    if (form.rating <= 0) {
+      alert("별점을 입력해주세요.");
       return;
     }
 
     try {
       setLoading(true);
+      console.log("전송할 데이터:", { reservationId, form });
 
-      if (typeof reviewId === "number" && reviewId > 0) {
-        await updateReview(reviewId, form);
-        alert("후기 수정 완료");
+      if (isEditMode) {
+        const reviews = await getWrittenReviews();
+        const existing = reviews.find((r) => r.reservationId === reservationId);
+
+        if (existing) {
+          console.log("수정 요청 시작:", existing.id, form);
+          const result = await updateReview(existing.id, form);
+          console.log("수정 결과:", result);
+          alert("후기 수정 완료!");
+        }
       } else {
-        await createReview(reservationId, form);
-        alert("후기 작성 완료");
+        console.log("생성 요청 시작:", reservationId, form);
+        const result = await createReview(reservationId, form);
+        console.log("생성 결과:", result);
+        alert("후기 작성 완료!");
       }
 
       router.push("/review");
-    } catch (error) {
-      console.error("❌ 후기 저장 실패", error);
-      alert("❌ 후기 저장 실패");
+    } catch (err) {
+      console.error("❌ 저장 실패 상세:", err);
+      alert(`저장 중 오류가 발생했습니다: ${err}`);
     } finally {
       setLoading(false);
     }
@@ -76,7 +84,7 @@ export default function ReviewFormPage() {
   return (
     <div className="w-full max-w-md mx-auto p-6 font-['NanumSquareRound']">
       <h1 className="text-2xl font-bold mb-6 text-center">
-        {isEdit ? "후기 수정" : "후기 작성"}
+        {isEditMode ? "후기 수정" : "후기 작성"}
       </h1>
       <div className="w-full h-px bg-yellow-400 mb-6"></div>
 
@@ -109,7 +117,7 @@ export default function ReviewFormPage() {
           disabled={loading}
           className="w-1/2 bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded"
         >
-          {loading ? "저장 중..." : isEdit ? "저장" : "작성"}
+          {loading ? "저장 중..." : isEditMode ? "수정" : "작성"}
         </button>
       </div>
     </div>
