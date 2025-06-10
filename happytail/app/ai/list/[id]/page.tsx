@@ -56,7 +56,7 @@ export default function AiResultList() {
             >
               <Image
                 src={entry.fileUrl}
-                alt={entry.resevationId}
+                alt={`예약 ID ${entry.resevationId}에 대한 예측 결과 이미지`}
                 width={96}
                 height={96}
                 className="object-cover rounded-md"
