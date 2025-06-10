@@ -135,7 +135,7 @@ const Ai_Step1 = () => {
           onClick={handleClick}
           className="w-full max-w-[600px] h-14 sm:h-16 bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-lg text-lg sm:text-xl font-['NanumSquareRound'] transition-all duration-300"
         >
-          사진 촬영 시작
+          사진 업로드
         </button>
       </div>
     </div>

@@ -77,7 +77,20 @@ export default function AiResultList() {
                   year: "numeric",
                   month: "2-digit",
                   day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}
+              </div>
+            </div>
+            {/*프로필 사진*/}
+            <div className="flex items-center justify-center gap-5 w-[300px]">
+              <img
+                src={entry.userInfo?.file?.url ?? "/img/profile.jpeg"}
+                alt="작성자 이미지"
+                className="w-20 h-20 rounded-full  object-cover"
+              />
+              <div className="text-lg font-bold text-gray-700">
+                {entry.userInfo?.nickname || "익명"}
               </div>
             </div>
           </div>

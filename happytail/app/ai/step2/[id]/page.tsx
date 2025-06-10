@@ -22,6 +22,16 @@ const Ai_Step3 = () => {
 
   const handleGoBack = () => router.back();
 
+  const formatTime = (isoString: string) => {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString([], {
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div className="w-full w-min-[400px]  min-h-screen flex-wrap bg-white mx-auto overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
       {/* 타이틀 */}
@@ -58,15 +68,14 @@ const Ai_Step3 = () => {
             <ol>
               <li className="my-2">{}</li>
               <li className="my-2">
-                AI가
-                {aiResult.predictedProbability * 100}로{" "}
+                AI가 {(aiResult.predictedProbability * 100).toFixed(2)}로{" "}
                 {aiResult.predictedDisease}
                 을(를) 추측해요
               </li>
               <li className="w-[90%] my-20 flex justify-between">
                 <div className="flex-[3] font-bold">예측날짜</div>
                 <div className="flex-[7] text-right">
-                  {aiResult.predictedDate}
+                  {formatTime(aiResult.predictedDate)}
                 </div>
               </li>
             </ol>
