@@ -115,6 +115,11 @@ export default function DiaryFormPage({
     }
   };
 
+  const handleDeleteNewImage = (index: number) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
+    setPreviewFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="w-full max-w-md mx-auto p-6 font-['NanumSquareRound']">
       <h1 className="text-2xl font-bold mb-6 text-center">
@@ -153,23 +158,37 @@ export default function DiaryFormPage({
           ))}
           {previewFiles.map((file, i) =>
             file.type === "image" ? (
-              <Image
-                key={i}
-                src={file.url}
-                alt={`preview-${i}`}
-                width={80}
-                height={80}
-                className="rounded border"
-              />
+              <div key={i} className="relative">
+                <Image
+                  src={file.url}
+                  alt={`preview-${i}`}
+                  width={80}
+                  height={80}
+                  className="rounded border"
+                />
+                <button
+                  onClick={() => handleDeleteNewImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
+                >
+                  ×
+                </button>
+              </div>
             ) : (
-              <video
-                key={i}
-                src={file.url}
-                controls
-                width={80}
-                height={80}
-                className="rounded border"
-              />
+              <div key={i} className="relative">
+                <video
+                  src={file.url}
+                  controls
+                  width={80}
+                  height={80}
+                  className="rounded border"
+                />
+                <button
+                  onClick={() => handleDeleteNewImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
+                >
+                  ×
+                </button>
+              </div>
             )
           )}
         </div>

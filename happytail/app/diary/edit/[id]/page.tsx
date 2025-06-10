@@ -77,8 +77,11 @@ export default function DiaryEditPage() {
     setLoading(true);
 
     try {
-      const uploaded = await Promise.all(newImages.map(uploadImage));
-      const allFileIds = [...existingImages.map((img) => img.id), ...uploaded];
+      const uploadedIds = await Promise.all(newImages.map(uploadImage));
+      const allFileIds = [
+        ...existingImages.map((img) => img.id),
+        ...uploadedIds,
+      ];
       await updateDiary(diaryId, { logContent, fileIds: allFileIds });
       alert("수정되었습니다.");
       router.push(`/diary`);
@@ -88,6 +91,11 @@ export default function DiaryEditPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteNewImage = (index: number) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
+    setPreviewFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -111,7 +119,7 @@ export default function DiaryEditPage() {
                 alt="old"
                 width={80}
                 height={80}
-                className="rounded border"
+                className="object-cover rounded border"
               />
               <button
                 onClick={() => handleDeleteExistingImage(img.id)}
@@ -123,23 +131,37 @@ export default function DiaryEditPage() {
           ))}
           {previewFiles.map((file, i) =>
             file.type === "image" ? (
-              <Image
-                key={i}
-                src={file.url}
-                alt={`preview-${i}`}
-                width={80}
-                height={80}
-                className="rounded border"
-              />
+              <div key={i} className="relative">
+                <Image
+                  src={file.url}
+                  alt={`preview-${i}`}
+                  width={80}
+                  height={80}
+                  className="rounded border"
+                />
+                <button
+                  onClick={() => handleDeleteNewImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
+                >
+                  ×
+                </button>
+              </div>
             ) : (
-              <video
-                key={i}
-                src={file.url}
-                controls
-                width={80}
-                height={80}
-                className="rounded border"
-              />
+              <div key={i} className="relative">
+                <video
+                  src={file.url}
+                  controls
+                  width={80}
+                  height={80}
+                  className="rounded border"
+                />
+                <button
+                  onClick={() => handleDeleteNewImage(i)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full"
+                >
+                  ×
+                </button>
+              </div>
             )
           )}
         </div>

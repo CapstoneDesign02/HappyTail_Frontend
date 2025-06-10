@@ -44,7 +44,7 @@ export const getReceivedReviews = async (): Promise<ReviewInfo[]> => {
 // 후기 작성 (예약 ID 기준)
 export const createReview = async (reservationId: number, data: ReviewForm) => {
   try {
-    const response = await axiosInstance.post(`/review/${reservationId}`, data);
+    const response = await axiosInstance.post(`/review/byReservation/${reservationId}`, data);
     return response.data;
   } catch (error) {
     console.error("❌ Failed to create review:", error);
